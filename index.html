@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VinhProfile</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 30'><rect width='110' height='30' rx='4' fill='%23000'/><text x='5' y='21' font-family='Arial' font-size='16' font-weight='bold' fill='%23fff'>Vinh</text><rect x='45' y='4' width='60' height='22' rx='3' fill='%23f90'/><text x='48' y='20' font-family='Arial' font-size='16' font-weight='bold' fill='%23000'>Profile</text></svg>">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        body {
+            background-color: #09090b;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: #ededed; font-family: 'Inter', sans-serif;
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            padding: 20px; overflow-x: hidden; position: relative;
+        }
+
+        /* SETTINGS MENU */
+        .settings-container { position: fixed; top: 20px; right: 20px; z-index: 100; }
+        .settings-btn {
+            background: #18181b; border: 1px solid #27272a; color: #a1a1aa;
+            width: 42px; height: 42px; border-radius: 12px; cursor: pointer;
+            font-size: 16px; transition: all 0.2s ease; display: flex;
+            align-items: center; justify-content: center;
+        }
+        .settings-btn:hover { background: #27272a; color: #fff; }
+        .settings-menu {
+            position: absolute; top: 50px; right: 0; background: #121214;
+            border: 1px solid #27272a; border-radius: 12px; padding: 15px;
+            width: 250px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            display: none; flex-direction: column; gap: 20px;
+            animation: fadeIn 0.2s ease forwards;
+        }
+        .settings-menu.show { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .menu-section h4 { color: #71717a; font-size: 11px; text-transform: uppercase; margin-bottom: 10px; font-family: 'JetBrains Mono', monospace; letter-spacing: 1px; }
+        .menu-grid { display: flex; gap: 8px; flex-wrap: wrap; }
+        .ctrl-btn { background: #18181b; border: 1px solid #27272a; color: #a1a1aa; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; font-family: 'JetBrains Mono', monospace; transition: all 0.2s ease; flex-grow: 1; text-align: center; }
+        .ctrl-btn:hover, .ctrl-btn.active { background: #27272a; border-color: #3f3f46; color: #fff; }
+
+        /* CV CARD */
+        .cv-card {
+            background: #121214; border: 1px solid #27272a; border-radius: 16px; 
+            padding: 45px 40px; max-width: 460px; width: 100%;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8); z-index: 10;
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transform: translateY(20px); opacity: 0; text-align: center;
+        }
+        @keyframes fadeInUp { to { transform: translateY(0); opacity: 1; } }
+
+        /* HEADER */
+        .avatar { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 2px solid #27272a; margin-bottom: 18px; padding: 4px; pointer-events: none; background: #09090b; }
+        .name { font-size: 24px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 6px; color: #ffffff; }
+        .title { color: #71717a; font-size: 13px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
+
+        /* LIVE VIEW COUNTER (EYE ANIMATION) */
+        .view-counter {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+            padding: 5px 12px;
+            background: #18181b;
+            border-radius: 20px;
+            border: 1px solid #27272a;
+            font-size: 12px;
+            color: #a1a1aa;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .eye-container {
+            position: relative;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .moving-eye {
+            position: relative;
+            color: #fff;
+            animation: eyeBlink 4s infinite;
+        }
+        .pupil {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #000;
+            border-radius: 50%;
+            top: 6px;
+            left: 6px;
+            animation: pupilMove 3s infinite ease-in-out;
+        }
+        @keyframes pupilMove {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(-2px, 0); }
+            75% { transform: translate(2px, 0); }
+        }
+
+        /* SECTIONS */
+        .section { margin-bottom: 28px; text-align: left; margin-top: 25px; }
+        .section h2 { font-size: 12px; font-weight: 600; margin-bottom: 12px; color: #71717a; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #27272a; padding-bottom: 8px; }
+        #about-text { font-size: 14px; line-height: 1.7; color: #a1a1aa; min-height: 80px; }
+        .typing-cursor::after { content: '█'; animation: blink 1s step-end infinite; color: #ffffff; margin-left: 4px; font-size: 12px; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* SKILL TAGS */
+        .skills-container { display: flex; flex-wrap: wrap; gap: 8px; }
+        .skill-tag { background: #18181b; color: #a1a1aa; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-family: 'JetBrains Mono', monospace; border: 1px solid #27272a; transition: all 0.2s ease; cursor: default; }
+        .skill-tag:hover { background: #27272a; color: #fff; border-color: #3f3f46; }
+        .yapping-skill { color: #ef4444; background: rgba(239, 68, 68, 0.05); border-color: rgba(239, 68, 68, 0.2); cursor: pointer; }
+        .yapping-skill:hover { background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.4); color: #f87171; }
+        .hello-tag { color: #3b82f6; background: rgba(59, 130, 246, 0.05); border-color: rgba(59, 130, 246, 0.2); cursor: pointer; }
+        .hello-tag:hover { background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.4); color: #60a5fa; }
+
+        /* DONATE */
+        .donate-btn { width: 100%; background: #ffffff; color: #000000; border: none; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 5px; margin-bottom: 25px; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .donate-btn:hover { background: #e4e4e7; transform: translateY(-1px); }
+
+        /* SOCIALS */
+        .social-links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+        .social-links a { color: #71717a; font-size: 18px; text-decoration: none; transition: all 0.2s; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 8px; background: #18181b; border: 1px solid #27272a; }
+        .social-links a:hover { color: #ffffff; background: #27272a; border-color: #3f3f46; }
+
+        /* MODAL DONATE */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 1000; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s ease; }
+        .modal-content { background: #121214; border: 1px solid #27272a; border-radius: 16px; padding: 25px; width: 90%; max-width: 320px; text-align: center; position: relative; transform: scale(0.95); transition: transform 0.2s ease; }
+        .close-modal { position: absolute; top: 12px; right: 15px; color: #71717a; font-size: 18px; cursor: pointer; }
+        .modal-content input { width: 100%; background: #09090b; border: 1px solid #27272a; color: #fff; padding: 10px 15px; border-radius: 8px; font-size: 15px; outline: none; margin-bottom: 18px; text-align: center; font-family: 'JetBrains Mono', monospace; }
+        .modal-content input[type="number"]::-webkit-outer-spin-button, .modal-content input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .qr-box { width: 100%; aspect-ratio: 1; background: #fff; border-radius: 8px; padding: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; pointer-events: none; }
+        .qr-box img { width: 100%; height: 100%; object-fit: contain; }
+
+        /* PARTICLES */
+        .effect-item { position: fixed; top: -20px; user-select: none; z-index: 1; pointer-events: none; opacity: 0.7; }
+        .snow-anim { animation: fallSnow linear infinite, sway 3s ease-in-out infinite alternate; }
+        .lightning-anim { animation: fallLightning linear infinite; opacity: 1; filter: drop-shadow(0 0 5px yellow); }
+        .leaf-anim { animation: fallLeaf linear infinite, swayLeaf 4s ease-in-out infinite alternate; }
+        @keyframes fallSnow { to { top: 100vh; } }
+        @keyframes fallLightning { to { top: 100vh; } }
+        @keyframes fallLeaf { to { top: 100vh; transform: rotate(360deg); } }
+        @keyframes sway { from { transform: translateX(-15px); } to { transform: translateX(15px); } }
+        @keyframes swayLeaf { from { transform: translateX(-30px) rotate(-15deg); } to { transform: translateX(30px) rotate(15deg); } }
+        #jumpscare-container { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: black; z-index: 99999; }
+        #jumpscare-container img { width: 100%; height: 100%; object-fit: contain; }
+        .footer-tag { position: absolute; bottom: 15px; width: 100%; text-align: center; color: #1e3a8a; font-size: 13px; font-family: 'JetBrains Mono', monospace; font-weight: 600; z-index: 5; pointer-events: none; }
+
+        @media (max-width: 600px) {
+            .cv-card { padding: 35px 25px; border-radius: 12px; }
+            .settings-container { top: 15px; right: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="jumpscare-container">
+        <img src="https://orion-uploads.openroadmedia.com/md_ebb42c5c23d5-jump-scare-feat.jpg" alt="Jumpscare">
+    </div>
+
+    <div class="settings-container">
+        <button class="settings-btn" onclick="toggleSettings()"><i class="fa-solid fa-gear"></i></button>
+        <div class="settings-menu" id="settingsMenu">
+            <div class="menu-section">
+                <h4>EFFECTS</h4>
+                <div class="menu-grid" id="effect-group">
+                    <button class="ctrl-btn" onclick="toggleEffect('snow', this)">Snow</button>
+                    <button class="ctrl-btn" onclick="toggleEffect('lightning', this)">Lightning</button>
+                    <button class="ctrl-btn" onclick="toggleEffect('leaf', this)">Leaf</button>
+                </div>
+            </div>
+            <div class="menu-section">
+                <h4>CURSORS</h4>
+                <div class="menu-grid" id="cursor-group">
+                    <button class="ctrl-btn active" onclick="changeCursor('default', this)">Default</button>
+                    <button class="ctrl-btn" onclick="changeCursor('crosshair', this)">Crosshair</button>
+                    <button class="ctrl-btn" onclick="changeCursor('pointer', this)">Pointer</button>
+                    <button class="ctrl-btn" onclick="changeCursor('help', this)">Help</button>
+                    <button class="ctrl-btn" onclick="changeCursor('not-allowed', this)">Blocked</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="donateModal">
+        <div class="modal-content" id="modalContent">
+            <i class="fas fa-times close-modal" onclick="closeDonate()"></i>
+            <h3>Fund my coffee</h3>
+            <p>Nhập số tiền (VNĐ) để tạo QR</p>
+            <input type="number" id="donateAmount" placeholder="9999" oninput="updateQR()">
+            <div class="qr-box"><img id="qrImage" src="https://img.vietqr.io/image/ACB-33689707-compact2.png?amount=0&accountName=NGUYEN%20NGOC%20TRI%20VINH&addInfo=Donate%20Vinhx"></div>
+        </div>
+    </div>
+
+    <div class="cv-card">
+        <div class="header">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExb3lwaHF6MTI1NmpyajNpcHNsY3hzZHFsMWhzZWhpc3ljNGRha21ubiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/s2pr9CVOvU4NMBsnYf/giphy.gif" alt="Avatar" class="avatar">
+            <h1 class="name">Vinhx</h1>
+            <p class="title">Software Developer</p>
+            
+            <div class="view-counter">
+                <div class="eye-container">
+                    <i class="fas fa-eye moving-eye"></i>
+                    <div class="pupil"></div>
+                </div>
+                <span id="visit-count">0</span> views
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>About_Me</h2>
+            <p id="about-text" class="typing-cursor"></p>
+        </div>
+
+        <div class="section">
+            <h2>Tech_Stack</h2>
+            <div class="skills-container">
+                <span class="skill-tag">HTML/CSS</span>
+                <span class="skill-tag">Python</span>
+                <span class="skill-tag">Java</span>
+                <span class="skill-tag">Lua</span>
+                <span class="skill-tag hello-tag" onclick="window.open('https://nohello.net/vi/', '_blank')">Hello 👋</span>
+                <span class="skill-tag yapping-skill" onclick="triggerJumpscare()">Yapping()</span>
+            </div>
+        </div>
+
+        <button class="donate-btn" onclick="openDonate()"><i class="fa-solid fa-mug-hot"></i> Buy me a coffee</button>
+
+        <div class="social-links">
+            <a href="https://vinhx.site/" target="_blank"><i class="fas fa-globe"></i></a>
+            <a href="https://github.com/vinhxdev" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://www.facebook.com/nguyenvinhtriowo/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://steamcommunity.com/id/P1mple1st/" target="_blank"><i class="fab fa-steam"></i></a>
+            <a href="mailto:nguyenngoctrivinh72@gmail.com"><i class="fas fa-envelope"></i></a>
+        </div>
+    </div>
+
+    <div class="footer-tag">@trustmebro</div>
+
+    <script>
+        // ANTI-TAMPER
+        console.log("%c[SECURE AREA]", "color: #ef4444; font-size: 20px; font-weight: bold;");
+        document.ondragstart = () => false;
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.onkeydown = (e) => {
+            if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && [73, 74, 67].includes(e.keyCode)) || (e.ctrlKey && [85, 83].includes(e.keyCode))) return false;
+        };
+        setInterval(() => { const b = new Date().getTime(); debugger; if (new Date().getTime() - b > 100) document.body.innerHTML = "<div style='color:red;text-align:center;margin-top:20vh;'>Debugger detected.</div>"; }, 1000);
+        new MutationObserver((m) => m.forEach(mu => mu.addedNodes.forEach(n => { if (['SCRIPT', 'IFRAME'].includes(n.tagName)) n.remove(); }))).observe(document.body, { childList: true, subtree: true });
+
+        // VIEW COUNTER API (Sử dụng CountAPI để đếm thực tế)
+        async function updateVisitCount() {
+            try {
+                // Đây là một API public miễn phí để đếm hit cho web tĩnh
+                const res = await fetch('https://api.countapi.xyz/hit/vinhprofile.site/visits');
+                const data = await res.json();
+                document.getElementById('visit-count').innerText = data.value.toLocaleString();
+            } catch (err) {
+                // Fallback nếu API lỗi
+                let count = localStorage.getItem('vinh_views') || Math.floor(Math.random() * 1000) + 500;
+                count = parseInt(count) + 1;
+                localStorage.setItem('vinh_views', count);
+                document.getElementById('visit-count').innerText = count.toLocaleString();
+            }
+        }
+        updateVisitCount();
+
+        // TYPING
+        const text = "Hello! I am a software developer with a strong passion for automation and system optimization. Always ready to solve real-world logic problems.";
+        let i = 0, del = false;
+        function type() {
+            const el = document.getElementById("about-text");
+            if (!del && i <= text.length) el.innerHTML = text.substring(0, i++);
+            else if (!del) { del = true; setTimeout(type, 5000); return; }
+            else if (del && i >= 0) el.innerHTML = text.substring(0, i--);
+            else del = false;
+            setTimeout(type, del ? 10 : 25);
+        }
+        type();
+
+        // SETTINGS & MODAL
+        const modal = document.getElementById('donateModal'), mCon = document.getElementById('modalContent');
+        function toggleSettings() { document.getElementById('settingsMenu').classList.toggle('show'); }
+        document.addEventListener('click', (e) => { if (!document.querySelector('.settings-container').contains(e.target)) document.getElementById('settingsMenu').classList.remove('show'); });
+        function openDonate() { modal.style.display = 'flex'; setTimeout(() => { modal.style.opacity = '1'; mCon.style.transform = 'scale(1)'; }, 10); }
+        function closeDonate() { modal.style.opacity = '0'; mCon.style.transform = 'scale(0.95)'; setTimeout(() => modal.style.display = 'none', 200); }
+        function updateQR() { const a = document.getElementById('donateAmount').value.replace(/\D/g, ''); document.getElementById('qrImage').src = `https://img.vietqr.io/image/ACB-33689707-compact2.png?amount=${a}&accountName=NGUYEN%20NGOC%20TRI%20VINH&addInfo=Donate%20Vinhx`; }
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeDonate(); });
+        function triggerJumpscare() { const js = document.getElementById('jumpscare-container'); js.style.display = 'block'; setTimeout(() => js.style.display = 'none', 1500); }
+
+        // CURSORS & EFFECTS
+        function changeCursor(t, btn) {
+            document.querySelectorAll('#cursor-group .ctrl-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active');
+            document.body.style.cursor = t;
+            document.querySelectorAll('a, button, input, .skill-tag').forEach(el => { if(!el.classList.contains('yapping-skill') && !el.classList.contains('hello-tag')) el.style.cursor = (t === 'default') ? 'pointer' : t; });
+        }
+        let curEff = null, effInt;
+        function toggleEffect(t, btn) {
+            clearInterval(effInt); document.querySelectorAll('.effect-item').forEach(e => e.remove());
+            if (curEff === t) { curEff = null; btn.classList.remove('active'); return; }
+            document.querySelectorAll('#effect-group .ctrl-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active');
+            curEff = t;
+            if (t === 'snow') effInt = setInterval(() => cp('❄️', 'snow-anim', 3, 10), 150);
+            if (t === 'lightning') effInt = setInterval(() => cp('⚡', 'lightning-anim', 1.5, 15), 300);
+            if (t === 'leaf') effInt = setInterval(() => cp('🍂', 'leaf-anim', 4, 12), 250);
+        }
+        function cp(i, a, d, s) {
+            const e = document.createElement('div'); e.classList.add('effect-item', a); e.innerHTML = i;
+            e.style.left = Math.random() * 100 + 'vw'; e.style.animationDuration = Math.random() * 2 + d + 's'; e.style.fontSize = Math.random() * 10 + s + 'px';
+            document.body.appendChild(e); setTimeout(() => e.remove(), 5000);
+        }
+    </script>
+</body>
+</html>
