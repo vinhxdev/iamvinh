@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nguyễn Vinh Trí - Portfolio</title>
+    <title>Vinhx - Portfolio</title>
     <!-- Thư viện Icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Font chữ Google (Inter) cho sự mượt mà, chuyên nghiệp -->
+    <!-- Font chữ Google (Inter) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
@@ -16,7 +16,6 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Inter', sans-serif;
-            /* Ngăn bôi đen văn bản */
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
@@ -24,52 +23,75 @@
         }
 
         body {
-            /* Background tối màu mượt mà, sang trọng */
-            background: linear-gradient(135deg, #1e1e24, #2b2b36);
+            background: linear-gradient(135deg, #121214, #1c1c24);
             color: #ffffff;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            overflow-x: hidden;
+            transition: cursor 0.3s;
         }
 
-        /* KHUNG THẺ CHÍNH (Glassmorphism) */
-        .cv-card {
+        /* MENU TÙY CHỈNH HIỆU ỨNG (Góc trên) */
+        .controls {
+            position: fixed;
+            top: 15px;
+            right: 15px;
             background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(10px);
+            padding: 10px 15px;
+            border-radius: 15px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 40px 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .controls select, .controls button {
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 8px;
+            outline: none;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        /* KHUNG THẺ CHÍNH (Glassmorphism & Bo tròn) */
+        .cv-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 30px; /* Bo tròn mượt mà */
+            padding: 40px 35px;
             max-width: 500px;
             width: 100%;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            z-index: 10;
         }
 
-        .cv-card:hover {
-            transform: translateY(-5px);
-        }
-
-        /* HEADER: Avatar & Tên */
+        /* HEADER */
         .header {
             text-align: center;
             margin-bottom: 30px;
         }
 
         .avatar {
-            width: 120px;
-            height: 120px;
+            width: 130px;
+            height: 130px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid rgba(255, 255, 255, 0.2);
+            border: 3px solid rgba(255, 255, 255, 0.15);
             margin-bottom: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
         }
 
         .name {
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 600;
             letter-spacing: 0.5px;
             margin-bottom: 5px;
@@ -81,13 +103,14 @@
             font-weight: 300;
         }
 
-        /* ABOUT & SKILLS SECTIONS */
+        /* SECTIONS */
         .section {
             margin-bottom: 25px;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 20px;
-            border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.05);
+            background: rgba(0, 0, 0, 0.25);
+            padding: 22px;
+            border-radius: 20px; /* Bo tròn trơn tru */
+            border: 1px solid rgba(255,255,255,0.03);
+            min-height: 120px;
         }
 
         .section h2 {
@@ -100,11 +123,17 @@
             gap: 8px;
         }
 
-        .section p {
+        /* TYPING EFFECT CURSOR */
+        #about-text {
             font-size: 14px;
             line-height: 1.7;
             color: #d4d4d8;
         }
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 0.8s step-end infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
 
         /* SKILL TAGS */
         .skills-container {
@@ -114,16 +143,28 @@
         }
 
         .skill-tag {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            padding: 6px 14px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #e4e4e7;
+            padding: 8px 16px;
             border-radius: 20px;
             font-size: 13px;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
+            cursor: default;
         }
 
         .skill-tag:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.05);
+        }
+
+        .yapping-skill {
+            background: rgba(255, 50, 50, 0.1);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 50, 50, 0.3);
+            cursor: pointer; /* Cho phép click */
+        }
+        .yapping-skill:hover {
+            background: rgba(255, 50, 50, 0.3);
         }
 
         /* SOCIAL LINKS */
@@ -131,19 +172,19 @@
             display: flex;
             justify-content: center;
             gap: 20px;
-            margin-top: 10px;
+            margin-top: 15px;
         }
 
         .social-links a {
             color: #a1a1aa;
-            font-size: 24px;
+            font-size: 22px;
             text-decoration: none;
-            transition: color 0.3s, transform 0.3s;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 45px;
-            height: 45px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.05);
         }
@@ -151,33 +192,112 @@
         .social-links a:hover {
             color: #ffffff;
             background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-3px);
+            transform: translateY(-4px);
+        }
+
+        /* JUMPSCARE CONTAINER MẶC ĐỊNH ẨN */
+        #jumpscare-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: black;
+            z-index: 99999;
+        }
+        #jumpscare-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* HIỆU ỨNG TUYẾT RƠI */
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            color: #fff;
+            font-size: 1em;
+            user-select: none;
+            z-index: 1;
+            pointer-events: none;
+            animation-name: fall, shake;
+            animation-iteration-count: infinite, infinite;
+            animation-timing-function: linear, ease-in-out;
+            opacity: 0.8;
+        }
+        @keyframes fall { 100% { top: 100vh; } }
+        @keyframes shake { 50% { transform: translateX(20px); } }
+
+        /* RESPONSIVE UI CHO MOBILE */
+        @media (max-width: 600px) {
+            .cv-card {
+                padding: 30px 20px;
+                border-radius: 24px;
+            }
+            .avatar {
+                width: 110px;
+                height: 110px;
+            }
+            .name {
+                font-size: 24px;
+            }
+            .controls {
+                top: auto;
+                bottom: 15px;
+                right: 50%;
+                transform: translateX(50%);
+                width: 90%;
+                justify-content: center;
+            }
+            .section {
+                padding: 18px;
+            }
         }
     </style>
 </head>
-<body>
+<body id="body-layout">
+
+    <!-- Jumpscare div -->
+    <div id="jumpscare-container">
+        <img src="https://orion-uploads.openroadmedia.com/md_ebb42c5c23d5-jump-scare-feat.jpg" alt="Jumpscare">
+    </div>
+
+    <!-- Nút điều khiển Tuyết & Chuột -->
+    <div class="controls">
+        <button id="snow-toggle" onclick="toggleSnow()"><i class="fas fa-snowflake"></i> Bật/Tắt Tuyết</button>
+        <select onchange="changeCursor(this.value)">
+            <option value="default">Chuột mặc định</option>
+            <option value="crosshair">Chuột Crosshair 🎯</option>
+            <option value="pointer">Chuột Bàn tay 👆</option>
+            <option value="help">Chuột Dấu hỏi ❓</option>
+        </select>
+    </div>
 
     <div class="cv-card">
-        <!-- Thay link ảnh avatar của bạn vào src dưới đây -->
         <div class="header">
-            <img src="https://i.imgur.com/YOUR_AVATAR_LINK.jpg" alt="Avatar" class="avatar">
-            <h1 class="name">Nguyễn Vinh Trí</h1>
+            <!-- Avatar từ link Giphy -->
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExb3lwaHF6MTI1NmpyajNpcHNsY3hzZHFsMWhzZWhpc3ljNGRha21ubiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/s2pr9CVOvU4NMBsnYf/giphy.gif" alt="Avatar" class="avatar">
+            <h1 class="name">Vinhx</h1>
             <p class="title">Software Developer / Programmer</p>
         </div>
 
         <div class="section">
-            <h2><i class="fas fa-user-circle"></i> Giới thiệu bản thân</h2>
-            <p>Xin chào! Tôi là một lập trình viên có niềm đam mê mạnh mẽ với việc phát triển phần mềm, xây dựng các công cụ tự động hóa và tối ưu hóa hệ thống. Tôi luôn đề cao sự tư duy logic và sẵn sàng giải quyết các bài toán kỹ thuật thực tế.</p>
+            <h2><i class="fas fa-user-circle"></i> About Me</h2>
+            <!-- Văn bản sẽ được gõ tự động vào đây -->
+            <p id="about-text" class="typing-cursor"></p>
         </div>
 
         <div class="section">
-            <h2><i class="fas fa-code"></i> Kỹ năng lập trình</h2>
+            <h2><i class="fas fa-code"></i> Skills</h2>
             <div class="skills-container">
                 <span class="skill-tag">HTML5 / CSS3</span>
                 <span class="skill-tag">Python</span>
                 <span class="skill-tag">Java</span>
                 <span class="skill-tag">Lua</span>
                 <span class="skill-tag">Git / GitHub</span>
+                <!-- Kỹ năng Yapping kích hoạt Jumpscare -->
+                <span class="skill-tag yapping-skill" onclick="triggerJumpscare()"><i class="fas fa-skull"></i> Yapping</span>
             </div>
         </div>
 
@@ -189,41 +309,110 @@
         </div>
     </div>
 
-    <!-- CHỐNG COPY BẰNG JAVASCRIPT -->
+    <!-- JAVASCRIPT: Logic gõ chữ, Jumpscare, Tuyết, Chống copy -->
     <script>
-        // 1. Chặn chuột phải
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
+        // 1. HIỆU ỨNG GÕ CHỮ (TYPING EFFECT)
+        const textToType = "Hello! I am a software developer with a strong passion for software development, building automation tools, and system optimization. I highly value logical thinking and am ready to solve real-world technical problems.";
+        let typingIndex = 0;
+        let isDeleting = false;
+        const speedType = 40;   // Tốc độ gõ
+        const speedDelete = 15; // Tốc độ xóa
+        const pauseEnd = 3000;  // Thời gian dừng khi gõ xong
+        const pauseStart = 500; // Thời gian chờ trước khi gõ lại
 
-        // 2. Chặn các phím tắt F12, Ctrl+Shift+I, Ctrl+U, Ctrl+C, Ctrl+S
-        document.onkeydown = function(e) {
-            // Chặn F12
-            if(e.keyCode == 123) {
-                return false;
-            }
-            // Chặn Ctrl+Shift+I (DevTools)
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
-                return false;
-            }
-            // Chặn Ctrl+Shift+J (DevTools Console)
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
-                return false;
-            }
-            // Chặn Ctrl+U (View Source)
-            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
-                return false;
-            }
-            // Chặn Ctrl+S (Save)
-            if(e.ctrlKey && e.keyCode == 'S'.charCodeAt(0)) {
-                return false;
-            }
-            // Chặn Ctrl+C (Copy)
-            if(e.ctrlKey && e.keyCode == 'C'.charCodeAt(0)) {
-                return false;
+        function typeWriterEffect() {
+            const el = document.getElementById("about-text");
+            
+            if (!isDeleting && typingIndex <= textToType.length) {
+                // Đang gõ chữ
+                el.innerHTML = textToType.substring(0, typingIndex);
+                typingIndex++;
+                setTimeout(typeWriterEffect, speedType);
+            } else if (!isDeleting && typingIndex > textToType.length) {
+                // Gõ xong -> Tạm dừng rồi chuyển sang chế độ xóa
+                isDeleting = true;
+                setTimeout(typeWriterEffect, pauseEnd);
+            } else if (isDeleting && typingIndex >= 0) {
+                // Đang xóa chữ
+                el.innerHTML = textToType.substring(0, typingIndex);
+                typingIndex--;
+                setTimeout(typeWriterEffect, speedDelete);
+            } else if (isDeleting && typingIndex < 0) {
+                // Xóa xong -> Tạm dừng rồi lặp lại
+                isDeleting = false;
+                setTimeout(typeWriterEffect, pauseStart);
             }
         }
-    </script>
+        // Khởi chạy hiệu ứng gõ
+        typeWriterEffect();
 
+        // 2. HIỆU ỨNG JUMPSCARE
+        function triggerJumpscare() {
+            const jumpscare = document.getElementById('jumpscare-container');
+            jumpscare.style.display = 'block'; // Hiện ảnh
+            
+            // Tự động ẩn đi sau 1.5 giây
+            setTimeout(() => {
+                jumpscare.style.display = 'none';
+            }, 1500);
+        }
+
+        // 3. THAY ĐỔI CON TRỎ CHUỘT
+        function changeCursor(cursorType) {
+            document.body.style.cursor = cursorType;
+            // Áp dụng cho cả thẻ a và span để không bị ghi đè
+            const interactiveElements = document.querySelectorAll('a, button, select, .skill-tag');
+            interactiveElements.forEach(el => {
+                if(!el.classList.contains('yapping-skill')){
+                    el.style.cursor = cursorType === 'default' ? 'pointer' : cursorType;
+                }
+            });
+        }
+
+        // 4. HIỆU ỨNG TUYẾT RƠI
+        let snowEnabled = false;
+        let snowInterval;
+
+        function createSnowflake() {
+            if (!snowEnabled) return;
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.innerHTML = '❄';
+            
+            // Random vị trí, kích thước và tốc độ
+            snowflake.style.left = Math.random() * 100 + 'vw';
+            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's, ' + (Math.random() * 3 + 2) + 's';
+            snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
+            
+            document.body.appendChild(snowflake);
+
+            // Xóa bông tuyết sau khi rơi xong để không nặng máy
+            setTimeout(() => {
+                snowflake.remove();
+            }, 5000);
+        }
+
+        function toggleSnow() {
+            snowEnabled = !snowEnabled;
+            const btn = document.getElementById('snow-toggle');
+            if (snowEnabled) {
+                btn.style.background = 'rgba(255, 255, 255, 0.3)';
+                snowInterval = setInterval(createSnowflake, 150); // Tạo tuyết mỗi 150ms
+            } else {
+                btn.style.background = 'rgba(0, 0, 0, 0.3)';
+                clearInterval(snowInterval);
+                // Xóa hết tuyết hiện tại
+                document.querySelectorAll('.snowflake').forEach(el => el.remove());
+            }
+        }
+
+        // 5. CHỐNG COPY VÀ F12
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.onkeydown = function(e) {
+            if(e.keyCode == 123) return false;
+            if(e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) return false;
+            if(e.ctrlKey && (e.keyCode == 'U'.charCodeAt(0) || e.keyCode == 'S'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) return false;
+        }
+    </script>
 </body>
 </html>
