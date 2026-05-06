@@ -9,13 +9,8 @@
     
     <style>
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
+            margin: 0; padding: 0; box-sizing: border-box;
+            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
             -webkit-user-drag: none;
         }
 
@@ -25,83 +20,68 @@
                 linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
             background-size: 20px 20px;
-            color: #ededed;
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            overflow-x: hidden;
-            position: relative;
+            color: #ededed; font-family: 'Inter', sans-serif;
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            padding: 20px; overflow-x: hidden; position: relative;
         }
 
-        /* BẢNG ĐIỀU KHIỂN GOM GỌN (CONTROL DOCK) */
-        .control-dock {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 15px;
-            background: #121214;
-            padding: 8px 15px;
-            border-radius: 12px;
-            border: 1px solid #27272a;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            z-index: 100;
+        /* MENU SETTINGS GỌN GÀNG GÓC PHẢI */
+        .settings-container {
+            position: fixed; top: 20px; right: 20px; z-index: 100;
+        }
+        
+        .settings-btn {
+            background: #18181b; border: 1px solid #27272a; color: #a1a1aa;
+            width: 42px; height: 42px; border-radius: 12px; cursor: pointer;
+            font-size: 16px; transition: all 0.2s ease; display: flex;
+            align-items: center; justify-content: center;
+        }
+        
+        .settings-btn:hover { background: #27272a; color: #fff; }
+        
+        .settings-menu {
+            position: absolute; top: 50px; right: 0; background: #121214;
+            border: 1px solid #27272a; border-radius: 12px; padding: 15px;
+            width: max-content; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            display: none; flex-direction: column; gap: 15px;
+            animation: fadeIn 0.2s ease forwards;
+        }
+        
+        .settings-menu.show { display: flex; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .control-group {
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        .menu-section h4 {
+            color: #71717a; font-size: 11px; text-transform: uppercase;
+            margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; letter-spacing: 1px;
         }
-
-        .group-divider {
-            width: 1px;
-            background: #27272a;
-            height: 24px;
-        }
-
+        
+        .menu-grid { display: flex; gap: 8px; flex-wrap: wrap; }
+        
         .ctrl-btn {
-            background: #18181b;
-            border: 1px solid transparent;
-            color: #a1a1aa;
-            padding: 6px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 13px;
-            font-family: 'JetBrains Mono', monospace;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            background: #18181b; border: 1px solid transparent; color: #a1a1aa;
+            width: 36px; height: 36px; border-radius: 8px; cursor: pointer;
+            font-size: 14px; transition: all 0.2s ease; display: flex;
+            align-items: center; justify-content: center;
         }
 
         .ctrl-btn:hover, .ctrl-btn.active {
-            background: #27272a;
-            color: #fff;
-            border-color: #3f3f46;
+            background: #27272a; border-color: #3f3f46; color: #fff;
         }
 
         /* KHUNG THẺ CHÍNH */
         .cv-card {
-            background: #121214;
-            border: 1px solid #27272a;
-            border-radius: 16px; 
-            padding: 45px 40px;
-            max-width: 460px;
-            width: 100%;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-            z-index: 10;
+            background: #121214; border: 1px solid #27272a; border-radius: 16px; 
+            padding: 45px 40px; max-width: 460px; width: 100%;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8); z-index: 10;
             animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            transform: translateY(20px);
-            opacity: 0;
+            transform: translateY(20px); opacity: 0;
         }
 
-        @keyframes fadeInUp {
-            to { transform: translateY(0); opacity: 1; }
-        }
+        @keyframes fadeInUp { to { transform: translateY(0); opacity: 1; } }
 
         /* HEADER */
         .header { text-align: center; margin-bottom: 35px; }
@@ -120,7 +100,6 @@
             text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #27272a; padding-bottom: 8px;
         }
         #about-text { font-size: 14px; line-height: 1.7; color: #a1a1aa; min-height: 80px; }
-        
         .typing-cursor::after {
             content: '█'; animation: blink 1s step-end infinite; color: #ffffff; margin-left: 4px; font-size: 12px;
         }
@@ -133,7 +112,6 @@
             font-family: 'JetBrains Mono', monospace; border: 1px solid #27272a; transition: all 0.2s ease; cursor: default;
         }
         .skill-tag:hover { background: #27272a; color: #fff; border-color: #3f3f46; }
-
         .yapping-skill { color: #ef4444; background: rgba(239, 68, 68, 0.05); border-color: rgba(239, 68, 68, 0.2); cursor: pointer; }
         .yapping-skill:hover { background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.4); color: #f87171; }
 
@@ -146,7 +124,7 @@
         .donate-btn:hover { background: #e4e4e7; transform: translateY(-1px); }
 
         /* SOCIAL LINKS */
-        .social-links { display: flex; justify-content: center; gap: 12px; }
+        .social-links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
         .social-links a {
             color: #71717a; font-size: 18px; text-decoration: none; transition: all 0.2s;
             display: flex; align-items: center; justify-content: center; width: 40px; height: 40px;
@@ -170,20 +148,13 @@
         .modal-content h3 { margin-bottom: 8px; font-size: 16px; color: #fff; }
         .modal-content p { font-size: 12px; color: #a1a1aa; margin-bottom: 18px; }
         
-        /* ĐÃ XÓA THANH KÉO SỐ LÊN XUỐNG CỦA INPUT */
         .modal-content input[type="number"]::-webkit-outer-spin-button,
-        .modal-content input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        .modal-content input[type="number"] {
-            -moz-appearance: textfield; /* Cho Firefox */
-        }
+        .modal-content input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .modal-content input[type="number"] { -moz-appearance: textfield; }
         
         .modal-content input {
-            width: 100%; background: #09090b; border: 1px solid #27272a;
-            color: #fff; padding: 10px 15px; border-radius: 8px; font-size: 15px; outline: none;
-            margin-bottom: 18px; text-align: center; font-family: 'JetBrains Mono', monospace;
+            width: 100%; background: #09090b; border: 1px solid #27272a; color: #fff; padding: 10px 15px; 
+            border-radius: 8px; font-size: 15px; outline: none; margin-bottom: 18px; text-align: center; font-family: 'JetBrains Mono', monospace;
         }
         .modal-content input:focus { border-color: #52525b; }
         .qr-box {
@@ -192,10 +163,8 @@
         }
         .qr-box img { width: 100%; height: 100%; object-fit: contain; }
 
-        /* HIỆU ỨNG RƠI (TUYẾT, SẤM, LÁ) */
-        .effect-item {
-            position: fixed; top: -20px; user-select: none; z-index: 1; pointer-events: none; opacity: 0.7;
-        }
+        /* HIỆU ỨNG RƠI */
+        .effect-item { position: fixed; top: -20px; user-select: none; z-index: 1; pointer-events: none; opacity: 0.7; }
         .snow-anim { animation: fallSnow linear infinite, sway 3s ease-in-out infinite alternate; }
         .lightning-anim { animation: fallLightning linear infinite; opacity: 1; filter: drop-shadow(0 0 5px yellow); }
         .leaf-anim { animation: fallLeaf linear infinite, swayLeaf 4s ease-in-out infinite alternate; }
@@ -206,29 +175,18 @@
         @keyframes sway { from { transform: translateX(-15px); } to { transform: translateX(15px); } }
         @keyframes swayLeaf { from { transform: translateX(-30px) rotate(-15deg); } to { transform: translateX(30px) rotate(15deg); } }
 
-        /* JUMPSCARE */
-        #jumpscare-container {
-            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: black; z-index: 99999;
-        }
+        #jumpscare-container { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: black; z-index: 99999; }
         #jumpscare-container img { width: 100%; height: 100%; object-fit: contain; }
 
-        /* TAG TRUSTMEBRO (Xanh dương đậm) */
         .footer-tag {
-            position: absolute;
-            bottom: 15px;
-            width: 100%;
-            text-align: center;
-            color: #1e3a8a; /* Xanh dương đậm */
-            font-size: 13px;
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 600;
-            z-index: 5;
-            pointer-events: none;
+            position: absolute; bottom: 15px; width: 100%; text-align: center;
+            color: #1e3a8a; font-size: 13px; font-family: 'JetBrains Mono', monospace;
+            font-weight: 600; z-index: 5; pointer-events: none;
         }
 
         @media (max-width: 600px) {
             .cv-card { padding: 35px 25px; border-radius: 12px; border-left: none; border-right: none; }
-            .control-dock { top: auto; bottom: 40px; right: 50%; transform: translateX(50%); width: max-content; }
+            .settings-container { top: 15px; right: 15px; }
             .footer-tag { bottom: 10px; }
         }
     </style>
@@ -239,24 +197,31 @@
         <img src="https://orion-uploads.openroadmedia.com/md_ebb42c5c23d5-jump-scare-feat.jpg" alt="Jumpscare">
     </div>
 
-    <!-- BẢNG ĐIỀU KHIỂN GOM GỌN (CONTROL DOCK) -->
-    <div class="control-dock">
-        <!-- Khu vực Hiệu ứng -->
-        <div class="control-group" id="effect-group">
-            <button class="ctrl-btn" onclick="toggleEffect('snow', this)" title="Tuyết">❄️</button>
-            <button class="ctrl-btn" onclick="toggleEffect('lightning', this)" title="Sấm chớp">⚡</button>
-            <button class="ctrl-btn" onclick="toggleEffect('leaf', this)" title="Lá rơi">🍂</button>
-        </div>
+    <!-- MENU CÀI ĐẶT GÓC PHẢI -->
+    <div class="settings-container">
+        <button class="settings-btn" onclick="toggleSettings()" title="Settings">
+            <i class="fa-solid fa-gear"></i>
+        </button>
         
-        <div class="group-divider"></div>
-
-        <!-- Khu vực Chuột -->
-        <div class="control-group" id="cursor-group">
-            <button class="ctrl-btn active" onclick="changeCursor('', 'default', this)" title="Mặc định">🖱️</button>
-            <button class="ctrl-btn" onclick="changeCursor('', 'crosshair', this)" title="Ngắm bắn">🎯</button>
-            <button class="ctrl-btn" onclick="changeCursor('❄️', 'custom', this)" title="Chuột Tuyết">❄️</button>
-            <button class="ctrl-btn" onclick="changeCursor('⚡', 'custom', this)" title="Chuột Sấm">⚡</button>
-            <button class="ctrl-btn" onclick="changeCursor('🍂', 'custom', this)" title="Chuột Lá">🍂</button>
+        <div class="settings-menu" id="settingsMenu">
+            <div class="menu-section">
+                <h4>Effects</h4>
+                <div class="menu-grid" id="effect-group">
+                    <button class="ctrl-btn" onclick="toggleEffect('snow', this)" title="Tuyết">❄️</button>
+                    <button class="ctrl-btn" onclick="toggleEffect('lightning', this)" title="Sấm chớp">⚡</button>
+                    <button class="ctrl-btn" onclick="toggleEffect('leaf', this)" title="Lá rơi">🍂</button>
+                </div>
+            </div>
+            <div class="menu-section">
+                <h4>Cursors</h4>
+                <div class="menu-grid" id="cursor-group">
+                    <button class="ctrl-btn active" onclick="changeCursor('', 'default', this)" title="Mặc định">🖱️</button>
+                    <button class="ctrl-btn" onclick="changeCursor('', 'crosshair', this)" title="Ngắm bắn">🎯</button>
+                    <button class="ctrl-btn" onclick="changeCursor('❄️', 'custom', this)" title="Chuột Tuyết">❄️</button>
+                    <button class="ctrl-btn" onclick="changeCursor('⚡', 'custom', this)" title="Chuột Sấm">⚡</button>
+                    <button class="ctrl-btn" onclick="changeCursor('🍂', 'custom', this)" title="Chuột Lá">🍂</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -265,7 +230,6 @@
             <i class="fas fa-times close-modal" onclick="closeDonate()"></i>
             <h3>Fund my coffee</h3>
             <p>Nhập số tiền (VNĐ) để tạo QR</p>
-            <!-- Ô nhập số đã bị xóa thanh kéo (spin button) -->
             <input type="number" id="donateAmount" placeholder="9999" oninput="updateQR()">
             <div class="qr-box">
                 <img id="qrImage" src="https://img.vietqr.io/image/ACB-33689707-compact2.png?amount=0&accountName=NGUYEN%20NGOC%20TRI%20VINH&addInfo=Donate%20Vinhx" alt="QR Code">
@@ -301,25 +265,23 @@
         </button>
 
         <div class="social-links">
-            <a href="https://vinhx.site/" target="_blank"><i class="fas fa-globe"></i></a>
-            <a href="https://github.com/vinhxdev" target="_blank"><i class="fab fa-github"></i></a>
-            <a href="https://www.facebook.com/nguyenvinhtriowo/" target="_blank"><i class="fab fa-facebook-f"></i></a>
-            <a href="https://steamcommunity.com/id/P1mple1st/" target="_blank"><i class="fab fa-steam"></i></a>
+            <a href="https://vinhx.site/" target="_blank" title="Website"><i class="fas fa-globe"></i></a>
+            <a href="https://github.com/vinhxdev" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+            <a href="https://www.facebook.com/nguyenvinhtriowo/" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://steamcommunity.com/id/P1mple1st/" target="_blank" title="Steam"><i class="fab fa-steam"></i></a>
+            <!-- Đã chèn thêm Email vào đây -->
+            <a href="mailto:nguyenngoctrivinh72@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
         </div>
     </div>
 
-    <!-- Tag xanh dương đậm dưới cùng trang -->
     <div class="footer-tag">@trustmebro</div>
 
     <script>
-        // BẢO MẬT GIAO DIỆN
         console.log("%c[SECURE AREA]", "color: #ef4444; font-size: 20px; font-weight: bold;");
         document.ondragstart = function() { return false; };
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.onkeydown = function(e) {
-            if(e.keyCode == 123) return false;
-            if(e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) return false;
-            if(e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83)) return false;
+            if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83))) return false;
         };
 
         // GÕ CHỮ
@@ -341,7 +303,20 @@
         }
         typeWriterEffect();
 
-        // DONATE MODAL
+        // TOGGLE SETTINGS MENU
+        function toggleSettings() {
+            document.getElementById('settingsMenu').classList.toggle('show');
+        }
+
+        // Đóng menu khi click ra ngoài
+        document.addEventListener('click', function(event) {
+            const container = document.querySelector('.settings-container');
+            if (!container.contains(event.target)) {
+                document.getElementById('settingsMenu').classList.remove('show');
+            }
+        });
+
+        // DONATE
         const modal = document.getElementById('donateModal');
         const modalContent = document.getElementById('modalContent');
         function openDonate() {
@@ -363,44 +338,25 @@
             js.style.display = 'block'; setTimeout(() => { js.style.display = 'none'; }, 1500);
         }
 
-        // HỆ THỐNG ĐỔI TRỎ CHUỘT
+        // CURSORS & EFFECTS
         function changeCursor(emoji, type, btnElement) {
-            // Update active state in dock
             document.querySelectorAll('#cursor-group .ctrl-btn').forEach(btn => btn.classList.remove('active'));
             btnElement.classList.add('active');
-
             let newCursor = type;
-            if (type === 'custom') {
-                // Tạo ảnh SVG chứa Emoji làm con trỏ chuột
-                newCursor = `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24'><text y='20' font-size='20'>${emoji}</text></svg>") 12 12, auto`;
-            }
-            
+            if (type === 'custom') newCursor = `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24'><text y='20' font-size='20'>${emoji}</text></svg>") 12 12, auto`;
             document.body.style.cursor = newCursor;
-            // Áp dụng cho cả các nút bấm (trừ nút Jumpscare)
             document.querySelectorAll('a, button, input, .skill-tag').forEach(el => {
-                if(!el.classList.contains('yapping-skill')) {
-                    el.style.cursor = (type === 'default') ? 'pointer' : newCursor;
-                }
+                if(!el.classList.contains('yapping-skill')) el.style.cursor = (type === 'default') ? 'pointer' : newCursor;
             });
         }
 
-        // HỆ THỐNG HIỆU ỨNG RƠI (TUYẾT, SẤM, LÁ)
-        let currentEffect = null;
-        let effectInterval;
-
+        let currentEffect = null; let effectInterval;
         function toggleEffect(type, btnElement) {
-            // Tắt hiệu ứng hiện tại
             clearInterval(effectInterval);
             document.querySelectorAll('.effect-item').forEach(e => e.remove());
-            
-            // Nếu bấm lại nút đang chạy -> Tắt luôn
             if (currentEffect === type) {
-                currentEffect = null;
-                btnElement.classList.remove('active');
-                return;
+                currentEffect = null; btnElement.classList.remove('active'); return;
             }
-
-            // Đổi active state
             document.querySelectorAll('#effect-group .ctrl-btn').forEach(btn => btn.classList.remove('active'));
             btnElement.classList.add('active');
             currentEffect = type;
@@ -412,13 +368,12 @@
 
         function createParticle(icon, animClass, durationBase, sizeBase) {
             const el = document.createElement('div');
-            el.classList.add('effect-item', animClass);
-            el.innerHTML = icon;
+            el.classList.add('effect-item', animClass); el.innerHTML = icon;
             el.style.left = Math.random() * 100 + 'vw';
             el.style.animationDuration = Math.random() * 2 + durationBase + 's';
             el.style.fontSize = Math.random() * 10 + sizeBase + 'px';
             document.body.appendChild(el);
-            setTimeout(() => el.remove(), 5000); // Tự dọn dẹp sau 5s
+            setTimeout(() => el.remove(), 5000);
         }
     </script>
 </body>
