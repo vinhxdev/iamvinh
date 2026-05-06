@@ -20,9 +20,7 @@
         }
 
         body {
-            /* Nền đen nhám chuyên nghiệp chuẩn Dev */
             background-color: #09090b;
-            /* Họa tiết lưới mờ (Grid) */
             background-image: 
                 linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
@@ -35,23 +33,41 @@
             justify-content: center;
             padding: 20px;
             overflow-x: hidden;
+            position: relative;
         }
 
-        /* BẢNG ĐIỀU KHIỂN */
-        .controls {
+        /* BẢNG ĐIỀU KHIỂN GOM GỌN (CONTROL DOCK) */
+        .control-dock {
             position: fixed;
             top: 20px;
             right: 20px;
             display: flex;
-            gap: 8px;
+            gap: 15px;
+            background: #121214;
+            padding: 8px 15px;
+            border-radius: 12px;
+            border: 1px solid #27272a;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             z-index: 100;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .group-divider {
+            width: 1px;
+            background: #27272a;
+            height: 24px;
         }
 
         .ctrl-btn {
             background: #18181b;
-            border: 1px solid #27272a;
+            border: 1px solid transparent;
             color: #a1a1aa;
-            padding: 8px 12px;
+            padding: 6px 10px;
             border-radius: 8px;
             cursor: pointer;
             font-size: 13px;
@@ -62,17 +78,17 @@
             gap: 6px;
         }
 
-        .ctrl-btn:hover {
+        .ctrl-btn:hover, .ctrl-btn.active {
             background: #27272a;
             color: #fff;
             border-color: #3f3f46;
         }
 
-        /* KHUNG THẺ CHÍNH - Phẳng, tối và sắc nét */
+        /* KHUNG THẺ CHÍNH */
         .cv-card {
             background: #121214;
             border: 1px solid #27272a;
-            border-radius: 16px; /* Bo góc nhẹ hơn, nam tính hơn */
+            border-radius: 16px; 
             padding: 45px 40px;
             max-width: 460px;
             width: 100%;
@@ -88,161 +104,55 @@
         }
 
         /* HEADER */
-        .header {
-            text-align: center;
-            margin-bottom: 35px;
-        }
-
+        .header { text-align: center; margin-bottom: 35px; }
         .avatar {
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #27272a;
-            margin-bottom: 18px;
-            padding: 4px; 
-            pointer-events: none; 
-            background: #09090b;
+            width: 110px; height: 110px; border-radius: 50%; object-fit: cover;
+            border: 2px solid #27272a; margin-bottom: 18px; padding: 4px; 
+            pointer-events: none; background: #09090b;
         }
-
-        .name {
-            font-size: 24px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-            color: #ffffff;
-        }
-
-        .title {
-            color: #71717a;
-            font-size: 13px;
-            font-weight: 500;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            font-family: 'JetBrains Mono', monospace;
-        }
+        .name { font-size: 24px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 6px; color: #ffffff; }
+        .title { color: #71717a; font-size: 13px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
 
         /* SECTIONS */
-        .section {
-            margin-bottom: 28px;
-        }
-
+        .section { margin-bottom: 28px; }
         .section h2 {
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: #71717a;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-bottom: 1px solid #27272a;
-            padding-bottom: 8px;
+            font-size: 12px; font-weight: 600; margin-bottom: 12px; color: #71717a;
+            text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #27272a; padding-bottom: 8px;
         }
-
-        #about-text {
-            font-size: 14px;
-            line-height: 1.7;
-            color: #a1a1aa;
-            min-height: 80px; 
-        }
+        #about-text { font-size: 14px; line-height: 1.7; color: #a1a1aa; min-height: 80px; }
         
         .typing-cursor::after {
-            content: '█';
-            animation: blink 1s step-end infinite;
-            color: #ffffff;
-            margin-left: 4px;
-            font-size: 12px;
+            content: '█'; animation: blink 1s step-end infinite; color: #ffffff; margin-left: 4px; font-size: 12px;
         }
         @keyframes blink { 50% { opacity: 0; } }
 
-        /* SKILL TAGS - Kiểu Code Terminal */
-        .skills-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
+        /* SKILL TAGS */
+        .skills-container { display: flex; flex-wrap: wrap; gap: 8px; }
         .skill-tag {
-            background: #18181b;
-            color: #a1a1aa;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-family: 'JetBrains Mono', monospace;
-            border: 1px solid #27272a;
-            transition: all 0.2s ease;
-            cursor: default;
+            background: #18181b; color: #a1a1aa; padding: 6px 12px; border-radius: 6px; font-size: 12px;
+            font-family: 'JetBrains Mono', monospace; border: 1px solid #27272a; transition: all 0.2s ease; cursor: default;
         }
+        .skill-tag:hover { background: #27272a; color: #fff; border-color: #3f3f46; }
 
-        .skill-tag:hover {
-            background: #27272a;
-            color: #fff;
-            border-color: #3f3f46;
-        }
+        .yapping-skill { color: #ef4444; background: rgba(239, 68, 68, 0.05); border-color: rgba(239, 68, 68, 0.2); cursor: pointer; }
+        .yapping-skill:hover { background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.4); color: #f87171; }
 
-        .yapping-skill {
-            color: #ef4444;
-            background: rgba(239, 68, 68, 0.05);
-            border-color: rgba(239, 68, 68, 0.2);
-            cursor: pointer;
-        }
-        .yapping-skill:hover {
-            background: rgba(239, 68, 68, 0.1);
-            border-color: rgba(239, 68, 68, 0.4);
-            color: #f87171;
-        }
-
-        /* DONATE BUTTON - Nổi bật, gọn gàng */
+        /* DONATE BUTTON */
         .donate-btn {
-            width: 100%;
-            background: #ffffff;
-            color: #000000;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 5px;
-            margin-bottom: 25px;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            width: 100%; background: #ffffff; color: #000000; border: none; padding: 12px; border-radius: 8px;
+            font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 5px; margin-bottom: 25px;
+            transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-
-        .donate-btn:hover {
-            background: #e4e4e7;
-            transform: translateY(-1px);
-        }
+        .donate-btn:hover { background: #e4e4e7; transform: translateY(-1px); }
 
         /* SOCIAL LINKS */
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-        }
-
+        .social-links { display: flex; justify-content: center; gap: 12px; }
         .social-links a {
-            color: #71717a;
-            font-size: 18px;
-            text-decoration: none;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            background: #18181b;
-            border: 1px solid #27272a;
+            color: #71717a; font-size: 18px; text-decoration: none; transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center; width: 40px; height: 40px;
+            border-radius: 8px; background: #18181b; border: 1px solid #27272a;
         }
-
-        .social-links a:hover {
-            color: #ffffff;
-            background: #27272a;
-            border-color: #3f3f46;
-        }
+        .social-links a:hover { color: #ffffff; background: #27272a; border-color: #3f3f46; }
 
         /* DONATE MODAL */
         .modal-overlay {
@@ -255,13 +165,21 @@
             padding: 25px; width: 90%; max-width: 320px; text-align: center; position: relative;
             transform: scale(0.95); transition: transform 0.2s ease;
         }
-        .close-modal {
-            position: absolute; top: 12px; right: 15px; color: #71717a; font-size: 18px;
-            cursor: pointer; transition: color 0.2s;
-        }
+        .close-modal { position: absolute; top: 12px; right: 15px; color: #71717a; font-size: 18px; cursor: pointer; transition: color 0.2s; }
         .close-modal:hover { color: #fff; }
         .modal-content h3 { margin-bottom: 8px; font-size: 16px; color: #fff; }
         .modal-content p { font-size: 12px; color: #a1a1aa; margin-bottom: 18px; }
+        
+        /* ĐÃ XÓA THANH KÉO SỐ LÊN XUỐNG CỦA INPUT */
+        .modal-content input[type="number"]::-webkit-outer-spin-button,
+        .modal-content input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .modal-content input[type="number"] {
+            -moz-appearance: textfield; /* Cho Firefox */
+        }
+        
         .modal-content input {
             width: 100%; background: #09090b; border: 1px solid #27272a;
             color: #fff; padding: 10px 15px; border-radius: 8px; font-size: 15px; outline: none;
@@ -270,29 +188,48 @@
         .modal-content input:focus { border-color: #52525b; }
         .qr-box {
             width: 100%; aspect-ratio: 1; background: #fff; border-radius: 8px; padding: 10px;
-            display: flex; align-items: center; justify-content: center; overflow: hidden;
-            pointer-events: none;
+            display: flex; align-items: center; justify-content: center; overflow: hidden; pointer-events: none;
         }
         .qr-box img { width: 100%; height: 100%; object-fit: contain; }
 
-        /* JUMPSCARE & SNOW */
+        /* HIỆU ỨNG RƠI (TUYẾT, SẤM, LÁ) */
+        .effect-item {
+            position: fixed; top: -20px; user-select: none; z-index: 1; pointer-events: none; opacity: 0.7;
+        }
+        .snow-anim { animation: fallSnow linear infinite, sway 3s ease-in-out infinite alternate; }
+        .lightning-anim { animation: fallLightning linear infinite; opacity: 1; filter: drop-shadow(0 0 5px yellow); }
+        .leaf-anim { animation: fallLeaf linear infinite, swayLeaf 4s ease-in-out infinite alternate; }
+
+        @keyframes fallSnow { to { top: 100vh; } }
+        @keyframes fallLightning { to { top: 100vh; } }
+        @keyframes fallLeaf { to { top: 100vh; transform: rotate(360deg); } }
+        @keyframes sway { from { transform: translateX(-15px); } to { transform: translateX(15px); } }
+        @keyframes swayLeaf { from { transform: translateX(-30px) rotate(-15deg); } to { transform: translateX(30px) rotate(15deg); } }
+
+        /* JUMPSCARE */
         #jumpscare-container {
-            display: none; position: fixed; top: 0; left: 0;
-            width: 100vw; height: 100vh; background-color: black; z-index: 99999;
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: black; z-index: 99999;
         }
         #jumpscare-container img { width: 100%; height: 100%; object-fit: contain; }
-        .snowflake {
-            position: fixed; top: -10px; color: #fff; font-size: 1em;
-            user-select: none; z-index: 1; pointer-events: none;
-            animation-name: fall, shake; animation-iteration-count: infinite, infinite;
-            animation-timing-function: linear, ease-in-out; opacity: 0.5;
+
+        /* TAG TRUSTMEBRO (Xanh dương đậm) */
+        .footer-tag {
+            position: absolute;
+            bottom: 15px;
+            width: 100%;
+            text-align: center;
+            color: #1e3a8a; /* Xanh dương đậm */
+            font-size: 13px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            z-index: 5;
+            pointer-events: none;
         }
-        @keyframes fall { 100% { top: 100vh; } }
-        @keyframes shake { 50% { transform: translateX(15px); } }
 
         @media (max-width: 600px) {
             .cv-card { padding: 35px 25px; border-radius: 12px; border-left: none; border-right: none; }
-            .controls { top: auto; bottom: 20px; right: 50%; transform: translateX(50%); width: max-content; }
+            .control-dock { top: auto; bottom: 40px; right: 50%; transform: translateX(50%); width: max-content; }
+            .footer-tag { bottom: 10px; }
         }
     </style>
 </head>
@@ -302,10 +239,25 @@
         <img src="https://orion-uploads.openroadmedia.com/md_ebb42c5c23d5-jump-scare-feat.jpg" alt="Jumpscare">
     </div>
 
-    <div class="controls">
-        <button id="snow-toggle" class="ctrl-btn" onclick="toggleSnow()">❄️ Snow</button>
-        <button class="ctrl-btn" onclick="changeCursor('default')" title="Default">🖱️</button>
-        <button class="ctrl-btn" onclick="changeCursor('crosshair')" title="Crosshair">🎯</button>
+    <!-- BẢNG ĐIỀU KHIỂN GOM GỌN (CONTROL DOCK) -->
+    <div class="control-dock">
+        <!-- Khu vực Hiệu ứng -->
+        <div class="control-group" id="effect-group">
+            <button class="ctrl-btn" onclick="toggleEffect('snow', this)" title="Tuyết">❄️</button>
+            <button class="ctrl-btn" onclick="toggleEffect('lightning', this)" title="Sấm chớp">⚡</button>
+            <button class="ctrl-btn" onclick="toggleEffect('leaf', this)" title="Lá rơi">🍂</button>
+        </div>
+        
+        <div class="group-divider"></div>
+
+        <!-- Khu vực Chuột -->
+        <div class="control-group" id="cursor-group">
+            <button class="ctrl-btn active" onclick="changeCursor('', 'default', this)" title="Mặc định">🖱️</button>
+            <button class="ctrl-btn" onclick="changeCursor('', 'crosshair', this)" title="Ngắm bắn">🎯</button>
+            <button class="ctrl-btn" onclick="changeCursor('❄️', 'custom', this)" title="Chuột Tuyết">❄️</button>
+            <button class="ctrl-btn" onclick="changeCursor('⚡', 'custom', this)" title="Chuột Sấm">⚡</button>
+            <button class="ctrl-btn" onclick="changeCursor('🍂', 'custom', this)" title="Chuột Lá">🍂</button>
+        </div>
     </div>
 
     <div class="modal-overlay" id="donateModal">
@@ -313,9 +265,9 @@
             <i class="fas fa-times close-modal" onclick="closeDonate()"></i>
             <h3>Fund my coffee</h3>
             <p>Nhập số tiền (VNĐ) để tạo QR</p>
-            <input type="number" id="donateAmount" placeholder="0" oninput="updateQR()">
+            <!-- Ô nhập số đã bị xóa thanh kéo (spin button) -->
+            <input type="number" id="donateAmount" placeholder="9999" oninput="updateQR()">
             <div class="qr-box">
-                <!-- Đã đổi sang ngân hàng ACB -->
                 <img id="qrImage" src="https://img.vietqr.io/image/ACB-33689707-compact2.png?amount=0&accountName=NGUYEN%20NGOC%20TRI%20VINH&addInfo=Donate%20Vinhx" alt="QR Code">
             </div>
         </div>
@@ -356,11 +308,12 @@
         </div>
     </div>
 
-    <script>
-        // BẢO MẬT & ANTI-TAMPER
-        console.log("%c[SECURE AREA]", "color: #ef4444; font-size: 20px; font-weight: bold;");
-        console.log("%cStatic Frontend Only. Access Denied for Debugging.", "color: #a1a1aa; font-size: 12px;");
+    <!-- Tag xanh dương đậm dưới cùng trang -->
+    <div class="footer-tag">@trustmebro</div>
 
+    <script>
+        // BẢO MẬT GIAO DIỆN
+        console.log("%c[SECURE AREA]", "color: #ef4444; font-size: 20px; font-weight: bold;");
         document.ondragstart = function() { return false; };
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.onkeydown = function(e) {
@@ -368,119 +321,104 @@
             if(e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) return false;
             if(e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83)) return false;
         };
-        setInterval(function() {
-            const before = new Date().getTime();
-            debugger;
-            const after = new Date().getTime();
-            if (after - before > 100) {
-                document.body.innerHTML = "<div style='color:#ef4444; font-size:20px; text-align:center; margin-top:20vh; font-family:monospace;'>[ERR] Debugger detected.</div>";
-            }
-        }, 1000);
-        const observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                if (mutation.addedNodes.length > 0) {
-                    mutation.addedNodes.forEach(function(node) {
-                        if (node.tagName === 'SCRIPT' || node.tagName === 'IFRAME') node.remove();
-                    });
-                }
-            });
-        });
-        observer.observe(document.body, { childList: true, subtree: true });
 
         // GÕ CHỮ
         const textToType = "Hello! I am a software developer with a strong passion for automation and system optimization. Always ready to solve real-world logic problems.";
-        let typingIndex = 0;
-        let isDeleting = false;
-        
+        let typingIndex = 0; let isDeleting = false;
         function typeWriterEffect() {
             const el = document.getElementById("about-text");
             if (!isDeleting && typingIndex <= textToType.length) {
                 el.innerHTML = textToType.substring(0, typingIndex);
-                typingIndex++;
-                setTimeout(typeWriterEffect, 25);
+                typingIndex++; setTimeout(typeWriterEffect, 25);
             } else if (!isDeleting && typingIndex > textToType.length) {
-                isDeleting = true;
-                setTimeout(typeWriterEffect, 5000);
+                isDeleting = true; setTimeout(typeWriterEffect, 5000);
             } else if (isDeleting && typingIndex >= 0) {
                 el.innerHTML = textToType.substring(0, typingIndex);
-                typingIndex--;
-                setTimeout(typeWriterEffect, 10);
+                typingIndex--; setTimeout(typeWriterEffect, 10);
             } else if (isDeleting && typingIndex < 0) {
-                isDeleting = false;
-                setTimeout(typeWriterEffect, 800);
+                isDeleting = false; setTimeout(typeWriterEffect, 800);
             }
         }
         typeWriterEffect();
 
-        // DONATE MODAL (Đã đổi sang ACB)
+        // DONATE MODAL
         const modal = document.getElementById('donateModal');
         const modalContent = document.getElementById('modalContent');
-        
         function openDonate() {
             modal.style.display = 'flex';
-            setTimeout(() => {
-                modal.style.opacity = '1';
-                modalContent.style.transform = 'scale(1)';
-            }, 10);
+            setTimeout(() => { modal.style.opacity = '1'; modalContent.style.transform = 'scale(1)'; }, 10);
         }
-
         function closeDonate() {
-            modal.style.opacity = '0';
-            modalContent.style.transform = 'scale(0.95)';
+            modal.style.opacity = '0'; modalContent.style.transform = 'scale(0.95)';
             setTimeout(() => { modal.style.display = 'none'; }, 200);
         }
-
         function updateQR() {
             let amount = document.getElementById('donateAmount').value.replace(/[^0-9]/g, '');
-            const img = document.getElementById('qrImage');
-            // Cập nhật ngân hàng ACB
-            img.src = `https://img.vietqr.io/image/ACB-33689707-compact2.png?amount=${amount}&accountName=NGUYEN%20NGOC%20TRI%20VINH&addInfo=Donate%20Vinhx`;
+            document.getElementById('qrImage').src = `https://img.vietqr.io/image/ACB-33689707-compact2.png?amount=${amount}&accountName=NGUYEN%20NGOC%20TRI%20VINH&addInfo=Donate%20Vinhx`;
         }
+        modal.addEventListener('click', function(e) { if (e.target === modal) closeDonate(); });
 
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) closeDonate();
-        });
-
-        // CHỨC NĂNG KHÁC
         function triggerJumpscare() {
             const js = document.getElementById('jumpscare-container');
-            js.style.display = 'block';
-            setTimeout(() => { js.style.display = 'none'; }, 1500);
+            js.style.display = 'block'; setTimeout(() => { js.style.display = 'none'; }, 1500);
         }
 
-        function changeCursor(type) {
-            document.body.style.cursor = type;
+        // HỆ THỐNG ĐỔI TRỎ CHUỘT
+        function changeCursor(emoji, type, btnElement) {
+            // Update active state in dock
+            document.querySelectorAll('#cursor-group .ctrl-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            let newCursor = type;
+            if (type === 'custom') {
+                // Tạo ảnh SVG chứa Emoji làm con trỏ chuột
+                newCursor = `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24'><text y='20' font-size='20'>${emoji}</text></svg>") 12 12, auto`;
+            }
+            
+            document.body.style.cursor = newCursor;
+            // Áp dụng cho cả các nút bấm (trừ nút Jumpscare)
             document.querySelectorAll('a, button, input, .skill-tag').forEach(el => {
                 if(!el.classList.contains('yapping-skill')) {
-                    el.style.cursor = type === 'default' ? 'pointer' : type;
+                    el.style.cursor = (type === 'default') ? 'pointer' : newCursor;
                 }
             });
         }
 
-        let snowEnabled = false; let snowInterval;
-        function createSnowflake() {
-            if (!snowEnabled) return;
-            const sf = document.createElement('div');
-            sf.classList.add('snowflake'); sf.innerHTML = '❄';
-            sf.style.left = Math.random() * 100 + 'vw';
-            sf.style.animationDuration = Math.random() * 2 + 2 + 's';
-            sf.style.fontSize = Math.random() * 6 + 8 + 'px';
-            document.body.appendChild(sf);
-            setTimeout(() => sf.remove(), 4000);
-        }
-        function toggleSnow() {
-            snowEnabled = !snowEnabled;
-            const btn = document.getElementById('snow-toggle');
-            if (snowEnabled) {
-                btn.style.background = '#27272a';
-                btn.style.color = '#fff';
-                snowInterval = setInterval(createSnowflake, 150);
-            } else {
-                btn.style.background = '#18181b';
-                btn.style.color = '#a1a1aa';
-                clearInterval(snowInterval);
-                document.querySelectorAll('.snowflake').forEach(e => e.remove());
+        // HỆ THỐNG HIỆU ỨNG RƠI (TUYẾT, SẤM, LÁ)
+        let currentEffect = null;
+        let effectInterval;
+
+        function toggleEffect(type, btnElement) {
+            // Tắt hiệu ứng hiện tại
+            clearInterval(effectInterval);
+            document.querySelectorAll('.effect-item').forEach(e => e.remove());
+            
+            // Nếu bấm lại nút đang chạy -> Tắt luôn
+            if (currentEffect === type) {
+                currentEffect = null;
+                btnElement.classList.remove('active');
+                return;
             }
+
+            // Đổi active state
+            document.querySelectorAll('#effect-group .ctrl-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+            currentEffect = type;
+
+            if (type === 'snow') effectInterval = setInterval(() => createParticle('❄️', 'snow-anim', 3, 10), 150);
+            if (type === 'lightning') effectInterval = setInterval(() => createParticle('⚡', 'lightning-anim', 1.5, 15), 300);
+            if (type === 'leaf') effectInterval = setInterval(() => createParticle('🍂', 'leaf-anim', 4, 12), 250);
+        }
+
+        function createParticle(icon, animClass, durationBase, sizeBase) {
+            const el = document.createElement('div');
+            el.classList.add('effect-item', animClass);
+            el.innerHTML = icon;
+            el.style.left = Math.random() * 100 + 'vw';
+            el.style.animationDuration = Math.random() * 2 + durationBase + 's';
+            el.style.fontSize = Math.random() * 10 + sizeBase + 'px';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 5000); // Tự dọn dẹp sau 5s
         }
     </script>
 </body>
