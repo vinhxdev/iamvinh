@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nguyễn Vinh Trí - Portfolio</title>
+    <!-- Thư viện Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Font chữ Google (Inter) cho sự mượt mà, chuyên nghiệp -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CHỐNG COPY BẰNG CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            /* Ngăn bôi đen văn bản */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            /* Background tối màu mượt mà, sang trọng */
+            background: linear-gradient(135deg, #1e1e24, #2b2b36);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* KHUNG THẺ CHÍNH (Glassmorphism) */
+        .cv-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px 30px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .cv-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* HEADER: Avatar & Tên */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .name {
+            font-size: 26px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .title {
+            color: #a1a1aa;
+            font-size: 15px;
+            font-weight: 300;
+        }
+
+        /* ABOUT & SKILLS SECTIONS */
+        .section {
+            margin-bottom: 25px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .section h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #e4e4e7;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section p {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #d4d4d8;
+        }
+
+        /* SKILL TAGS */
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill-tag {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            transition: background 0.3s;
+        }
+
+        .skill-tag:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* SOCIAL LINKS */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .social-links a {
+            color: #a1a1aa;
+            font-size: 24px;
+            text-decoration: none;
+            transition: color 0.3s, transform 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .social-links a:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cv-card">
+        <!-- Thay link ảnh avatar của bạn vào src dưới đây -->
+        <div class="header">
+            <img src="https://i.imgur.com/YOUR_AVATAR_LINK.jpg" alt="Avatar" class="avatar">
+            <h1 class="name">Nguyễn Vinh Trí</h1>
+            <p class="title">Software Developer / Programmer</p>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-user-circle"></i> Giới thiệu bản thân</h2>
+            <p>Xin chào! Tôi là một lập trình viên có niềm đam mê mạnh mẽ với việc phát triển phần mềm, xây dựng các công cụ tự động hóa và tối ưu hóa hệ thống. Tôi luôn đề cao sự tư duy logic và sẵn sàng giải quyết các bài toán kỹ thuật thực tế.</p>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-code"></i> Kỹ năng lập trình</h2>
+            <div class="skills-container">
+                <span class="skill-tag">HTML5 / CSS3</span>
+                <span class="skill-tag">Python</span>
+                <span class="skill-tag">Java</span>
+                <span class="skill-tag">Lua</span>
+                <span class="skill-tag">Git / GitHub</span>
+            </div>
+        </div>
+
+        <div class="social-links">
+            <a href="https://vinhx.site/" target="_blank" title="Personal Website"><i class="fas fa-globe"></i></a>
+            <a href="https://github.com/vinhxdev" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+            <a href="https://www.facebook.com/nguyenvinhtriowo/" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://steamcommunity.com/id/P1mple1st/" target="_blank" title="Steam"><i class="fab fa-steam"></i></a>
+        </div>
+    </div>
+
+    <!-- CHỐNG COPY BẰNG JAVASCRIPT -->
+    <script>
+        // 1. Chặn chuột phải
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // 2. Chặn các phím tắt F12, Ctrl+Shift+I, Ctrl+U, Ctrl+C, Ctrl+S
+        document.onkeydown = function(e) {
+            // Chặn F12
+            if(e.keyCode == 123) {
+                return false;
+            }
+            // Chặn Ctrl+Shift+I (DevTools)
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+                return false;
+            }
+            // Chặn Ctrl+Shift+J (DevTools Console)
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+                return false;
+            }
+            // Chặn Ctrl+U (View Source)
+            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+                return false;
+            }
+            // Chặn Ctrl+S (Save)
+            if(e.ctrlKey && e.keyCode == 'S'.charCodeAt(0)) {
+                return false;
+            }
+            // Chặn Ctrl+C (Copy)
+            if(e.ctrlKey && e.keyCode == 'C'.charCodeAt(0)) {
+                return false;
+            }
+        }
+    </script>
+
+</body>
+</html>
