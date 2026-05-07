@@ -1,36 +1,37 @@
 import { kv } from '@vercel/kv';
 
 export default async function handler(req, res) {
-    // 1. Lấy địa chỉ IP thực của người truy cập
+    // 1. Lấy IP thực của người truy cập
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'unknown';
 
     try {
-        // 2. Tạo một cái "nhãn" để đánh dấu IP này trong Database
-        const ipKey = `visited_ip_${ip}`;
+        const totalViewsKey = 'global_total_views_real'; // Key moi bat dau tu 1
+        const ipKey = `visited_ip_24h_${ip}`;
         
-        // 3. Kiểm tra xem Database đã từng ghi nhận IP này chưa
+        // 2. Kiểm tra IP đã tồn tại trong 24h qua chưa
         const hasVisited = await kv.get(ipKey);
         
         let totalViews;
 
-        // Nếu IP này CHƯA TỪNG truy cập
+        // Nếu CHƯA TỪNG truy cập trong 24h (bao gồm cả fake IP mới)
         if (!hasVisited && ip !== 'unknown') {
-            // Lưu IP này lại vĩnh viễn để lần sau không cộng nữa
-            await kv.set(ipKey, 'true'); 
-            // Tăng tổng số lượt xem lên 1
-            totalViews = await kv.incr('global_total_views');
+            // Lưu IP vào Database với thời gian hết hạn là 24 giờ (86400 giây)
+            await kv.set(ipKey, 'true', { ex: 86400 }); 
+            
+            // Tăng tổng đếm thực tế lên 1
+            totalViews = await kv.incr(totalViewsKey);
         } 
-        // Nếu IP đã truy cập rồi (Họ đang spam nút F5)
+        // Nếu ĐÃ TRUY CẬP trong 24h (F5 lại hoặc IP cũ)
         else {
-            // Chỉ lấy con số tổng hiện tại ra đưa cho họ xem, KHÔNG CỘNG THÊM
-            totalViews = await kv.get('global_total_views') || 1;
+            // Chỉ lấy con số tổng hiện tại, KHÔNG CỘNG THÊM
+            totalViews = await kv.get(totalViewsKey) || 1;
         }
 
-        // 4. Trả kết quả (số view) về cho file script.js ở Frontend hiển thị
+        // 3. Trả về kết quả cho Frontend
         res.status(200).json({ views: totalViews });
 
     } catch (error) {
-        // Nếu Database bị lỗi hoặc chưa kết nối, trả về mặc định là 1 để web không bị sập
+        // Fallback an toàn
         res.status(500).json({ error: 'Database Error', views: 1 });
     }
 }
