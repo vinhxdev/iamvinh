@@ -7,7 +7,8 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 30'><rect width='110' height='30' rx='4' fill='%23000'/><text x='5' y='21' font-family='Arial' font-size='16' font-weight='bold' fill='%23fff'>Vinh</text><rect x='45' y='4' width='60' height='22' rx='3' fill='%23f90'/><text x='48' y='20' font-family='Arial' font-size='16' font-weight='bold' fill='%23000'>Profile</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css"> </head>
+    <link rel="stylesheet" href="style.css">
+</head>
 <body>
     <div id="jumpscare-container"><img src="https://orion-uploads.openroadmedia.com/md_ebb42c5c23d5-jump-scare-feat.jpg" alt="Jumpscare"></div>
     
@@ -18,16 +19,16 @@
                 <h4>EFFECTS</h4>
                 <div class="menu-grid" id="effect-group">
                     <button class="ctrl-btn" onclick="toggleEffect('snow',this)">Snow</button>
-                    <button class="ctrl-btn" onclick="toggleEffect('lightning',this)">Lightning</button>
-                    <button class="ctrl-btn" onclick="toggleEffect('leaf',this)">Leaf</button>
+                    <button class="ctrl-btn" onclick="toggleEffect('spark',this)">Spark</button>
+                    <button class="ctrl-btn" onclick="toggleEffect('sakura',this)">Sakura</button>
                 </div>
             </div>
             <div class="menu-section">
                 <h4>CURSORS</h4>
                 <div class="menu-grid" id="cursor-group">
                     <button class="ctrl-btn active" onclick="changeCursor('default',this)">Default</button>
-                    <button class="ctrl-btn" onclick="changeCursor('crosshair',this)">Crosshair</button>
-                    <button class="ctrl-btn" onclick="changeCursor('pointer',this)">Pointer</button>
+                    <button class="ctrl-btn" onclick="changeCursor('crosshair',this)">Aim</button>
+                    <button class="ctrl-btn" onclick="changeCursor('progress',this)">Loading</button>
                     <button class="ctrl-btn" onclick="changeCursor('help',this)">Help</button>
                     <button class="ctrl-btn" onclick="changeCursor('not-allowed',this)">Blocked</button>
                 </div>
@@ -39,7 +40,7 @@
         <div class="modal-content" id="modalContent">
             <i class="fas fa-times close-modal" onclick="closeDonate()"></i>
             <h3>Fund my coffee</h3>
-            <p>Nhập số tiền (VNĐ) để tạo QR</p>
+            <p>Enter VNĐ amount</p>
             <input type="number" id="donateAmount" placeholder="9999" oninput="updateQR()">
             <div class="qr-box"><img id="qrImage" src="https://img.vietqr.io/image/ACB-33689707-compact2.png?amount=0&accountName=NGUYEN%20NGOC%20TRI%20VINH&addInfo=Donate%20Vinhx" alt="QR Code"></div>
         </div>
@@ -50,7 +51,7 @@
             <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExb3lwaHF6MTI1NmpyajNpcHNsY3hzZHFsMWhzZWhpc3ljNGRha21ubiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/s2pr9CVOvU4NMBsnYf/giphy.gif" class="avatar" alt="Avatar">
             <h1 class="name">Vinhx</h1>
             <p class="title">Software Developer</p>
-            <div class="view-counter"><div class="eye-container"><i class="fas fa-eye moving-eye"></i><div class="pupil"></div></div><span id="visit-count">...</span> views</div>
+            <div class="view-counter"><div class="eye-container" id="eye-parent"><div class="moving-eye"><div class="pupil"></div></div></div><span id="visit-count">...</span> views</div>
         </div>
         <div class="section">
             <h2>About_Me</h2>
@@ -78,5 +79,6 @@
     </div>
     <div class="footer-tag">@trustmebro</div>
 
-    <script src="script.js"></script> </body>
+    <script src="script.js"></script>
+</body>
 </html>
