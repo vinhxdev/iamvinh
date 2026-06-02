@@ -1,23 +1,22 @@
-// script.js
 (() => {
   "use strict";
 
-  const $ = (s, p = document) => p.querySelector(s);
-  const $$ = (s, p = document) => [...p.querySelectorAll(s)];
+  const $ = (selector, parent = document) => parent.querySelector(selector);
+  const $$ = (selector, parent = document) => [...parent.querySelectorAll(selector)];
 
   const state = {
     effect: null,
     effectTimer: null,
     cursorTrail: false,
-    mouseX: innerWidth / 2,
-    mouseY: innerHeight / 2,
+    mouseX: window.innerWidth / 2,
+    mouseY: window.innerHeight / 2,
     lastTrail: 0
   };
 
-  const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const isMobile = matchMedia("(max-width: 768px), (pointer: coarse)").matches;
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isMobile = window.matchMedia("(max-width: 768px), (pointer: coarse)").matches;
 
-  function hardenClient() {
+  function protectClient() {
     document.addEventListener("dragstart", (e) => e.preventDefault(), true);
 
     document.addEventListener(
@@ -32,6 +31,7 @@
       "keydown",
       (e) => {
         const key = e.key.toLowerCase();
+
         const blocked =
           e.key === "F12" ||
           (e.ctrlKey && e.shiftKey && ["i", "j", "c"].includes(key)) ||
@@ -48,35 +48,34 @@
 
   async function fetchRealTimeViews() {
     const el = $("#visit-count");
-    if (!el) return;
 
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 5000);
+    if (!el) return;
 
     try {
       const res = await fetch(`/api/views?t=${Date.now()}`, {
         method: "GET",
         cache: "no-store",
-        credentials: "same-origin",
-        signal: controller.signal
+        credentials: "same-origin"
       });
 
       const data = await res.json();
 
       el.textContent = Number(data.views || 1).toLocaleString("en-US");
 
-      const box = el.closest(".view-counter");
-      if (box && data.online) box.title = `${data.online} online now`;
+      const counter = el.closest(".view-counter");
+
+      if (counter && data.online) {
+        counter.title = `${data.online} online now`;
+      }
     } catch {
       el.textContent = "1";
-    } finally {
-      clearTimeout(timer);
     }
   }
 
   function initEye() {
     const eyeParent = $("#eye-parent");
     const pupil = eyeParent?.querySelector(".pupil");
+
     if (!eyeParent || !pupil || isMobile) return;
 
     document.addEventListener(
@@ -88,7 +87,9 @@
         const angle = Math.atan2(e.clientY - eyeY, e.clientX - eyeX);
         const distance = Math.min(5, Math.hypot(e.clientX - eyeX, e.clientY - eyeY) / 15);
 
-        pupil.style.transform = `translate(calc(-50% + ${Math.cos(angle) * distance}px), calc(-50% + ${Math.sin(angle) * distance}px))`;
+        pupil.style.transform = `translate(calc(-50% + ${Math.cos(angle) * distance}px), calc(-50% + ${
+          Math.sin(angle) * distance
+        }px))`;
       },
       { passive: true }
     );
@@ -96,31 +97,32 @@
 
   function initTyping() {
     const el = $("#about-text");
+
     if (!el) return;
 
     const text =
       "Hello! I am a software developer with a strong passion for automation and system optimization. Always ready to solve real-world logic problems.";
 
-    let i = 0;
+    let index = 0;
     let deleting = false;
 
     function type() {
-      el.textContent = text.slice(0, i);
+      el.textContent = text.slice(0, index);
 
-      if (!deleting && i < text.length) {
-        i++;
+      if (!deleting && index < text.length) {
+        index++;
         setTimeout(type, 25);
         return;
       }
 
-      if (!deleting && i >= text.length) {
+      if (!deleting && index >= text.length) {
         deleting = true;
         setTimeout(type, 4500);
         return;
       }
 
-      if (deleting && i > 0) {
-        i--;
+      if (deleting && index > 0) {
+        index--;
         setTimeout(type, 10);
         return;
       }
@@ -139,9 +141,11 @@
   function openDonate() {
     const modal = $("#donateModal");
     const content = $("#modalContent");
+
     if (!modal || !content) return;
 
     modal.style.display = "flex";
+
     requestAnimationFrame(() => {
       modal.style.opacity = "1";
       content.style.transform = "scale(1)";
@@ -151,10 +155,12 @@
   function closeDonate() {
     const modal = $("#donateModal");
     const content = $("#modalContent");
+
     if (!modal || !content) return;
 
     modal.style.opacity = "0";
     content.style.transform = "scale(.95)";
+
     setTimeout(() => {
       modal.style.display = "none";
     }, 180);
@@ -163,29 +169,35 @@
   function updateQR() {
     const input = $("#donateAmount");
     const qr = $("#qrImage");
+
     if (!input || !qr) return;
 
     const amount = input.value.replace(/\D/g, "").slice(0, 9);
     input.value = amount;
 
-    qr.src = `https://img.vietqr.io/image/ACB-33689707-compact2.png?amount=${amount || 0}&accountName=NGUYEN%20NGOC%20TRI%20VINH&addInfo=Donate%20Vinhx`;
+    qr.src = `https://img.vietqr.io/image/ACB-33689707-compact2.png?amount=${
+      amount || 0
+    }&accountName=NGUYEN%20NGOC%20TRI%20VINH&addInfo=Donate%20Vinhx`;
   }
 
   function triggerJumpscare() {
     const box = $("#jumpscare-container");
+
     if (!box) return;
 
     box.style.display = "block";
+
     setTimeout(() => {
       box.style.display = "none";
     }, 1200);
   }
 
   function changeCursor(type, btn) {
-    $$("#cursor-group .ctrl-btn").forEach((b) => b.classList.remove("active"));
+    $$("#cursor-group .ctrl-btn").forEach((button) => button.classList.remove("active"));
     btn?.classList.add("active");
 
     state.cursorTrail = type === "trail";
+
     $$(".cursor-trail-dot").forEach((dot) => dot.remove());
 
     const cursors = {
@@ -205,7 +217,9 @@
     if (!state.cursorTrail || prefersReducedMotion) return;
 
     const now = performance.now();
+
     if (now - state.lastTrail < (isMobile ? 90 : 28)) return;
+
     state.lastTrail = now;
 
     const dot = document.createElement("div");
@@ -214,14 +228,19 @@
     dot.style.top = `${y}px`;
 
     document.body.appendChild(dot);
-    setTimeout(() => dot.remove(), 520);
+
+    setTimeout(() => {
+      dot.remove();
+    }, 520);
   }
 
   function clearEffect() {
     clearInterval(state.effectTimer);
-    state.effectTimer = null;
+
     state.effect = null;
-    $$(".particle-effect").forEach((e) => e.remove());
+    state.effectTimer = null;
+
+    $$(".particle-effect").forEach((el) => el.remove());
   }
 
   function toggleEffect(type, btn) {
@@ -235,7 +254,7 @@
 
     clearEffect();
 
-    $$("#effect-group .ctrl-btn").forEach((b) => b.classList.remove("active"));
+    $$("#effect-group .ctrl-btn").forEach((button) => button.classList.remove("active"));
     btn?.classList.add("active");
 
     state.effect = type;
@@ -251,12 +270,13 @@
 
   function createParticle(type) {
     const el = document.createElement("div");
+
     el.className = `particle-effect particle-${type}`;
 
-    let startX = Math.random() * innerWidth;
+    let startX = Math.random() * window.innerWidth;
     let startY = -20;
     let moveX = Math.random() * 80 - 40;
-    let moveY = innerHeight + 40;
+    let moveY = window.innerHeight + 40;
     let size = 4;
     let duration = 3000;
 
@@ -287,10 +307,10 @@
 
     document.body.appendChild(el);
 
-    el.animate(
+    const animation = el.animate(
       [
         {
-          transform: "translate3d(0,0,0) rotate(0deg)",
+          transform: "translate3d(0, 0, 0) rotate(0deg)",
           opacity: 0.9
         },
         {
@@ -302,29 +322,50 @@
         duration,
         easing: "linear"
       }
-    ).onfinish = () => el.remove();
+    );
+
+    animation.onfinish = () => el.remove();
   }
 
-  document.addEventListener("mousemove", (e) => {
-    state.mouseX = e.clientX;
-    state.mouseY = e.clientY;
-    createTrail(e.clientX, e.clientY);
-  }, { passive: true });
+  function bindEvents() {
+    document.addEventListener(
+      "mousemove",
+      (e) => {
+        state.mouseX = e.clientX;
+        state.mouseY = e.clientY;
 
-  document.addEventListener("click", (e) => {
-    const settings = $(".settings-container");
-    if (settings && !settings.contains(e.target)) {
-      $("#settingsMenu")?.classList.remove("show");
-    }
+        createTrail(e.clientX, e.clientY);
+      },
+      { passive: true }
+    );
 
-    if (e.target === $("#donateModal")) closeDonate();
-  });
+    document.addEventListener("click", (e) => {
+      const settings = $(".settings-container");
 
-  hardenClient();
-  fetchRealTimeViews();
-  setInterval(fetchRealTimeViews, 15000);
+      if (settings && !settings.contains(e.target)) {
+        $("#settingsMenu")?.classList.remove("show");
+      }
+
+      if (e.target === $("#donateModal")) {
+        closeDonate();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeDonate();
+        $("#settingsMenu")?.classList.remove("show");
+      }
+    });
+  }
+
+  protectClient();
+  bindEvents();
   initEye();
   initTyping();
+
+  fetchRealTimeViews();
+  setInterval(fetchRealTimeViews, 15000);
 
   Object.assign(window, {
     toggleSettings,
