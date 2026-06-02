@@ -5,7 +5,8 @@
   const $$ = (s, p = document) => Array.from(p.querySelectorAll(s));
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const touchDevice = window.matchMedia("(pointer: coarse)").matches;
+  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const canUseCursor = finePointer && !reduceMotion;
 
   const state = {
     effect: null,
@@ -80,7 +81,7 @@
     const eye = $("#eye-parent");
     const pupil = eye ? eye.querySelector(".pupil") : null;
 
-    if (!eye || !pupil || touchDevice) return;
+    if (!eye || !pupil || !canUseCursor) return;
 
     document.addEventListener(
       "mousemove",
@@ -138,8 +139,7 @@
   }
 
   function toggleSettings() {
-    const menu = $("#settingsMenu");
-    if (menu) menu.classList.toggle("show");
+    $("#settingsMenu")?.classList.toggle("show");
   }
 
   function openDonate() {
@@ -183,9 +183,10 @@
     const amountInput = $("#donateAmount");
     const infoInput = $("#donateInfo");
 
-    const amount = String(amountInput ? amountInput.value : "0")
-      .replace(/\D/g, "")
-      .slice(0, 9) || "0";
+    const amount =
+      String(amountInput ? amountInput.value : "0")
+        .replace(/\D/g, "")
+        .slice(0, 9) || "0";
 
     const info = cleanText(infoInput ? infoInput.value : "Donate Vinhx") || "Donate Vinhx";
 
@@ -270,9 +271,7 @@
     state.timer = 0;
     state.effect = null;
 
-    const canvas = $(".effect-canvas");
-    if (canvas) canvas.remove();
-
+    $(".effect-canvas")?.remove();
     $$(".particle-effect, .neon-orb").forEach((el) => el.remove());
 
     state.canvas = null;
@@ -280,26 +279,35 @@
   }
 
   function createCanvas() {
-    const oldCanvas = $(".effect-canvas");
-    if (oldCanvas) oldCanvas.remove();
+    $(".effect-canvas")?.remove();
 
     const canvas = document.createElement("canvas");
     canvas.className = "effect-canvas";
 
-    canvas.width = window.innerWidth * window.devicePixelRatio;
-    canvas.height = window.innerHeight * window.devicePixelRatio;
-    canvas.style.width = `${window.innerWidth}px`;
-    canvas.style.height = `${window.innerHeight}px`;
-
+    resizeCanvas(canvas);
     document.body.appendChild(canvas);
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { alpha: true });
     ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
 
     state.canvas = canvas;
     state.ctx = ctx;
 
     return canvas;
+  }
+
+  function resizeCanvas(canvas = state.canvas) {
+    if (!canvas) return;
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    canvas.width = Math.floor(window.innerWidth * dpr);
+    canvas.height = Math.floor(window.innerHeight * dpr);
+    canvas.style.width = `${window.innerWidth}px`;
+    canvas.style.height = `${window.innerHeight}px`;
+
+    const ctx = canvas.getContext("2d", { alpha: true });
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
   function toggleEffect(type, btn) {
@@ -328,13 +336,13 @@
   function startStars() {
     createCanvas();
 
-    const count = window.innerWidth < 768 ? 65 : 140;
+    const count = window.innerWidth < 768 ? 55 : 130;
 
     const stars = Array.from({ length: count }, () => ({
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
       z: Math.random() * 1 + 0.3,
-      r: Math.random() * 1.9 + 0.4,
+      r: Math.random() * 1.8 + 0.4,
       vx: Math.random() * 0.18 - 0.09,
       vy: Math.random() * 0.18 + 0.05
     }));
@@ -371,35 +379,46 @@
     createCanvas();
 
     const ctx = state.ctx;
-    const chars = "01アイウエオカキクケコサシスセソ";
-    const font = window.innerWidth < 768 ? 13 : 15;
-    const cols = Math.floor(window.innerWidth / font);
-    const drops = Array(cols)
-      .fill(0)
-      .map(() => Math.random() * -window.innerHeight);
+    if (!ctx) return;
+
+    const chars = "01アカサタナハマヤラワ";
+    const fontSize = window.innerWidth < 768 ? 14 : 16;
+    const columns = Math.ceil(window.innerWidth / fontSize);
+    const drops = Array.from({ length: columns }, () => Math.floor(Math.random() * -40));
 
     function draw() {
+      const ctx = state.ctx;
       if (!ctx) return;
 
-      ctx.fillStyle = "rgba(9,9,11,0.14)";
-      ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-      ctx.font = `${font}px JetBrains Mono, monospace`;
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
-      for (let i = 0; i < drops.length; i++) {
-        const x = i * font;
-        const y = drops[i] * font;
-        const char = chars[Math.floor(Math.random() * chars.length)];
+      ctx.font = `${fontSize}px JetBrains Mono, monospace`;
+      ctx.textAlign = "center";
 
-        ctx.fillStyle = "rgba(34,197,94,0.85)";
-        ctx.fillText(char, x, y);
+      for (let i = 0; i < columns; i++) {
+        const x = i * fontSize + fontSize / 2;
 
-        drops[i] += 0.75;
+        for (let j = 0; j < 18; j++) {
+          const y = (drops[i] - j) * fontSize;
+          if (y < -fontSize || y > window.innerHeight + fontSize) continue;
 
-        if (y > window.innerHeight && Math.random() > 0.975) {
-          drops[i] = Math.random() * -20;
+          const alpha = Math.max(0, 1 - j / 18);
+          const char = chars[Math.floor(Math.random() * chars.length)];
+
+          ctx.fillStyle = j === 0 ? "rgba(187,247,208,0.95)" : `rgba(34,197,94,${alpha * 0.55})`;
+          ctx.shadowColor = "rgba(34,197,94,0.75)";
+          ctx.shadowBlur = j === 0 ? 12 : 4;
+          ctx.fillText(char, x, y);
+        }
+
+        drops[i] += 0.42;
+
+        if (drops[i] * fontSize > window.innerHeight + 320 && Math.random() > 0.985) {
+          drops[i] = Math.floor(Math.random() * -50);
         }
       }
 
+      ctx.shadowBlur = 0;
       state.raf = requestAnimationFrame(draw);
     }
 
@@ -417,8 +436,8 @@
   }
 
   function startFalling(type) {
-    const max = window.innerWidth < 768 ? 35 : 75;
-    const delay = type === "snow" ? 95 : 150;
+    const max = window.innerWidth < 768 ? 28 : 70;
+    const delay = type === "snow" ? 110 : 160;
 
     state.timer = setInterval(() => {
       if ($$(".particle-effect").length > max) return;
@@ -459,7 +478,7 @@
   }
 
   function initCursor() {
-    if (touchDevice || reduceMotion) return;
+    if (!canUseCursor) return;
 
     if (!$(".cursor-core")) {
       const glow = document.createElement("div");
@@ -485,9 +504,9 @@
       state.glowX += (state.mouseX - state.glowX) * 0.08;
       state.glowY += (state.mouseY - state.glowY) * 0.08;
 
-      if (core) core.style.transform = `translate(${state.coreX}px, ${state.coreY}px) translate(-50%, -50%)`;
-      if (ring) ring.style.transform = `translate(${state.ringX}px, ${state.ringY}px) translate(-50%, -50%)`;
-      if (glow) glow.style.transform = `translate(${state.glowX}px, ${state.glowY}px) translate(-50%, -50%)`;
+      if (core) core.style.transform = `translate3d(${state.coreX}px, ${state.coreY}px, 0) translate(-50%, -50%)`;
+      if (ring) ring.style.transform = `translate3d(${state.ringX}px, ${state.ringY}px, 0) translate(-50%, -50%)`;
+      if (glow) glow.style.transform = `translate3d(${state.glowX}px, ${state.glowY}px, 0) translate(-50%, -50%)`;
 
       requestAnimationFrame(draw);
     }
@@ -505,7 +524,6 @@
     );
 
     state.cursor = "default";
-
     $$(".cursor-particle, .cursor-ripple").forEach((el) => el.remove());
   }
 
@@ -515,7 +533,7 @@
 
     clearCursorMode();
 
-    if (type === "default" || touchDevice || reduceMotion) return;
+    if (type === "default" || !canUseCursor) return;
 
     state.cursor = type;
     document.body.classList.add("cursor-on");
@@ -529,7 +547,7 @@
   }
 
   function spawnCursorParticle(x, y, force = false) {
-    if (touchDevice || reduceMotion || state.cursor === "default" || state.cursor === "ring") return;
+    if (!canUseCursor || state.cursor === "default" || state.cursor === "ring") return;
 
     const now = performance.now();
 
@@ -552,7 +570,7 @@
   }
 
   function spawnClickRipple(x, y) {
-    if (touchDevice || reduceMotion || state.cursor === "default") return;
+    if (!canUseCursor || state.cursor === "default") return;
 
     const ripple = document.createElement("div");
     ripple.className = "cursor-ripple";
@@ -598,8 +616,7 @@
       const settings = $(".settings-container");
 
       if (settings && !settings.contains(e.target)) {
-        const menu = $("#settingsMenu");
-        if (menu) menu.classList.remove("show");
+        $("#settingsMenu")?.classList.remove("show");
       }
 
       const modal = $("#donateModal");
@@ -609,29 +626,14 @@
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         closeDonate();
-
-        const menu = $("#settingsMenu");
-        if (menu) menu.classList.remove("show");
+        $("#settingsMenu")?.classList.remove("show");
       }
     });
 
     window.addEventListener("resize", () => {
-      if (!state.canvas) return;
-
-      state.canvas.width = window.innerWidth * window.devicePixelRatio;
-      state.canvas.height = window.innerHeight * window.devicePixelRatio;
-      state.canvas.style.width = `${window.innerWidth}px`;
-      state.canvas.style.height = `${window.innerHeight}px`;
-
-      if (state.ctx) {
-        state.ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
-      }
+      resizeCanvas();
     });
   }
-
-  window.addEventListener("error", (event) => {
-    console.error("Site error:", event.message);
-  });
 
   protectClient();
   bindEvents();
