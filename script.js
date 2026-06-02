@@ -278,24 +278,6 @@
     state.ctx = null;
   }
 
-  function createCanvas() {
-    $(".effect-canvas")?.remove();
-
-    const canvas = document.createElement("canvas");
-    canvas.className = "effect-canvas";
-
-    resizeCanvas(canvas);
-    document.body.appendChild(canvas);
-
-    const ctx = canvas.getContext("2d", { alpha: true });
-    ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
-
-    state.canvas = canvas;
-    state.ctx = ctx;
-
-    return canvas;
-  }
-
   function resizeCanvas(canvas = state.canvas) {
     if (!canvas) return;
 
@@ -308,6 +290,24 @@
 
     const ctx = canvas.getContext("2d", { alpha: true });
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function createCanvas() {
+    $(".effect-canvas")?.remove();
+
+    const canvas = document.createElement("canvas");
+    canvas.className = "effect-canvas";
+
+    resizeCanvas(canvas);
+    document.body.appendChild(canvas);
+
+    const ctx = canvas.getContext("2d", { alpha: true });
+    ctx.setTransform(Math.min(window.devicePixelRatio || 1, 2), 0, 0, Math.min(window.devicePixelRatio || 1, 2), 0, 0);
+
+    state.canvas = canvas;
+    state.ctx = ctx;
+
+    return canvas;
   }
 
   function toggleEffect(type, btn) {
@@ -378,9 +378,6 @@
   function startMatrix() {
     createCanvas();
 
-    const ctx = state.ctx;
-    if (!ctx) return;
-
     const chars = "01アカサタナハマヤラワ";
     const fontSize = window.innerWidth < 768 ? 14 : 16;
     const columns = Math.ceil(window.innerWidth / fontSize);
@@ -400,6 +397,7 @@
 
         for (let j = 0; j < 18; j++) {
           const y = (drops[i] - j) * fontSize;
+
           if (y < -fontSize || y > window.innerHeight + fontSize) continue;
 
           const alpha = Math.max(0, 1 - j / 18);
