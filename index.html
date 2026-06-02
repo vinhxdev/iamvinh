@@ -14,10 +14,6 @@
   <meta property="og:url" content="https://iamvinh.vercel.app/" />
   <meta property="og:image" content="https://iamvinh.vercel.app/preview.png" />
 
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="VinhProfile" />
-  <meta name="twitter:description" content="Software Developer profile by Vinhx." />
-
   <link
     rel="icon"
     type="image/svg+xml"
@@ -32,10 +28,12 @@
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
   />
+
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
     rel="stylesheet"
   />
+
   <link rel="stylesheet" href="./style.css" />
 </head>
 
@@ -49,18 +47,14 @@
   </div>
 
   <div class="settings-container">
-    <button
-      class="settings-btn"
-      type="button"
-      onclick="toggleSettings()"
-      aria-label="Open settings"
-    >
+    <button class="settings-btn" type="button" onclick="toggleSettings()" aria-label="Open settings">
       <i class="fa-solid fa-gear" aria-hidden="true"></i>
     </button>
 
     <div class="settings-menu" id="settingsMenu">
       <div class="menu-section">
         <h4>EFFECTS</h4>
+
         <div class="menu-grid" id="effect-group">
           <button class="ctrl-btn" type="button" onclick="toggleEffect('snow', this)">Snow</button>
           <button class="ctrl-btn" type="button" onclick="toggleEffect('spark', this)">Spark</button>
@@ -70,6 +64,7 @@
 
       <div class="menu-section">
         <h4>CURSORS</h4>
+
         <div class="menu-grid" id="cursor-group">
           <button class="ctrl-btn active" type="button" onclick="changeCursor('default', this)">Normal</button>
           <button class="ctrl-btn" type="button" onclick="changeCursor('sniper', this)">Sniper</button>
@@ -129,6 +124,7 @@
             <div class="pupil"></div>
           </div>
         </div>
+
         <span id="visit-count">...</span>
         <span>views</span>
       </div>
@@ -141,6 +137,7 @@
 
     <section class="section">
       <h2>Skills</h2>
+
       <div class="skills-container">
         <span class="skill-tag">HTML/CSS</span>
         <span class="skill-tag">Python</span>
