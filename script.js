@@ -1,589 +1,913 @@
-(() => {
-  "use strict";
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
 
-  const $ = (s, p = document) => p.querySelector(s);
-  const $$ = (s, p = document) => [...p.querySelectorAll(s)];
+html {
+  min-height: 100%;
+  background: #09090b;
+}
 
-  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const touchDevice = matchMedia("(pointer: coarse)").matches;
+body {
+  min-height: 100vh;
+  background-color: #09090b;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+  color: #ededed;
+  font-family: "Inter", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 88px 20px 56px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: relative;
+}
 
-  const state = {
-    effect: null,
-    canvas: null,
-    ctx: null,
-    raf: 0,
-    timer: 0,
-    cursor: "default",
-    mouseX: innerWidth / 2,
-    mouseY: innerHeight / 2,
-    coreX: innerWidth / 2,
-    coreY: innerHeight / 2,
-    ringX: innerWidth / 2,
-    ringY: innerHeight / 2,
-    glowX: innerWidth / 2,
-    glowY: innerHeight / 2,
-    lastParticle: 0
-  };
+button,
+input,
+a {
+  font: inherit;
+}
 
-  function protectClient() {
-    document.addEventListener("dragstart", (e) => e.preventDefault(), true);
+button {
+  border: 0;
+}
 
-    document.addEventListener("contextmenu", (e) => {
-      if (!e.target.closest("input, textarea")) e.preventDefault();
-    }, true);
+/* SETTINGS */
 
-    document.addEventListener("keydown", (e) => {
-      const k = e.key.toLowerCase();
+.settings-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+}
 
-      if (
-        e.key === "F12" ||
-        (e.ctrlKey && e.shiftKey && ["i", "j", "c"].includes(k)) ||
-        (e.ctrlKey && ["u", "s"].includes(k))
-      ) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    }, true);
+.settings-btn {
+  background: #18181b;
+  border: 1px solid #27272a;
+  color: #a1a1aa;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-btn:hover {
+  background: #27272a;
+  color: #fff;
+}
+
+.settings-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: #121214;
+  border: 1px solid #27272a;
+  border-radius: 12px;
+  padding: 15px;
+  width: 250px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+  display: none;
+  flex-direction: column;
+  gap: 20px;
+  animation: fadeIn 0.2s ease forwards;
+}
+
+.settings-menu.show {
+  display: flex;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
   }
 
-  async function fetchRealTimeViews() {
-    const el = $("#visit-count");
-    if (!el) return;
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-    try {
-      const res = await fetch(`/api/views?t=${Date.now()}`, {
-        cache: "no-store",
-        credentials: "same-origin"
-      });
+.menu-section h4 {
+  color: #71717a;
+  font-size: 11px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 1px;
+}
 
-      const data = await res.json();
-      el.textContent = Number(data.views || 1).toLocaleString("en-US");
+.menu-grid {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
 
-      const counter = el.closest(".view-counter");
-      if (counter && data.online) counter.title = `${data.online} online now`;
-    } catch {
-      el.textContent = "1";
-    }
+.ctrl-btn {
+  background: #18181b;
+  border: 1px solid #27272a;
+  color: #a1a1aa;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: "JetBrains Mono", monospace;
+  transition: all 0.2s ease;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.ctrl-btn:hover,
+.ctrl-btn.active {
+  background: #27272a;
+  border-color: #3f3f46;
+  color: #fff;
+}
+
+/* CARD */
+
+.cv-card {
+  background: #121214;
+  border: 1px solid #27272a;
+  border-radius: 16px;
+  padding: 50px 45px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+  z-index: 10;
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform: translateY(20px);
+  opacity: 0;
+  text-align: center;
+}
+
+@keyframes fadeInUp {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.avatar {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #27272a;
+  margin-bottom: 20px;
+  padding: 4px;
+  pointer-events: none;
+  background: #09090b;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.name {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+.title {
+  color: #71717a;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-family: "JetBrains Mono", monospace;
+}
+
+/* VIEW COUNTER */
+
+.view-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 6px 15px;
+  background: #18181b;
+  border-radius: 20px;
+  border: 1px solid #27272a;
+  font-size: 13px;
+  color: #a1a1aa;
+  font-family: "JetBrains Mono", monospace;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.1);
+}
+
+.eye-container {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.moving-eye {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  border-radius: 50%;
+  border: 2px solid #ef4444;
+  overflow: hidden;
+  box-shadow: inset 0 0 8px #ef4444, 0 0 8px #ef4444;
+}
+
+.pupil {
+  position: absolute;
+  width: 4px;
+  height: 14px;
+  background: #fbbf24;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease-out;
+  will-change: transform;
+  box-shadow: 0 0 8px #fbbf24;
+}
+
+/* CONTENT */
+
+.section {
+  margin-bottom: 28px;
+  text-align: left;
+  margin-top: 30px;
+}
+
+.section h2 {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #71717a;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid #27272a;
+  padding-bottom: 8px;
+}
+
+#about-text {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #a1a1aa;
+  min-height: 80px;
+}
+
+.typing-cursor::after {
+  content: "█";
+  animation: blink 1s step-end infinite;
+  color: #fff;
+  margin-left: 4px;
+  font-size: 12px;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.skills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-tag {
+  background: #18181b;
+  color: #a1a1aa;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: "JetBrains Mono", monospace;
+  border: 1px solid #27272a;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.skill-tag:hover {
+  background: #27272a;
+  color: #fff;
+  border-color: #3f3f46;
+}
+
+.donate-btn {
+  width: 100%;
+  background: #fff;
+  color: #000;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-bottom: 25px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.donate-btn:hover {
+  background: #e4e4e7;
+  transform: translateY(-1px);
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.social-links a {
+  color: #71717a;
+  font-size: 18px;
+  text-decoration: none;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: #18181b;
+  border: 1px solid #27272a;
+}
+
+.social-links a:hover {
+  color: #fff;
+  background: #27272a;
+  border-color: #3f3f46;
+}
+
+/* DONATE MODAL */
+
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  min-height: 100vh;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(7px);
+  z-index: 1000;
+  align-items: flex-start;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  overflow-y: auto;
+  padding: 56px 14px;
+}
+
+.modal-content {
+  background: #121214;
+  border: 1px solid #27272a;
+  border-radius: 16px;
+  padding: 25px;
+  width: 100%;
+  max-width: 340px;
+  text-align: center;
+  position: relative;
+  transform: scale(0.95);
+  transition: transform 0.2s ease;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.85);
+}
+
+.close-modal {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  color: #71717a;
+  font-size: 18px;
+  cursor: pointer;
+  background: transparent;
+}
+
+.close-modal:hover {
+  color: #fff;
+}
+
+.modal-content h3 {
+  margin-bottom: 8px;
+}
+
+.modal-desc {
+  color: #a1a1aa;
+  margin-bottom: 14px;
+  font-size: 14px;
+}
+
+.modal-content input {
+  width: 100%;
+  background: #09090b;
+  border: 1px solid #27272a;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  margin-bottom: 10px;
+  text-align: center;
+  font-family: "JetBrains Mono", monospace;
+  user-select: text;
+}
+
+.modal-content input:focus {
+  border-color: #3f3f46;
+}
+
+.modal-content input[type="number"]::-webkit-outer-spin-button,
+.modal-content input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.modal-content input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.donate-meta {
+  margin: 12px 0;
+  border: 1px solid #27272a;
+  border-radius: 10px;
+  overflow: hidden;
+  text-align: left;
+}
+
+.donate-meta div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 10px;
+  border-bottom: 1px solid #27272a;
+  font-size: 12px;
+}
+
+.donate-meta div:last-child {
+  border-bottom: 0;
+}
+
+.donate-meta span {
+  color: #71717a;
+}
+
+.donate-meta strong {
+  color: #ededed;
+  font-weight: 600;
+  text-align: right;
+  word-break: break-word;
+}
+
+.modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.modal-actions button {
+  background: #18181b;
+  border: 1px solid #27272a;
+  color: #a1a1aa;
+  border-radius: 8px;
+  padding: 9px 8px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.modal-actions button:hover {
+  background: #27272a;
+  color: #fff;
+}
+
+.qr-box {
+  width: 100%;
+  aspect-ratio: 1;
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.qr-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* EFFECTS */
+
+.effect-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.particle-effect {
+  position: fixed;
+  pointer-events: none;
+  z-index: 2;
+  will-change: transform, opacity;
+}
+
+.particle-sakura {
+  width: 10px;
+  height: 10px;
+  background: #ffb7c5;
+  border-radius: 70% 0 70% 70%;
+  box-shadow: 0 0 14px rgba(255, 183, 197, 0.55);
+}
+
+.particle-snow {
+  width: 5px;
+  height: 5px;
+  background: #fff;
+  border-radius: 999px;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.9);
+}
+
+.neon-orb {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1;
+  width: 260px;
+  height: 260px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.2), rgba(168, 85, 247, 0.08), transparent 70%);
+  filter: blur(14px);
+  animation: neonFloat 7s ease-in-out infinite alternate;
+}
+
+.neon-orb:nth-child(2) {
+  background: radial-gradient(circle, rgba(249, 115, 22, 0.18), rgba(239, 68, 68, 0.08), transparent 70%);
+  animation-duration: 9s;
+  animation-delay: -2s;
+}
+
+.neon-orb:nth-child(3) {
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.14), rgba(59, 130, 246, 0.08), transparent 70%);
+  animation-duration: 11s;
+  animation-delay: -4s;
+}
+
+@keyframes neonFloat {
+  from {
+    transform: translate3d(-40px, -30px, 0) scale(1);
   }
 
-  function initEye() {
-    const eye = $("#eye-parent");
-    const pupil = eye?.querySelector(".pupil");
-    if (!eye || !pupil || touchDevice) return;
+  to {
+    transform: translate3d(70px, 60px, 0) scale(1.25);
+  }
+}
 
-    document.addEventListener("mousemove", (e) => {
-      const r = eye.getBoundingClientRect();
-      const x = r.left + r.width / 2;
-      const y = r.top + r.height / 2;
-      const a = Math.atan2(e.clientY - y, e.clientX - x);
-      const d = Math.min(5, Math.hypot(e.clientX - x, e.clientY - y) / 15);
+/* CUSTOM CURSOR */
 
-      pupil.style.transform = `translate(calc(-50% + ${Math.cos(a) * d}px), calc(-50% + ${Math.sin(a) * d}px))`;
-    }, { passive: true });
+.cursor-core,
+.cursor-ring,
+.cursor-glow {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  pointer-events: none;
+  z-index: 2147483647;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  will-change: transform;
+}
+
+.cursor-core {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 0 12px #fff;
+}
+
+.cursor-ring {
+  width: 42px;
+  height: 42px;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.35);
+}
+
+.cursor-glow {
+  width: 74px;
+  height: 74px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.18), transparent 65%);
+  filter: blur(2px);
+}
+
+.cursor-on,
+.cursor-on * {
+  cursor: none !important;
+}
+
+.cursor-on .cursor-core,
+.cursor-on .cursor-ring,
+.cursor-on .cursor-glow {
+  opacity: 1;
+}
+
+.cursor-ring-mode .cursor-core {
+  background: #38bdf8;
+  box-shadow: 0 0 16px #38bdf8, 0 0 32px #2563eb;
+}
+
+.cursor-ring-mode .cursor-ring {
+  border-color: #38bdf8;
+  box-shadow: 0 0 22px rgba(56, 189, 248, 0.8);
+}
+
+.cursor-cyber-mode .cursor-core {
+  width: 12px;
+  height: 12px;
+  background: #22d3ee;
+  box-shadow: 0 0 18px #22d3ee, 0 0 36px #a855f7;
+}
+
+.cursor-cyber-mode .cursor-ring {
+  width: 54px;
+  height: 54px;
+  border: 2px dashed #a855f7;
+  box-shadow: 0 0 24px rgba(168, 85, 247, 0.9);
+  animation: cursorRotate 1.3s linear infinite;
+}
+
+.cursor-cyber-mode .cursor-glow {
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.28), rgba(168, 85, 247, 0.16), transparent 70%);
+}
+
+.cursor-fire-mode .cursor-core {
+  width: 13px;
+  height: 13px;
+  background: #fb923c;
+  box-shadow: 0 0 18px #fb923c, 0 0 38px #ef4444;
+}
+
+.cursor-fire-mode .cursor-ring {
+  border-color: #f97316;
+  box-shadow: 0 0 28px rgba(249, 115, 22, 0.9);
+}
+
+.cursor-fire-mode .cursor-glow {
+  background: radial-gradient(circle, rgba(249, 115, 22, 0.35), rgba(239, 68, 68, 0.15), transparent 70%);
+}
+
+.cursor-trail-mode .cursor-core {
+  background: #facc15;
+  box-shadow: 0 0 18px #facc15, 0 0 38px #f97316;
+}
+
+.cursor-trail-mode .cursor-ring {
+  border-color: #facc15;
+  box-shadow: 0 0 28px rgba(250, 204, 21, 0.8);
+}
+
+.cursor-particle {
+  position: fixed;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  z-index: 2147483646;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  will-change: transform, opacity;
+}
+
+.cursor-particle.trail {
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle, #fff 0%, #60a5fa 42%, transparent 72%);
+  box-shadow: 0 0 18px #3b82f6;
+  animation: trailFade 0.65s ease-out forwards;
+}
+
+.cursor-particle.cyber {
+  width: 14px;
+  height: 14px;
+  border: 1px solid #22d3ee;
+  background: rgba(168, 85, 247, 0.25);
+  box-shadow: 0 0 18px #22d3ee, 0 0 26px #a855f7;
+  animation: cyberFade 0.75s ease-out forwards;
+}
+
+.cursor-particle.fire {
+  width: 13px;
+  height: 13px;
+  border-radius: 70% 30% 70% 30%;
+  background: #fb923c;
+  box-shadow: 0 0 18px #f97316, 0 0 30px #ef4444;
+  animation: fireFade 0.72s ease-out forwards;
+}
+
+.cursor-ripple {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+  z-index: 2147483645;
+  border-radius: 999px;
+  border: 2px solid #fff;
+  transform: translate(-50%, -50%);
+  animation: clickRipple 0.45s ease-out forwards;
+}
+
+@keyframes cursorRotate {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes trailFade {
+  from {
+    opacity: 0.95;
+    transform: translate(-50%, -50%) scale(1);
   }
 
-  function initTyping() {
-    const el = $("#about-text");
-    if (!el) return;
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(3.6);
+  }
+}
 
-    const text =
-      "Hello! I am a software developer with a strong passion for automation and system optimization. Always ready to solve real-world logic problems.";
-
-    let i = 0;
-    let del = false;
-
-    function loop() {
-      el.textContent = text.slice(0, i);
-
-      if (!del && i < text.length) {
-        i++;
-        setTimeout(loop, 25);
-        return;
-      }
-
-      if (!del) {
-        del = true;
-        setTimeout(loop, 4200);
-        return;
-      }
-
-      if (del && i > 0) {
-        i--;
-        setTimeout(loop, 10);
-        return;
-      }
-
-      del = false;
-      setTimeout(loop, 700);
-    }
-
-    loop();
+@keyframes cyberFade {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
   }
 
-  function toggleSettings() {
-    $("#settingsMenu")?.classList.toggle("show");
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(3) rotate(180deg);
+  }
+}
+
+@keyframes fireFade {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
   }
 
-  function openDonate() {
-    const modal = $("#donateModal");
-    const content = $("#modalContent");
-    if (!modal || !content) return;
+  to {
+    opacity: 0;
+    transform: translate(-50%, -85%) scale(0.15) rotate(90deg);
+  }
+}
 
-    updateQR();
-
-    modal.style.display = "flex";
-
-    requestAnimationFrame(() => {
-      modal.style.opacity = "1";
-      content.style.transform = "scale(1)";
-    });
+@keyframes clickRipple {
+  from {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(1);
   }
 
-  function closeDonate() {
-    const modal = $("#donateModal");
-    const content = $("#modalContent");
-    if (!modal || !content) return;
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(4.5);
+  }
+}
 
-    modal.style.opacity = "0";
-    content.style.transform = "scale(.95)";
+/* JUMPSCARE */
 
-    setTimeout(() => {
-      modal.style.display = "none";
-    }, 180);
+#jumpscare-container {
+  display: none;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  z-index: 99999;
+}
+
+#jumpscare-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.footer-tag {
+  position: fixed;
+  bottom: 15px;
+  width: 100%;
+  text-align: center;
+  color: #1e3a8a;
+  font-size: 13px;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 600;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 600px) {
+  body {
+    display: block;
+    padding: 88px 14px 48px;
   }
 
-  function getDonateData() {
-    const amountInput = $("#donateAmount");
-    const infoInput = $("#donateInfo");
-
-    const amount = (amountInput?.value || "0").replace(/\D/g, "").slice(0, 9) || "0";
-    const info = (infoInput?.value || "Donate Vinhx")
-      .replace(/[^\p{L}\p{N}\s._-]/gu, "")
-      .trim()
-      .slice(0, 80) || "Donate Vinhx";
-
-    if (amountInput) amountInput.value = amount === "0" ? "" : amount;
-    if (infoInput) infoInput.value = info;
-
-    return { amount, info };
+  .cv-card {
+    padding: 36px 22px;
+    max-width: 100%;
+    border-radius: 12px;
   }
 
-  function updateQR() {
-    const qr = $("#qrImage");
-    const content = $("#transferContent");
-    if (!qr) return;
-
-    const { amount, info } = getDonateData();
-
-    if (content) content.textContent = info;
-
-    qr.src = `/api/qr?amount=${encodeURIComponent(amount)}&info=${encodeURIComponent(info)}&t=${Date.now()}`;
+  .settings-container {
+    top: 14px;
+    right: 14px;
   }
 
-  async function copyTransferContent() {
-    const { info } = getDonateData();
-
-    try {
-      await navigator.clipboard.writeText(info);
-      toast("Copied");
-    } catch {
-      toast("Copy failed");
-    }
+  .settings-menu {
+    position: fixed;
+    top: 66px;
+    right: 14px;
+    left: 14px;
+    width: auto;
   }
 
-  function downloadQR() {
-    const { amount, info } = getDonateData();
-    const a = document.createElement("a");
-
-    a.href = `/api/qr?amount=${encodeURIComponent(amount)}&info=${encodeURIComponent(info)}&download=1`;
-    a.download = `vinhprofile-qr-${amount}.png`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
+  .avatar {
+    width: 132px;
+    height: 132px;
   }
 
-  function toast(text) {
-    let el = $(".toast");
-
-    if (!el) {
-      el = document.createElement("div");
-      el.className = "toast";
-      el.style.cssText =
-        "position:fixed;left:50%;bottom:36px;z-index:2147483647;transform:translateX(-50%);background:#18181b;border:1px solid #27272a;color:#fff;padding:10px 14px;border-radius:999px;font:600 12px Inter,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.45);opacity:0;transition:.2s";
-      document.body.appendChild(el);
-    }
-
-    el.textContent = text;
-    el.style.opacity = "1";
-
-    clearTimeout(el._timer);
-    el._timer = setTimeout(() => {
-      el.style.opacity = "0";
-    }, 1200);
+  .modal-overlay {
+    align-items: flex-start;
+    padding: 42px 14px;
   }
 
-  function triggerJumpscare() {
-    const box = $("#jumpscare-container");
-    if (!box) return;
-
-    box.style.display = "block";
-
-    setTimeout(() => {
-      box.style.display = "none";
-    }, 1200);
+  .modal-content {
+    max-width: 360px;
   }
 
-  function resetEffect() {
-    cancelAnimationFrame(state.raf);
-    clearInterval(state.timer);
+  .footer-tag {
+    bottom: 12px;
+  }
+}
 
-    state.raf = 0;
-    state.timer = 0;
-    state.effect = null;
-
-    $(".effect-canvas")?.remove();
-    $$(".particle-effect, .neon-orb").forEach((el) => el.remove());
-
-    state.canvas = null;
-    state.ctx = null;
+@media (pointer: coarse) {
+  .cursor-core,
+  .cursor-ring,
+  .cursor-glow,
+  .cursor-particle,
+  .cursor-ripple {
+    display: none !important;
   }
 
-  function createCanvas() {
-    $(".effect-canvas")?.remove();
+  .cursor-on,
+  .cursor-on * {
+    cursor: auto !important;
+  }
+}
 
-    const canvas = document.createElement("canvas");
-    canvas.className = "effect-canvas";
-    canvas.width = innerWidth * devicePixelRatio;
-    canvas.height = innerHeight * devicePixelRatio;
-    canvas.style.width = `${innerWidth}px`;
-    canvas.style.height = `${innerHeight}px`;
-
-    document.body.appendChild(canvas);
-
-    const ctx = canvas.getContext("2d");
-    ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
-
-    state.canvas = canvas;
-    state.ctx = ctx;
-
-    return canvas;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
   }
 
-  function toggleEffect(type, btn) {
-    if (reduceMotion) return;
-
-    if (type === "none" || state.effect === type) {
-      resetEffect();
-      $$("#effect-group .ctrl-btn").forEach((b) => b.classList.remove("active"));
-      return;
-    }
-
-    resetEffect();
-
-    $$("#effect-group .ctrl-btn").forEach((b) => b.classList.remove("active"));
-    btn?.classList.add("active");
-
-    state.effect = type;
-
-    if (type === "stars") startStars();
-    if (type === "matrix") startMatrix();
-    if (type === "neon") startNeon();
-    if (type === "sakura") startFalling("sakura");
-    if (type === "snow") startFalling("snow");
+  .effect-canvas,
+  .particle-effect,
+  .neon-orb,
+  .cursor-core,
+  .cursor-ring,
+  .cursor-glow,
+  .cursor-particle,
+  .cursor-ripple {
+    display: none !important;
   }
-
-  function startStars() {
-    createCanvas();
-
-    const stars = Array.from({ length: innerWidth < 768 ? 65 : 140 }, () => ({
-      x: Math.random() * innerWidth,
-      y: Math.random() * innerHeight,
-      z: Math.random() * 1 + 0.3,
-      r: Math.random() * 1.9 + 0.4,
-      vx: Math.random() * 0.18 - 0.09,
-      vy: Math.random() * 0.18 + 0.05
-    }));
-
-    function draw() {
-      const ctx = state.ctx;
-      if (!ctx) return;
-
-      ctx.clearRect(0, 0, innerWidth, innerHeight);
-
-      for (const s of stars) {
-        s.x += s.vx * s.z;
-        s.y += s.vy * s.z;
-
-        if (s.y > innerHeight + 10) s.y = -10;
-        if (s.x < -10) s.x = innerWidth + 10;
-        if (s.x > innerWidth + 10) s.x = -10;
-
-        const glow = 0.35 + Math.sin(Date.now() / 500 + s.x) * 0.25;
-
-        ctx.beginPath();
-        ctx.fillStyle = `rgba(255,255,255,${glow})`;
-        ctx.arc(s.x, s.y, s.r * s.z, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      state.raf = requestAnimationFrame(draw);
-    }
-
-    draw();
-  }
-
-  function startMatrix() {
-    createCanvas();
-
-    const ctx = state.ctx;
-    const chars = "01アイウエオカキクケコサシスセソ";
-    const font = innerWidth < 768 ? 13 : 15;
-    const cols = Math.floor(innerWidth / font);
-    const drops = Array(cols).fill(0).map(() => Math.random() * -innerHeight);
-
-    function draw() {
-      if (!ctx) return;
-
-      ctx.fillStyle = "rgba(9,9,11,0.14)";
-      ctx.fillRect(0, 0, innerWidth, innerHeight);
-      ctx.font = `${font}px JetBrains Mono, monospace`;
-
-      for (let i = 0; i < drops.length; i++) {
-        const x = i * font;
-        const y = drops[i] * font;
-        const char = chars[Math.floor(Math.random() * chars.length)];
-
-        ctx.fillStyle = "rgba(34,197,94,0.85)";
-        ctx.fillText(char, x, y);
-
-        drops[i] += 0.75;
-
-        if (y > innerHeight && Math.random() > 0.975) {
-          drops[i] = Math.random() * -20;
-        }
-      }
-
-      state.raf = requestAnimationFrame(draw);
-    }
-
-    draw();
-  }
-
-  function startNeon() {
-    for (let i = 0; i < 3; i++) {
-      const orb = document.createElement("div");
-      orb.className = "neon-orb";
-      orb.style.left = `${Math.random() * 80}vw`;
-      orb.style.top = `${Math.random() * 80}vh`;
-      document.body.appendChild(orb);
-    }
-  }
-
-  function startFalling(type) {
-    const max = innerWidth < 768 ? 35 : 75;
-    const delay = type === "snow" ? 95 : 150;
-
-    state.timer = setInterval(() => {
-      if ($$(".particle-effect").length > max) return;
-
-      const p = document.createElement("div");
-      p.className = `particle-effect particle-${type}`;
-
-      const size = type === "snow" ? Math.random() * 4 + 2 : Math.random() * 9 + 7;
-      const startX = Math.random() * innerWidth;
-      const drift = Math.random() * 180 - 90;
-      const duration = type === "snow" ? Math.random() * 3000 + 4200 : Math.random() * 3600 + 4200;
-
-      p.style.width = `${size}px`;
-      p.style.height = `${size}px`;
-      p.style.left = `${startX}px`;
-      p.style.top = `-20px`;
-
-      document.body.appendChild(p);
-
-      p.animate(
-        [
-          { transform: "translate3d(0,0,0) rotate(0deg)", opacity: 0 },
-          { transform: `translate3d(${drift * 0.35}px, ${innerHeight * 0.45}px, 0) rotate(220deg)`, opacity: 0.9 },
-          { transform: `translate3d(${drift}px, ${innerHeight + 80}px, 0) rotate(720deg)`, opacity: 0 }
-        ],
-        {
-          duration,
-          easing: "linear"
-        }
-      ).onfinish = () => p.remove();
-    }, delay);
-  }
-
-  function initCursor() {
-    if (touchDevice || reduceMotion) return;
-
-    if (!$(".cursor-core")) {
-      const glow = document.createElement("div");
-      const ring = document.createElement("div");
-      const core = document.createElement("div");
-
-      glow.className = "cursor-glow";
-      ring.className = "cursor-ring";
-      core.className = "cursor-core";
-
-      document.body.append(glow, ring, core);
-    }
-
-    const core = $(".cursor-core");
-    const ring = $(".cursor-ring");
-    const glow = $(".cursor-glow");
-
-    function draw() {
-      state.coreX += (state.mouseX - state.coreX) * 0.9;
-      state.coreY += (state.mouseY - state.coreY) * 0.9;
-      state.ringX += (state.mouseX - state.ringX) * 0.18;
-      state.ringY += (state.mouseY - state.ringY) * 0.18;
-      state.glowX += (state.mouseX - state.glowX) * 0.08;
-      state.glowY += (state.mouseY - state.glowY) * 0.08;
-
-      if (core) core.style.transform = `translate(${state.coreX}px, ${state.coreY}px) translate(-50%, -50%)`;
-      if (ring) ring.style.transform = `translate(${state.ringX}px, ${state.ringY}px) translate(-50%, -50%)`;
-      if (glow) glow.style.transform = `translate(${state.glowX}px, ${state.glowY}px) translate(-50%, -50%)`;
-
-      requestAnimationFrame(draw);
-    }
-
-    draw();
-  }
-
-  function clearCursorMode() {
-    document.body.classList.remove(
-      "cursor-on",
-      "cursor-ring-mode",
-      "cursor-cyber-mode",
-      "cursor-fire-mode",
-      "cursor-trail-mode"
-    );
-
-    state.cursor = "default";
-    $$(".cursor-particle, .cursor-ripple").forEach((el) => el.remove());
-  }
-
-  function changeCursor(type, btn) {
-    $$("#cursor-group .ctrl-btn").forEach((b) => b.classList.remove("active"));
-    btn?.classList.add("active");
-
-    clearCursorMode();
-
-    if (type === "default" || touchDevice || reduceMotion) return;
-
-    state.cursor = type;
-    document.body.classList.add("cursor-on");
-
-    if (type === "ring") document.body.classList.add("cursor-ring-mode");
-    if (type === "cyber") document.body.classList.add("cursor-cyber-mode");
-    if (type === "fire") document.body.classList.add("cursor-fire-mode");
-    if (type === "trail") document.body.classList.add("cursor-trail-mode");
-
-    spawnCursorParticle(state.mouseX, state.mouseY, true);
-  }
-
-  function spawnCursorParticle(x, y, force = false) {
-    if (touchDevice || reduceMotion || state.cursor === "default" || state.cursor === "ring") return;
-
-    const now = performance.now();
-    if (!force && now - state.lastParticle < 18) return;
-
-    state.lastParticle = now;
-
-    const particle = document.createElement("div");
-
-    if (state.cursor === "cyber") particle.className = "cursor-particle cyber";
-    if (state.cursor === "fire") particle.className = "cursor-particle fire";
-    if (state.cursor === "trail") particle.className = "cursor-particle trail";
-
-    particle.style.left = `${x + Math.random() * 10 - 5}px`;
-    particle.style.top = `${y + Math.random() * 10 - 5}px`;
-
-    document.body.appendChild(particle);
-
-    setTimeout(() => particle.remove(), 760);
-  }
-
-  function spawnClickRipple(x, y) {
-    if (touchDevice || reduceMotion || state.cursor === "default") return;
-
-    const ripple = document.createElement("div");
-    ripple.className = "cursor-ripple";
-    ripple.style.left = `${x}px`;
-    ripple.style.top = `${y}px`;
-
-    document.body.appendChild(ripple);
-
-    setTimeout(() => ripple.remove(), 480);
-  }
-
-  function bindEvents() {
-    document.addEventListener("mousemove", (e) => {
-      state.mouseX = e.clientX;
-      state.mouseY = e.clientY;
-
-      spawnCursorParticle(e.clientX, e.clientY);
-    }, { passive: true });
-
-    document.addEventListener("mousedown", (e) => {
-      spawnClickRipple(e.clientX, e.clientY);
-      $(".cursor-ring")?.style.setProperty("width", "24px");
-      $(".cursor-ring")?.style.setProperty("height", "24px");
-    });
-
-    document.addEventListener("mouseup", () => {
-      $(".cursor-ring")?.style.setProperty("width", "");
-      $(".cursor-ring")?.style.setProperty("height", "");
-    });
-
-    document.addEventListener("click", (e) => {
-      const settings = $(".settings-container");
-
-      if (settings && !settings.contains(e.target)) {
-        $("#settingsMenu")?.classList.remove("show");
-      }
-
-      if (e.target === $("#donateModal")) closeDonate();
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        closeDonate();
-        $("#settingsMenu")?.classList.remove("show");
-      }
-    });
-
-    addEventListener("resize", () => {
-      if (!state.canvas) return;
-
-      state.canvas.width = innerWidth * devicePixelRatio;
-      state.canvas.height = innerHeight * devicePixelRatio;
-      state.canvas.style.width = `${innerWidth}px`;
-      state.canvas.style.height = `${innerHeight}px`;
-      state.ctx?.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
-    });
-  }
-
-  protectClient();
-  bindEvents();
-  initCursor();
-  initEye();
-  initTyping();
-
-  fetchRealTimeViews();
-  setInterval(fetchRealTimeViews, 15000);
-
-  Object.assign(window, {
-    toggleSettings,
-    openDonate,
-    closeDonate,
-    updateQR,
-    copyTransferContent,
-    downloadQR,
-    triggerJumpscare,
-    changeCursor,
-    toggleEffect
-  });
-})();
+}
