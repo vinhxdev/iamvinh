@@ -5,7 +5,7 @@
   const $$ = (s, p = document) => [...p.querySelectorAll(s)];
 
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const mobile = matchMedia("(max-width: 768px), (pointer: coarse)").matches;
+  const touchDevice = matchMedia("(pointer: coarse)").matches;
 
   const state = {
     effect: null,
@@ -16,9 +16,13 @@
     cursor: "default",
     mouseX: innerWidth / 2,
     mouseY: innerHeight / 2,
+    coreX: innerWidth / 2,
+    coreY: innerHeight / 2,
     ringX: innerWidth / 2,
     ringY: innerHeight / 2,
-    lastTrail: 0
+    glowX: innerWidth / 2,
+    glowY: innerHeight / 2,
+    lastParticle: 0
   };
 
   function protectClient() {
@@ -53,7 +57,6 @@
       });
 
       const data = await res.json();
-
       el.textContent = Number(data.views || 1).toLocaleString("en-US");
 
       const counter = el.closest(".view-counter");
@@ -66,7 +69,7 @@
   function initEye() {
     const eye = $("#eye-parent");
     const pupil = eye?.querySelector(".pupil");
-    if (!eye || !pupil || mobile) return;
+    if (!eye || !pupil || touchDevice) return;
 
     document.addEventListener("mousemove", (e) => {
       const r = eye.getBoundingClientRect();
@@ -206,7 +209,7 @@
       el = document.createElement("div");
       el.className = "toast";
       el.style.cssText =
-        "position:fixed;left:50%;bottom:36px;z-index:999999;transform:translateX(-50%);background:#18181b;border:1px solid #27272a;color:#fff;padding:10px 14px;border-radius:999px;font:600 12px Inter,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.45);opacity:0;transition:.2s";
+        "position:fixed;left:50%;bottom:36px;z-index:2147483647;transform:translateX(-50%);background:#18181b;border:1px solid #27272a;color:#fff;padding:10px 14px;border-radius:999px;font:600 12px Inter,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.45);opacity:0;transition:.2s";
       document.body.appendChild(el);
     }
 
@@ -292,11 +295,11 @@
   function startStars() {
     createCanvas();
 
-    const stars = Array.from({ length: mobile ? 65 : 130 }, () => ({
+    const stars = Array.from({ length: innerWidth < 768 ? 65 : 140 }, () => ({
       x: Math.random() * innerWidth,
       y: Math.random() * innerHeight,
       z: Math.random() * 1 + 0.3,
-      r: Math.random() * 1.8 + 0.4,
+      r: Math.random() * 1.9 + 0.4,
       vx: Math.random() * 0.18 - 0.09,
       vy: Math.random() * 0.18 + 0.05
     }));
@@ -334,7 +337,7 @@
 
     const ctx = state.ctx;
     const chars = "01アイウエオカキクケコサシスセソ";
-    const font = mobile ? 13 : 15;
+    const font = innerWidth < 768 ? 13 : 15;
     const cols = Math.floor(innerWidth / font);
     const drops = Array(cols).fill(0).map(() => Math.random() * -innerHeight);
 
@@ -377,7 +380,7 @@
   }
 
   function startFalling(type) {
-    const max = mobile ? 35 : 70;
+    const max = innerWidth < 768 ? 35 : 75;
     const delay = type === "snow" ? 95 : 150;
 
     state.timer = setInterval(() => {
@@ -413,22 +416,35 @@
   }
 
   function initCursor() {
-    if (mobile || reduceMotion) return;
+    if (touchDevice || reduceMotion) return;
 
-    const core = document.createElement("div");
-    const ring = document.createElement("div");
+    if (!$(".cursor-core")) {
+      const glow = document.createElement("div");
+      const ring = document.createElement("div");
+      const core = document.createElement("div");
 
-    core.className = "cursor-core";
-    ring.className = "cursor-ring";
+      glow.className = "cursor-glow";
+      ring.className = "cursor-ring";
+      core.className = "cursor-core";
 
-    document.body.append(core, ring);
+      document.body.append(glow, ring, core);
+    }
+
+    const core = $(".cursor-core");
+    const ring = $(".cursor-ring");
+    const glow = $(".cursor-glow");
 
     function draw() {
+      state.coreX += (state.mouseX - state.coreX) * 0.9;
+      state.coreY += (state.mouseY - state.coreY) * 0.9;
       state.ringX += (state.mouseX - state.ringX) * 0.18;
       state.ringY += (state.mouseY - state.ringY) * 0.18;
+      state.glowX += (state.mouseX - state.glowX) * 0.08;
+      state.glowY += (state.mouseY - state.glowY) * 0.08;
 
-      core.style.transform = `translate3d(${state.mouseX}px, ${state.mouseY}px, 0) translate(-50%, -50%)`;
-      ring.style.transform = `translate3d(${state.ringX}px, ${state.ringY}px, 0) translate(-50%, -50%)`;
+      if (core) core.style.transform = `translate(${state.coreX}px, ${state.coreY}px) translate(-50%, -50%)`;
+      if (ring) ring.style.transform = `translate(${state.ringX}px, ${state.ringY}px) translate(-50%, -50%)`;
+      if (glow) glow.style.transform = `translate(${state.glowX}px, ${state.glowY}px) translate(-50%, -50%)`;
 
       requestAnimationFrame(draw);
     }
@@ -446,7 +462,7 @@
     );
 
     state.cursor = "default";
-    $$(".cursor-trail-dot, .fire-bit").forEach((el) => el.remove());
+    $$(".cursor-particle, .cursor-ripple").forEach((el) => el.remove());
   }
 
   function changeCursor(type, btn) {
@@ -455,7 +471,7 @@
 
     clearCursorMode();
 
-    if (type === "default" || mobile || reduceMotion) return;
+    if (type === "default" || touchDevice || reduceMotion) return;
 
     state.cursor = type;
     document.body.classList.add("cursor-on");
@@ -464,42 +480,55 @@
     if (type === "cyber") document.body.classList.add("cursor-cyber-mode");
     if (type === "fire") document.body.classList.add("cursor-fire-mode");
     if (type === "trail") document.body.classList.add("cursor-trail-mode");
+
+    spawnCursorParticle(state.mouseX, state.mouseY, true);
   }
 
-  function spawnCursorParticle(x, y) {
+  function spawnCursorParticle(x, y, force = false) {
+    if (touchDevice || reduceMotion || state.cursor === "default" || state.cursor === "ring") return;
+
     const now = performance.now();
+    if (!force && now - state.lastParticle < 18) return;
 
-    if (now - state.lastTrail < 24) return;
+    state.lastParticle = now;
 
-    state.lastTrail = now;
+    const particle = document.createElement("div");
 
-    if (state.cursor === "trail" || state.cursor === "cyber") {
-      const dot = document.createElement("div");
-      dot.className = "cursor-trail-dot";
-      dot.style.left = `${x}px`;
-      dot.style.top = `${y}px`;
-      document.body.appendChild(dot);
-      setTimeout(() => dot.remove(), 560);
-    }
+    if (state.cursor === "cyber") particle.className = "cursor-particle cyber";
+    if (state.cursor === "fire") particle.className = "cursor-particle fire";
+    if (state.cursor === "trail") particle.className = "cursor-particle trail";
 
-    if (state.cursor === "fire") {
-      const flame = document.createElement("div");
-      flame.className = "fire-bit";
-      flame.style.left = `${x + Math.random() * 14 - 7}px`;
-      flame.style.top = `${y + Math.random() * 14 - 7}px`;
-      document.body.appendChild(flame);
-      setTimeout(() => flame.remove(), 720);
-    }
+    particle.style.left = `${x + Math.random() * 10 - 5}px`;
+    particle.style.top = `${y + Math.random() * 10 - 5}px`;
+
+    document.body.appendChild(particle);
+
+    setTimeout(() => particle.remove(), 760);
+  }
+
+  function spawnClickRipple(x, y) {
+    if (touchDevice || reduceMotion || state.cursor === "default") return;
+
+    const ripple = document.createElement("div");
+    ripple.className = "cursor-ripple";
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+
+    document.body.appendChild(ripple);
+
+    setTimeout(() => ripple.remove(), 480);
   }
 
   function bindEvents() {
     document.addEventListener("mousemove", (e) => {
       state.mouseX = e.clientX;
       state.mouseY = e.clientY;
+
       spawnCursorParticle(e.clientX, e.clientY);
     }, { passive: true });
 
-    document.addEventListener("mousedown", () => {
+    document.addEventListener("mousedown", (e) => {
+      spawnClickRipple(e.clientX, e.clientY);
       $(".cursor-ring")?.style.setProperty("width", "24px");
       $(".cursor-ring")?.style.setProperty("height", "24px");
     });
