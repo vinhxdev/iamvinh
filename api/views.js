@@ -6,23 +6,17 @@ const ONLINE_KEY = "vinhprofile:online_users";
 
 function getIp(req) {
   const forwarded = req.headers["x-forwarded-for"];
-
-  if (typeof forwarded === "string") {
-    return forwarded.split(",")[0].trim();
-  }
-
+  if (typeof forwarded === "string") return forwarded.split(",")[0].trim();
   return req.socket?.remoteAddress || "unknown";
 }
 
-function getHash(value) {
-  return crypto.createHash("sha256").update(value).digest("hex");
+function hash(value) {
+  return crypto.createHash("sha256").update(String(value)).digest("hex");
 }
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
-    return res.status(405).json({
-      error: "Method Not Allowed"
-    });
+    return res.status(405).json({ error: "Method Not Allowed" });
   }
 
   res.setHeader("Cache-Control", "no-store");
@@ -30,8 +24,7 @@ export default async function handler(req, res) {
   try {
     const ua = req.headers["user-agent"] || "";
     const ip = getIp(req);
-
-    const id = getHash(`${ip}:${ua}`);
+    const id = hash(`${ip}:${ua}`);
     const uniqueKey = `vinhprofile:unique:${id}`;
 
     const isNew = await kv.set(uniqueKey, "1", {
@@ -41,9 +34,7 @@ export default async function handler(req, res) {
 
     let views = await kv.get(TOTAL_KEY);
 
-    if (isNew) {
-      views = await kv.incr(TOTAL_KEY);
-    }
+    if (isNew) views = await kv.incr(TOTAL_KEY);
 
     if (!views) {
       await kv.set(TOTAL_KEY, 1);
