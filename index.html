@@ -24,26 +24,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-  />
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
-    rel="stylesheet"
-  />
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./style.css" />
 </head>
 
 <body>
   <div id="jumpscare-container" aria-hidden="true">
-    <img
-      src="https://orion-uploads.openroadmedia.com/md_ebb42c5c23d5-jump-scare-feat.jpg"
-      alt=""
-      draggable="false"
-    />
+    <img src="https://orion-uploads.openroadmedia.com/md_ebb42c5c23d5-jump-scare-feat.jpg" alt="" draggable="false" />
   </div>
 
   <div class="settings-container">
@@ -54,21 +42,23 @@
     <div class="settings-menu" id="settingsMenu">
       <div class="menu-section">
         <h4>EFFECTS</h4>
-
         <div class="menu-grid" id="effect-group">
-          <button class="ctrl-btn" type="button" onclick="toggleEffect('snow', this)">Snow</button>
-          <button class="ctrl-btn" type="button" onclick="toggleEffect('spark', this)">Spark</button>
+          <button class="ctrl-btn" type="button" onclick="toggleEffect('stars', this)">Stars</button>
+          <button class="ctrl-btn" type="button" onclick="toggleEffect('matrix', this)">Matrix</button>
+          <button class="ctrl-btn" type="button" onclick="toggleEffect('neon', this)">Neon</button>
           <button class="ctrl-btn" type="button" onclick="toggleEffect('sakura', this)">Sakura</button>
+          <button class="ctrl-btn" type="button" onclick="toggleEffect('snow', this)">Snow</button>
+          <button class="ctrl-btn" type="button" onclick="toggleEffect('none', this)">Off</button>
         </div>
       </div>
 
       <div class="menu-section">
         <h4>CURSORS</h4>
-
         <div class="menu-grid" id="cursor-group">
           <button class="ctrl-btn active" type="button" onclick="changeCursor('default', this)">Normal</button>
-          <button class="ctrl-btn" type="button" onclick="changeCursor('sniper', this)">Sniper</button>
-          <button class="ctrl-btn" type="button" onclick="changeCursor('flame', this)">Flame</button>
+          <button class="ctrl-btn" type="button" onclick="changeCursor('ring', this)">Ring</button>
+          <button class="ctrl-btn" type="button" onclick="changeCursor('cyber', this)">Cyber</button>
+          <button class="ctrl-btn" type="button" onclick="changeCursor('fire', this)">Fire</button>
           <button class="ctrl-btn" type="button" onclick="changeCursor('trail', this)">Trail</button>
         </div>
       </div>
@@ -82,7 +72,7 @@
       </button>
 
       <h3 id="donateTitle">Fund my coffee</h3>
-      <p>Enter VNĐ amount</p>
+      <p class="modal-desc">Enter VNĐ amount and transfer content</p>
 
       <input
         type="number"
@@ -95,13 +85,49 @@
         autocomplete="off"
       />
 
+      <input
+        type="text"
+        id="donateInfo"
+        placeholder="Donate Vinhx"
+        maxlength="80"
+        value="Donate Vinhx"
+        oninput="updateQR()"
+        autocomplete="off"
+      />
+
+      <div class="donate-meta">
+        <div>
+          <span>Bank</span>
+          <strong>ACB</strong>
+        </div>
+        <div>
+          <span>Account</span>
+          <strong>33689707</strong>
+        </div>
+        <div>
+          <span>Name</span>
+          <strong>NGUYEN NGOC TRI VINH</strong>
+        </div>
+        <div>
+          <span>Content</span>
+          <strong id="transferContent">Donate Vinhx</strong>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" onclick="copyTransferContent()">
+          <i class="fa-regular fa-copy"></i>
+          Copy content
+        </button>
+
+        <button type="button" onclick="downloadQR()">
+          <i class="fa-solid fa-download"></i>
+          Download QR
+        </button>
+      </div>
+
       <div class="qr-box">
-        <img
-          id="qrImage"
-          src="https://img.vietqr.io/image/ACB-33689707-compact2.png?amount=0&accountName=NGUYEN%20NGOC%20TRI%20VINH&addInfo=Donate%20Vinhx"
-          alt="Donate QR Code"
-          draggable="false"
-        />
+        <img id="qrImage" src="/api/qr?amount=0&info=Donate%20Vinhx" alt="Donate QR Code" draggable="false" />
       </div>
     </div>
   </div>
@@ -124,7 +150,6 @@
             <div class="pupil"></div>
           </div>
         </div>
-
         <span id="visit-count">...</span>
         <span>views</span>
       </div>
@@ -137,7 +162,6 @@
 
     <section class="section">
       <h2>Skills</h2>
-
       <div class="skills-container">
         <span class="skill-tag">HTML/CSS</span>
         <span class="skill-tag">Python</span>
@@ -157,19 +181,15 @@
       <a href="https://vinhx.site/" target="_blank" rel="noopener noreferrer" aria-label="Website">
         <i class="fas fa-globe" aria-hidden="true"></i>
       </a>
-
       <a href="https://github.com/vinhxdev" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
         <i class="fab fa-github" aria-hidden="true"></i>
       </a>
-
       <a href="https://www.facebook.com/nguyenvinhtriowo/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
         <i class="fab fa-facebook-f" aria-hidden="true"></i>
       </a>
-
       <a href="https://steamcommunity.com/id/P1mple1st/" target="_blank" rel="noopener noreferrer" aria-label="Steam">
         <i class="fab fa-steam" aria-hidden="true"></i>
       </a>
-
       <a href="mailto:nguyenngoctrivinh72@gmail.com" aria-label="Email">
         <i class="fas fa-envelope" aria-hidden="true"></i>
       </a>
