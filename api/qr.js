@@ -8,7 +8,7 @@ function cleanAmount(value) {
 
 function cleanInfo(value) {
   return String(value || "Donate Vinhx")
-    .replace(/[^\p{L}\p{N}\s._-]/gu, "")
+    .replace(/[^\w\sÀ-ỹ._-]/g, "")
     .trim()
     .slice(0, 80) || "Donate Vinhx";
 }
