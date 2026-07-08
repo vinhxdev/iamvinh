@@ -3,10 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ============ Theme init (blocking, prevents flash of wrong theme) ============ -->
+<script>
+  (function () {
+    try {
+      var savedTheme = localStorage.getItem('vinh-theme');
+      if (savedTheme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+      var savedLang = localStorage.getItem('vinh-lang');
+      if (savedLang === 'vi') {
+        document.documentElement.setAttribute('lang', 'vi');
+      }
+    } catch (e) {}
+  })();
+</script>
+
 <title>Vinh — Developer & Sound Tinkerer</title>
 <meta name="description" content="Vinh (vinhxdev) — full-stack developer and self-taught sound tinkerer. Code by day, mixes by night.">
+<meta name="theme-color" content="#12211C">
 
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%2312211C%22/><text x=%2250%22 y=%2266%22 font-size=%2260%22 font-family=%22Georgia,serif%22 font-style=%22italic%22 fill=%22%23E8A33D%22 text-anchor=%22middle%22>V</text></svg>">
+<!-- ============ Open Graph / Social preview ============ -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Vinh — Developer & Sound Tinkerer">
+<meta property="og:description" content="Full-stack developer by daylight, self-taught sound tinkerer after dark. I ship interfaces that behave themselves and tracks that don't.">
+<meta property="og:image" content="https://vinhxdev.github.io/og-image.jpg">
+<meta property="og:url" content="https://vinhxdev.github.io/">
+<meta property="og:site_name" content="vinhxdev">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Vinh — Developer & Sound Tinkerer">
+<meta name="twitter:description" content="Full-stack developer by daylight, self-taught sound tinkerer after dark.">
+<meta name="twitter:image" content="https://vinhxdev.github.io/og-image.jpg">
+
+<!-- ============ Favicon (embedded SVG — a waveform-formed V) ============ -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2312211C'/%3E%3Cg stroke='%23E8A33D' stroke-width='7' stroke-linecap='round' fill='none'%3E%3Cpath d='M24 30 L50 74 L76 30'/%3E%3C/g%3E%3C/svg%3E">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,36 +52,56 @@
 
 <header class="site-nav">
   <a class="site-nav__logo" href="#top">VINH<span>.dev</span></a>
+
   <nav class="site-nav__links">
-    <a href="#about">about</a>
-    <a href="#elsewhere">elsewhere</a>
-    <a class="site-nav__cta" href="https://github.com/vinhxdev" target="_blank" rel="noopener">github ↗</a>
+    <a href="#about" data-i18n="nav.about">about</a>
+    <a href="#elsewhere" data-i18n="nav.elsewhere">elsewhere</a>
+    <a href="#radio" data-i18n="nav.radio">radio</a>
+    <a class="site-nav__cta" href="https://github.com/vinhxdev" target="_blank" rel="noopener" data-i18n="nav.cta">github ↗</a>
   </nav>
+
+  <div class="site-nav__controls">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <button type="button" class="lang-switch__btn is-active" data-lang="en" id="langEnBtn">EN</button>
+      <span class="lang-switch__divider" aria-hidden="true">/</span>
+      <button type="button" class="lang-switch__btn" data-lang="vi" id="langViBtn">VI</button>
+    </div>
+
+    <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle light and dark theme">
+      <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+        <circle cx="12" cy="12" r="4.2"/>
+        <path d="M12 2.5v2.4M12 19.1v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"/>
+      </svg>
+      <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 14.3A8.3 8.3 0 1 1 9.7 4a6.6 6.6 0 0 0 10.3 10.3Z"/>
+      </svg>
+    </button>
+  </div>
 </header>
 
 <main>
 
   <section class="hero" id="top">
     <div class="hero__inner">
-      <p class="eyebrow" data-reveal>// currently building things that make noise</p>
+      <p class="eyebrow" data-reveal data-i18n="hero.eyebrow">// currently building things that make noise</p>
       <h1 class="hero__title">
-        <span class="hero__title-line" data-reveal>Vinh codes,</span>
-        <span class="hero__title-line hero__title-line--accent" data-reveal>Vinh mixes.</span>
+        <span class="hero__title-line" data-reveal data-i18n="hero.title1">Vinh codes,</span>
+        <span class="hero__title-line hero__title-line--accent" data-reveal data-i18n="hero.title2">Vinh mixes.</span>
       </h1>
-      <p class="hero__sub" data-reveal>
+      <p class="hero__sub" data-reveal data-i18n="hero.sub">
         Full-stack developer by daylight, self-taught sound tinkerer after dark.
         I ship interfaces that behave themselves and tracks that don't.
       </p>
       <div class="hero__actions" data-reveal>
-        <a class="btn btn--primary" href="#elsewhere">Find me elsewhere</a>
-        <a class="btn btn--ghost" href="https://github.com/vinhxdev" target="_blank" rel="noopener">View GitHub</a>
+        <a class="btn btn--primary" href="#elsewhere" data-i18n="hero.btnPrimary">Find me elsewhere</a>
+        <a class="btn btn--ghost" href="https://github.com/vinhxdev" target="_blank" rel="noopener" data-i18n="hero.btnGhost">View GitHub</a>
       </div>
     </div>
 
     <canvas id="waveform" class="hero__waveform" aria-hidden="true"></canvas>
 
     <button class="scroll-cue" id="scrollCue" aria-label="Scroll to About section">
-      <span>scroll</span>
+      <span data-i18n="scrollcue">scroll</span>
       <span class="scroll-cue__line"></span>
     </button>
   </section>
@@ -58,19 +110,19 @@
     <span class="about__mark" aria-hidden="true">V</span>
 
     <div class="about__content">
-      <p class="eyebrow" data-reveal>who's typing</p>
-      <h2 class="about__heading" data-reveal>
+      <p class="eyebrow" data-reveal data-i18n="about.eyebrow">who's typing</p>
+      <h2 class="about__heading" data-reveal data-i18n="about.heading">
         I like problems that end in either a <em>deploy</em> or a <em>drop</em>.
       </h2>
 
       <div class="about__text" data-reveal>
-        <p>
+        <p data-i18n="about.p1">
           I'm Vinh — most places online you'll find me as <strong>vinhxdev</strong>.
           By trade I build things for the web: interfaces, small tools, and the
           occasional over-engineered side project that only I will ever use.
           By habit, I'm somewhere in a DAW, chasing a bassline that won't sit right.
         </p>
-        <p>
+        <p data-i18n="about.p2">
           The two aren't as far apart as they sound. Code and music are both just
           timing, structure, and knowing when to leave space. I spend most of my
           time on the front end, but I'm just as happy tracing a bug at 1am as I am
@@ -79,44 +131,48 @@
       </div>
 
       <ul class="about__stats" data-reveal>
-        <li><span class="about__stats-label">stack</span><span class="about__stats-value">JS · TS · React · Node</span></li>
-        <li><span class="about__stats-label">mode</span><span class="about__stats-value">day: code / night: sound</span></li>
-        <li><span class="about__stats-label">status</span><span class="about__stats-value">open to collab</span></li>
+        <li><span class="about__stats-label" data-i18n="about.stat1label">stack</span><span class="about__stats-value" data-i18n="about.stat1value">JS · TS · React · Node</span></li>
+        <li><span class="about__stats-label" data-i18n="about.stat2label">mode</span><span class="about__stats-value" data-i18n="about.stat2value">day: code / night: sound</span></li>
+        <li><span class="about__stats-label" data-i18n="about.stat3label">status</span><span class="about__stats-value" data-i18n="about.stat3value">open to collab</span></li>
       </ul>
     </div>
   </section>
 
   <section class="links" id="elsewhere">
-    <p class="eyebrow" data-reveal>elsewhere</p>
-    <h2 class="links__title" data-reveal>Find me around the internet.</h2>
+    <p class="eyebrow" data-reveal data-i18n="links.eyebrow">elsewhere</p>
+    <h2 class="links__title" data-reveal data-i18n="links.title">Find me around the internet.</h2>
 
     <div class="links__grid" data-reveal>
 
       <a class="link-card" href="https://github.com/vinhxdev" target="_blank" rel="noopener">
         <div class="link-card__top">
-          <span class="link-card__icon" aria-hidden="true">&lt;/&gt;</span>
-          <span class="link-card__arrow">↗</span>
-        </div>
-        <div class="link-card__body">
-          <p class="link-card__label">github</p>
-          <p class="link-card__handle">@vinhxdev</p>
-          <p class="link-card__desc">Where the code lives — repos, experiments, late-night commits.</p>
-        </div>
-      </a>
-
-      <a class="link-card" href="https://www.facebook.com/trivinhnguyenuwu/" target="_blank" rel="noopener">
-        <div class="link-card__top">
-          <span class="link-card__icon link-card__icon--bubble" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
-              <path d="M12 3C6.75 3 2.5 6.7 2.5 11.25c0 2.62 1.42 4.95 3.63 6.46-.12 1.06-.5 2.4-1.13 3.54 1.42-.28 2.9-.9 4.02-1.63 1 .28 2.06.43 3.98.43 5.25 0 9.5-3.7 9.5-8.25S17.75 3 12 3Z"/>
+          <span class="link-card__icon-wrap" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.64 1.59.24 2.76.12 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.7 5.4-5.26 5.68.41.36.78 1.07.78 2.15 0 1.55-.01 2.8-.01 3.18 0 .31.21.67.8.55A10.52 10.52 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5Z"/>
             </svg>
           </span>
           <span class="link-card__arrow">↗</span>
         </div>
         <div class="link-card__body">
-          <p class="link-card__label">facebook</p>
+          <p class="link-card__label" data-i18n="card.githubLabel">github</p>
+          <p class="link-card__handle">@vinhxdev</p>
+          <p class="link-card__desc" data-i18n="card.githubDesc">Where the code lives — repos, experiments, late-night commits.</p>
+        </div>
+      </a>
+
+      <a class="link-card" href="https://www.facebook.com/trivinhnguyenuwu/" target="_blank" rel="noopener">
+        <div class="link-card__top">
+          <span class="link-card__icon-wrap" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M24 12.07C24 5.66 18.63.5 12 .5S0 5.66 0 12.07c0 5.79 4.39 10.59 10.13 11.43v-8.09H7.08v-3.34h3.05V9.41c0-3.02 1.8-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.95h-1.51c-1.49 0-1.95.93-1.95 1.89v2.27h3.32l-.53 3.34h-2.79v8.09C19.61 22.66 24 17.86 24 12.07Z"/>
+            </svg>
+          </span>
+          <span class="link-card__arrow">↗</span>
+        </div>
+        <div class="link-card__body">
+          <p class="link-card__label" data-i18n="card.facebookLabel">facebook</p>
           <p class="link-card__handle">trivinhnguyenuwu</p>
-          <p class="link-card__desc">Say hi, or just lurk from the timeline. I don't mind either.</p>
+          <p class="link-card__desc" data-i18n="card.facebookDesc">Say hi, or just lurk from the timeline. I don't mind either.</p>
         </div>
       </a>
 
@@ -124,23 +180,66 @@
 
     <a class="sound-card" id="soundCard" href="https://soundcloud.com/47_nguyen-ngoc-tri-vinh" target="_blank" rel="noopener" data-reveal>
       <div class="sound-card__left">
-        <p class="link-card__label">soundcloud</p>
+        <span class="link-card__icon-wrap link-card__icon-wrap--sound" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8.6 10.2c.3-2.6 2.5-4.6 5.2-4.6 2.5 0 4.6 1.7 5.1 4a3.6 3.6 0 0 1-.4 7.2H8.9a3.15 3.15 0 0 1-.3-6.6Z"/>
+          </svg>
+        </span>
+        <p class="link-card__label" data-i18n="sound.label">soundcloud</p>
         <p class="sound-card__handle">47_nguyen-ngoc-tri-vinh</p>
-        <p class="sound-card__desc">Tracks, mixes, and whatever's been stuck in my head this week.</p>
-        <span class="sound-card__cta">Press play <span class="link-card__arrow">↗</span></span>
+        <p class="sound-card__desc" data-i18n="sound.desc">Tracks, mixes, and whatever's been stuck in my head this week.</p>
+        <span class="sound-card__cta"><span data-i18n="sound.cta">Press play</span> <span class="link-card__arrow">↗</span></span>
       </div>
       <div class="sound-card__eq" id="soundEq" aria-hidden="true"></div>
     </a>
   </section>
 
+  <section class="radio" id="radio">
+    <p class="eyebrow" data-reveal data-i18n="radio.eyebrow">now playing</p>
+    <h2 class="radio__title" data-reveal data-i18n="radio.title">A track that's had me on repeat lately.</h2>
+
+    <div class="radio-widget" data-reveal>
+      <div class="radio-widget__visual">
+        <div class="vinyl" aria-hidden="true">
+          <div class="vinyl__grooves"></div>
+          <div class="vinyl__label">V</div>
+        </div>
+        <div class="radio-widget__eq" id="radioEq" aria-hidden="true"></div>
+      </div>
+
+      <div class="radio-widget__info">
+        <p class="radio-widget__kicker" data-i18n="radio.kicker">personal radio</p>
+        <p class="radio-widget__note" data-i18n="radio.note">Hit play — no login, no ads, just the track.</p>
+        <div class="radio-widget__player">
+          <iframe
+            title="Spotify player — currently playing track"
+            src="https://open.spotify.com/embed/track/3UsJUXvHb7qz4GiQtEc4a4?utm_source=generator&theme=0"
+            width="100%"
+            height="152"
+            frameborder="0"
+            allowfullscreen
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <footer class="footer">
-  <p class="footer__text">Designed &amp; built from scratch by Vinh. © <span id="year"></span></p>
+  <div class="footer__brand">
+    <svg class="footer__logo" viewBox="0 0 40 40" aria-hidden="true">
+      <rect width="40" height="40" rx="10" fill="var(--amber)" opacity="0.14"/>
+      <path d="M11 12 L20 30 L29 12" fill="none" stroke="var(--amber)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <p class="footer__text">Designed &amp; built from scratch by vinhx. © 2026</p>
+  </div>
   <div class="footer__links">
-    <a href="https://github.com/vinhxdev" target="_blank" rel="noopener">github</a>
-    <a href="https://www.facebook.com/trivinhnguyenuwu/" target="_blank" rel="noopener">facebook</a>
-    <a href="https://soundcloud.com/47_nguyen-ngoc-tri-vinh" target="_blank" rel="noopener">soundcloud</a>
+    <a href="https://github.com/vinhxdev" target="_blank" rel="noopener" data-i18n="footer.github">github</a>
+    <a href="https://www.facebook.com/trivinhnguyenuwu/" target="_blank" rel="noopener" data-i18n="footer.facebook">facebook</a>
+    <a href="https://soundcloud.com/47_nguyen-ngoc-tri-vinh" target="_blank" rel="noopener" data-i18n="footer.soundcloud">soundcloud</a>
   </div>
   <button class="footer__top" id="backToTop" aria-label="Back to top">↑</button>
 </footer>
