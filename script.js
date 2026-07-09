@@ -1,7 +1,7 @@
 /* ============================================================
-   VINH — PORTFOLIO INTERACTIONS
-   Theme toggle, language switch, smooth scroll, scroll-reveal,
-   ambient waveform canvas, equalizer bars, footer utilities.
+   VINHXDEV — PORTFOLIO INTERACTIONS
+   Theme toggle, language switch, email copy, scroll progress,
+   smooth scroll, scroll-reveal, ambient waveform, equalizers.
    ============================================================ */
 
 /* ---------------------------------------------------------
@@ -9,12 +9,12 @@
 --------------------------------------------------------- */
 const translations = {
   en: {
-    nav: { about: "about", elsewhere: "elsewhere", radio: "radio", cta: "github ↗" },
+    nav: { about: "about", elsewhere: "elsewhere", learning: "learning", radio: "radio", email: "copy email" },
     hero: {
       eyebrow: "// currently building things that make noise",
       title1: "Vinh codes,",
       title2: "Vinh mixes.",
-      sub: "Full-stack developer by daylight, self-taught sound tinkerer after dark. I ship interfaces that behave themselves and tracks that don't.",
+      sub: "I love coding and listening to music whenever I have free time.",
       btnPrimary: "Find me elsewhere",
       btnGhost: "View GitHub"
     },
@@ -22,11 +22,11 @@ const translations = {
     about: {
       eyebrow: "who's typing",
       heading: "I like problems that end in either a <em>deploy</em> or a <em>drop</em>.",
-      p1: "I'm Vinh — most places online you'll find me as <strong>vinhxdev</strong>. By trade I build things for the web: interfaces, small tools, and the occasional over-engineered side project that only I will ever use. By habit, I'm somewhere in a DAW, chasing a bassline that won't sit right.",
-      p2: "The two aren't as far apart as they sound. Code and music are both just timing, structure, and knowing when to leave space. I spend most of my time on the front end, but I'm just as happy tracing a bug at 1am as I am layering a track past 2.",
-      stat1label: "stack", stat1value: "JS · TS · React · Node",
-      stat2label: "mode", stat2value: "day: code / night: sound",
-      stat3label: "status", stat3value: "open to collab"
+      p1: "I'm Vinh — you'll find me online as <strong>vinhxdev</strong>.",
+      p2: "I love coding and listening to music whenever I have free time.",
+      stat1label: "mode", stat1value: "day: code / night: sound",
+      stat2label: "status", stat2value: "open to collab",
+      techLabel: "tech stack"
     },
     links: { eyebrow: "elsewhere", title: "Find me around the internet." },
     card: {
@@ -40,22 +40,30 @@ const translations = {
       desc: "Tracks, mixes, and whatever's been stuck in my head this week.",
       cta: "Press play"
     },
+    learning: {
+      eyebrow: "learning hub",
+      title: "A few resources worth your time.",
+      mdn: "The reference for HTML, CSS, and JavaScript — where I look things up first.",
+      fcc: "Free, structured courses covering the full path from basics to full-stack.",
+      cs50: "Harvard's intro to computer science — a solid foundation in how systems work."
+    },
     radio: {
       eyebrow: "now playing",
       title: "A track that's had me on repeat lately.",
       kicker: "personal radio",
       note: "Hit play — no login, no ads, just the track."
     },
-    footer: { github: "github", facebook: "facebook", soundcloud: "soundcloud" }
+    footer: { github: "github", facebook: "facebook", soundcloud: "soundcloud" },
+    emailCopied: "copied!"
   },
 
   vi: {
-    nav: { about: "giới thiệu", elsewhere: "kết nối", radio: "radio", cta: "github ↗" },
+    nav: { about: "giới thiệu", elsewhere: "kết nối", learning: "học tập", radio: "radio", email: "sao chép email" },
     hero: {
       eyebrow: "// đang xây những thứ gây ồn theo cách riêng",
       title1: "Vinh code,",
       title2: "Vinh mix.",
-      sub: "Là full-stack developer vào ban ngày, tay chơi âm thanh tự học vào ban đêm. Mình làm ra giao diện biết cư xử đúng mực, còn những bản mix thì không hẳn.",
+      sub: "Mình thích code và nghe nhạc mỗi khi có thời gian rảnh.",
       btnPrimary: "Tìm mình ở nơi khác",
       btnGhost: "Xem GitHub"
     },
@@ -63,11 +71,11 @@ const translations = {
     about: {
       eyebrow: "ai đang gõ phím",
       heading: "Mình thích những vấn đề kết thúc bằng một lần <em>deploy</em> hoặc một bản <em>drop</em>.",
-      p1: "Mình là Vinh — hầu hết mọi nơi trên mạng bạn sẽ thấy mình với cái tên <strong>vinhxdev</strong>. Công việc chính là xây những thứ cho web: giao diện, công cụ nhỏ, và thỉnh thoảng vài dự án cá nhân bị làm phức tạp hoá quá mức mà chỉ mình mình dùng. Còn theo thói quen thì mình hay lẩn quẩn trong một cái DAW, đuổi theo một đường bass chưa vừa ý.",
-      p2: "Hai việc này không xa nhau như mọi người nghĩ. Code và âm nhạc đều là chuyện timing, cấu trúc, và biết khi nào nên để khoảng lặng. Phần lớn thời gian mình làm front-end, nhưng debug lúc 1 giờ sáng hay chồng lớp âm thanh qua 2 giờ đêm thì mình đều thấy vui như nhau.",
-      stat1label: "công nghệ", stat1value: "JS · TS · React · Node",
-      stat2label: "chế độ", stat2value: "ngày: code / đêm: âm thanh",
-      stat3label: "trạng thái", stat3value: "sẵn sàng hợp tác"
+      p1: "Mình là Vinh — hầu hết mọi nơi trên mạng bạn sẽ thấy mình với cái tên <strong>vinhxdev</strong>.",
+      p2: "Mình thích code và nghe nhạc mỗi khi có thời gian rảnh.",
+      stat1label: "chế độ", stat1value: "ngày: code / đêm: âm thanh",
+      stat2label: "trạng thái", stat2value: "sẵn sàng hợp tác",
+      techLabel: "công nghệ dùng"
     },
     links: { eyebrow: "kết nối", title: "Tìm mình quanh đây trên internet." },
     card: {
@@ -81,17 +89,26 @@ const translations = {
       desc: "Track, bản mix, và bất cứ giai điệu nào đang vướng trong đầu mình tuần này.",
       cta: "Nhấn nghe"
     },
+    learning: {
+      eyebrow: "tài liệu học tập",
+      title: "Vài tài nguyên đáng để bạn dành thời gian.",
+      mdn: "Tài liệu tham khảo cho HTML, CSS và JavaScript — nơi mình tra cứu đầu tiên.",
+      fcc: "Khóa học miễn phí, có lộ trình rõ ràng từ cơ bản đến full-stack.",
+      cs50: "Nhập môn khoa học máy tính của Harvard — nền tảng vững cho cách hệ thống vận hành."
+    },
     radio: {
       eyebrow: "đang phát",
       title: "Bản nhạc mình nghe lặp lại suốt dạo này.",
       kicker: "radio cá nhân",
       note: "Nhấn play — không cần đăng nhập, không quảng cáo, chỉ có nhạc."
     },
-    footer: { github: "github", facebook: "facebook", soundcloud: "soundcloud" }
+    footer: { github: "github", facebook: "facebook", soundcloud: "soundcloud" },
+    emailCopied: "đã sao chép!"
   }
 };
 
 let currentTheme = "dark";
+let currentLang = "en";
 
 document.addEventListener("DOMContentLoaded", () => {
   const prefersReducedMotion = window.matchMedia(
@@ -99,19 +116,21 @@ document.addEventListener("DOMContentLoaded", () => {
   ).matches;
 
   /* ---------------------------------------------------------
-     1. Footer year is fixed per brief (© 2026), no JS needed.
-     2. Language switch
+     1. Language switch
   --------------------------------------------------------- */
   const langEnBtn = document.getElementById("langEnBtn");
   const langViBtn = document.getElementById("langViBtn");
 
   function applyLanguage(lang) {
     const dict = translations[lang] || translations.en;
+    currentLang = lang;
+
     document.querySelectorAll("[data-i18n]").forEach((el) => {
       const key = el.getAttribute("data-i18n");
       const value = key.split(".").reduce((acc, k) => (acc ? acc[k] : undefined), dict);
       if (value !== undefined) el.innerHTML = value;
     });
+
     document.documentElement.lang = lang;
     if (langEnBtn) langEnBtn.classList.toggle("is-active", lang === "en");
     if (langViBtn) langViBtn.classList.toggle("is-active", lang === "vi");
@@ -126,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (langViBtn) langViBtn.addEventListener("click", () => applyLanguage("vi"));
 
   /* ---------------------------------------------------------
-     3. Theme toggle
+     2. Theme toggle
   --------------------------------------------------------- */
   const themeToggle = document.getElementById("themeToggle");
   const themeColorMeta = document.querySelector('meta[name="theme-color"]');
@@ -139,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.documentElement.removeAttribute("data-theme");
     }
     if (themeColorMeta) {
-      themeColorMeta.setAttribute("content", theme === "light" ? "#F7F2E7" : "#12211C");
+      themeColorMeta.setAttribute("content", theme === "light" ? "#F7F2E7" : "#0A0B0A");
     }
     try { localStorage.setItem("vinh-theme", theme); } catch (e) {}
   }
@@ -154,7 +173,63 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------------------------------------------------------
-     4. Smooth scroll for internal links + scroll cue + back-to-top
+     3. 1-click email copy
+  --------------------------------------------------------- */
+  const emailCopyBtn = document.getElementById("emailCopyBtn");
+  if (emailCopyBtn) {
+    const labelEl = emailCopyBtn.querySelector(".email-copy__label");
+    const email = emailCopyBtn.getAttribute("data-email") || "";
+    let resetTimeout;
+
+    emailCopyBtn.addEventListener("click", async () => {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(email);
+        } else {
+          const tempInput = document.createElement("textarea");
+          tempInput.value = email;
+          tempInput.style.position = "fixed";
+          tempInput.style.opacity = "0";
+          document.body.appendChild(tempInput);
+          tempInput.select();
+          document.execCommand("copy");
+          document.body.removeChild(tempInput);
+        }
+
+        emailCopyBtn.classList.add("is-copied");
+        if (labelEl) {
+          const dict = translations[currentLang] || translations.en;
+          labelEl.textContent = dict.emailCopied || "copied!";
+        }
+
+        clearTimeout(resetTimeout);
+        resetTimeout = setTimeout(() => {
+          emailCopyBtn.classList.remove("is-copied");
+          if (labelEl) {
+            const dict = translations[currentLang] || translations.en;
+            labelEl.textContent = dict.nav.email;
+          }
+        }, 2000);
+      } catch (err) {
+        console.error("Clipboard copy failed:", err);
+      }
+    });
+  }
+
+  /* ---------------------------------------------------------
+     4. Scroll progress bar
+  --------------------------------------------------------- */
+  const scrollProgress = document.getElementById("scrollProgress");
+  function updateScrollProgress() {
+    if (!scrollProgress) return;
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const percent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    scrollProgress.style.width = `${percent}%`;
+  }
+
+  /* ---------------------------------------------------------
+     5. Smooth scroll for internal links + scroll cue + back-to-top
   --------------------------------------------------------- */
   const smoothScrollTo = (selector) => {
     const target = document.querySelector(selector);
@@ -188,7 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------------------------------------------------------
-     5. Scroll-reveal via IntersectionObserver
+     6. Scroll-reveal via IntersectionObserver
   --------------------------------------------------------- */
   const revealEls = document.querySelectorAll("[data-reveal]");
 
@@ -213,7 +288,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------------------------------------------------------
-     6. Ambient hero waveform (canvas)
+     7. Ambient hero waveform (canvas)
   --------------------------------------------------------- */
   const canvas = document.getElementById("waveform");
 
@@ -249,7 +324,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const barWidth = width / bars.length;
       const isLight = currentTheme === "light";
-      const topAlpha = isLight ? 0.55 : 0.9;
+      const topAlpha = isLight ? 0.55 : 0.85;
       const bottomAlpha = isLight ? 0.03 : 0.05;
 
       bars.forEach((bar, i) => {
@@ -295,8 +370,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------------------------------------------------------
-     7. Equalizer bar generator (shared by SoundCloud card
-        and the Radio widget)
+     8. Equalizer bar generator (SoundCloud card + Radio widget)
   --------------------------------------------------------- */
   function createEqBars(container, count, minPeak, maxPeak, minDur, maxDur) {
     if (!container) return;
@@ -318,13 +392,13 @@ document.addEventListener("DOMContentLoaded", () => {
   createEqBars(document.getElementById("radioEq"), 9, 40, 100, 0.6, 1.3);
 
   /* ---------------------------------------------------------
-     8. Nav background intensifies slightly on scroll
+     9. Nav background intensifies on scroll + progress bar sync
   --------------------------------------------------------- */
   const nav = document.querySelector(".site-nav");
-  if (nav) {
-    let ticking = false;
+  let ticking = false;
 
-    function updateNav() {
+  function updateOnScroll() {
+    if (nav) {
       if (window.scrollY > 40) {
         nav.style.background = "var(--ink)";
         nav.style.boxShadow = "0 1px 0 var(--border)";
@@ -332,16 +406,17 @@ document.addEventListener("DOMContentLoaded", () => {
         nav.style.background = "linear-gradient(to bottom, var(--ink), transparent)";
         nav.style.boxShadow = "none";
       }
-      ticking = false;
     }
-
-    window.addEventListener("scroll", () => {
-      if (!ticking) {
-        requestAnimationFrame(updateNav);
-        ticking = true;
-      }
-    });
-
-    updateNav();
+    updateScrollProgress();
+    ticking = false;
   }
+
+  window.addEventListener("scroll", () => {
+    if (!ticking) {
+      requestAnimationFrame(updateOnScroll);
+      ticking = true;
+    }
+  });
+
+  updateOnScroll();
 });
