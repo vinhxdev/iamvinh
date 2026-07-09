@@ -1,7 +1,8 @@
 /* ============================================================
    VINHXDEV — PORTFOLIO INTERACTIONS
-   Theme toggle, language switch, email copy, scroll progress,
-   smooth scroll, scroll-reveal, ambient waveform, equalizers.
+   Theme (system + manual), language switch, email copy,
+   scroll progress, scroll-reveal, ambient waveform, equalizers,
+   interactive terminal, vinhxcapcha anti-spam gate.
    ============================================================ */
 
 /* ---------------------------------------------------------
@@ -9,15 +10,15 @@
 --------------------------------------------------------- */
 const translations = {
   en: {
-    nav: { about: "about", elsewhere: "elsewhere", learning: "learning", radio: "radio", email: "copy email" },
+    nav: { about: "about", elsewhere: "elsewhere", learning: "learning", terminal: "terminal", radio: "radio", email: "copy email" },
     hero: {
       eyebrow: "// currently building things that make noise",
-      title1: "Vinh codes,",
-      title2: "Vinh mixes.",
-      sub: "I love coding and listening to music whenever I have free time.",
+      title: "Hello, I'm Vinh.",
+      sub: "I'm Vinh — most places online you'll find me as vinhxdev. I love coding and listening to music whenever I have free time.",
       btnPrimary: "Find me elsewhere",
       btnGhost: "View GitHub"
     },
+    status: { text: "Ready for new code strings" },
     scrollcue: "scroll",
     about: {
       eyebrow: "who's typing",
@@ -47,26 +48,57 @@ const translations = {
       fcc: "Free, structured courses covering the full path from basics to full-stack.",
       cs50: "Harvard's intro to computer science — a solid foundation in how systems work."
     },
+    terminal: {
+      eyebrow: "try it yourself",
+      title: "A tiny terminal, just for fun.",
+      intro: "Type <strong>help</strong> to see available commands.",
+      help: [
+        "Available commands:",
+        "help — show this list",
+        "about — quick bio",
+        "skills — tech stack",
+        "music — now playing",
+        "clear — clear the screen"
+      ],
+      about: [
+        "Vinh — full-stack developer.",
+        "I love coding and listening to music whenever I have free time."
+      ],
+      skills: ["JavaScript · HTML/CSS · Git · Lua · Systems"],
+      music: [
+        "spinning up the turntable...",
+        "♪ now playing: \"keep steady\" — sosocamo ♪",
+        "press play in the Radio section below to hear it for real."
+      ],
+      notFound: (cmd) => `command not found: ${cmd} — type "help" for options.`
+    },
     radio: {
       eyebrow: "now playing",
       title: "A track that's had me on repeat lately.",
       kicker: "personal radio",
+      track: "currently: \"keep steady\" — sosocamo",
       note: "Hit play — no login, no ads, just the track."
     },
     footer: { github: "github", facebook: "facebook", soundcloud: "soundcloud" },
-    emailCopied: "copied!"
+    emailCopied: "copied!",
+    capcha: {
+      title: "Quick check before you continue",
+      note: "We noticed a burst of activity. Please confirm you're not a bot.",
+      label: "Click to verify you're a human developer",
+      verified: "Verified — welcome back."
+    }
   },
 
   vi: {
-    nav: { about: "giới thiệu", elsewhere: "kết nối", learning: "học tập", radio: "radio", email: "sao chép email" },
+    nav: { about: "giới thiệu", elsewhere: "kết nối", learning: "học tập", terminal: "terminal", radio: "radio", email: "sao chép email" },
     hero: {
       eyebrow: "// đang xây những thứ gây ồn theo cách riêng",
-      title1: "Vinh code,",
-      title2: "Vinh mix.",
-      sub: "Mình thích code và nghe nhạc mỗi khi có thời gian rảnh.",
+      title: "Xin chào, mình là Vinh.",
+      sub: "Mình là Vinh — hầu hết mọi nơi trên mạng bạn sẽ thấy mình với cái tên vinhxdev. Mình thích code và nghe nhạc mỗi khi có thời gian rảnh.",
       btnPrimary: "Tìm mình ở nơi khác",
       btnGhost: "Xem GitHub"
     },
+    status: { text: "Sẵn sàng vọc vạch code mới" },
     scrollcue: "cuộn",
     about: {
       eyebrow: "ai đang gõ phím",
@@ -96,14 +128,45 @@ const translations = {
       fcc: "Khóa học miễn phí, có lộ trình rõ ràng từ cơ bản đến full-stack.",
       cs50: "Nhập môn khoa học máy tính của Harvard — nền tảng vững cho cách hệ thống vận hành."
     },
+    terminal: {
+      eyebrow: "thử ngay tại đây",
+      title: "Một cái terminal nhỏ, cho vui thôi.",
+      intro: "Gõ <strong>help</strong> để xem các lệnh có sẵn.",
+      help: [
+        "Các lệnh có sẵn:",
+        "help — hiển thị danh sách này",
+        "about — giới thiệu nhanh",
+        "skills — công nghệ đang dùng",
+        "music — bài đang nghe",
+        "clear — xoá màn hình"
+      ],
+      about: [
+        "Vinh — full-stack developer.",
+        "Mình thích code và nghe nhạc mỗi khi có thời gian rảnh."
+      ],
+      skills: ["JavaScript · HTML/CSS · Git · Lua · Systems"],
+      music: [
+        "đang quay đĩa than...",
+        "♪ đang phát: \"keep steady\" — sosocamo ♪",
+        "nhấn play ở mục Radio bên dưới để nghe thật nhé."
+      ],
+      notFound: (cmd) => `không tìm thấy lệnh: ${cmd} — gõ "help" để xem danh sách.`
+    },
     radio: {
       eyebrow: "đang phát",
       title: "Bản nhạc mình nghe lặp lại suốt dạo này.",
       kicker: "radio cá nhân",
+      track: "đang phát: \"keep steady\" — sosocamo",
       note: "Nhấn play — không cần đăng nhập, không quảng cáo, chỉ có nhạc."
     },
     footer: { github: "github", facebook: "facebook", soundcloud: "soundcloud" },
-    emailCopied: "đã sao chép!"
+    emailCopied: "đã sao chép!",
+    capcha: {
+      title: "Xác minh nhanh trước khi tiếp tục",
+      note: "Mình nhận thấy có thao tác liên tục bất thường. Vui lòng xác nhận bạn không phải bot.",
+      label: "Nhấn để xác minh bạn là một developer thật",
+      verified: "Đã xác minh — chào mừng quay lại."
+    }
   }
 };
 
@@ -145,12 +208,17 @@ document.addEventListener("DOMContentLoaded", () => {
   if (langViBtn) langViBtn.addEventListener("click", () => applyLanguage("vi"));
 
   /* ---------------------------------------------------------
-     2. Theme toggle
+     2. Theme: system auto-detect + manual override
   --------------------------------------------------------- */
   const themeToggle = document.getElementById("themeToggle");
   const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+  const systemSchemeQuery = window.matchMedia ? window.matchMedia("(prefers-color-scheme: light)") : null;
 
-  function applyTheme(theme) {
+  function hasManualThemeOverride() {
+    try { return localStorage.getItem("vinh-theme") !== null; } catch (e) { return false; }
+  }
+
+  function applyTheme(theme, { manual = false } = {}) {
     currentTheme = theme;
     if (theme === "light") {
       document.documentElement.setAttribute("data-theme", "light");
@@ -158,18 +226,37 @@ document.addEventListener("DOMContentLoaded", () => {
       document.documentElement.removeAttribute("data-theme");
     }
     if (themeColorMeta) {
-      themeColorMeta.setAttribute("content", theme === "light" ? "#F7F2E7" : "#0A0B0A");
+      themeColorMeta.setAttribute("content", theme === "light" ? "#F7F2E7" : "#0A0A0A");
     }
-    try { localStorage.setItem("vinh-theme", theme); } catch (e) {}
+    if (manual) {
+      try { localStorage.setItem("vinh-theme", theme); } catch (e) {}
+    }
   }
 
-  const startingTheme = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
-  applyTheme(startingTheme);
+  // Determine the theme actually applied by the blocking head script.
+  const initialTheme = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+  currentTheme = initialTheme;
+  if (themeColorMeta) {
+    themeColorMeta.setAttribute("content", initialTheme === "light" ? "#F7F2E7" : "#0A0A0A");
+  }
 
   if (themeToggle) {
     themeToggle.addEventListener("click", () => {
-      applyTheme(currentTheme === "light" ? "dark" : "light");
+      applyTheme(currentTheme === "light" ? "dark" : "light", { manual: true });
     });
+  }
+
+  // Live-follow the OS theme only while the user hasn't manually chosen one.
+  if (systemSchemeQuery) {
+    const handleSystemChange = (e) => {
+      if (hasManualThemeOverride()) return;
+      applyTheme(e.matches ? "light" : "dark", { manual: false });
+    };
+    if (systemSchemeQuery.addEventListener) {
+      systemSchemeQuery.addEventListener("change", handleSystemChange);
+    } else if (systemSchemeQuery.addListener) {
+      systemSchemeQuery.addListener(handleSystemChange);
+    }
   }
 
   /* ---------------------------------------------------------
@@ -419,4 +506,151 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   updateOnScroll();
+
+  /* ---------------------------------------------------------
+     10. Interactive mock terminal
+  --------------------------------------------------------- */
+  const terminalOutput = document.getElementById("terminalOutput");
+  const terminalInput = document.getElementById("terminalInput");
+  const terminalBody = document.getElementById("terminalBody");
+
+  function scrollTerminalToBottom() {
+    if (terminalOutput) terminalOutput.scrollTop = terminalOutput.scrollHeight;
+  }
+
+  function addTerminalLine(text, variant) {
+    if (!terminalOutput) return;
+    const line = document.createElement("p");
+    line.className = "terminal-line" + (variant ? ` terminal-line--${variant}` : "");
+    line.innerHTML = text;
+    terminalOutput.appendChild(line);
+    scrollTerminalToBottom();
+  }
+
+  function addTerminalLinesWithDelay(lines, variant, gap) {
+    lines.forEach((text, i) => {
+      setTimeout(() => addTerminalLine(text, variant), i * gap);
+    });
+  }
+
+  function runTerminalCommand(raw) {
+    const dict = (translations[currentLang] || translations.en).terminal;
+    const cmd = raw.trim().toLowerCase();
+
+    addTerminalLine(raw || "&nbsp;", "command");
+
+    if (!cmd) return;
+
+    switch (cmd) {
+      case "help":
+        dict.help.forEach((line) => addTerminalLine(line, "muted"));
+        break;
+      case "about":
+        dict.about.forEach((line) => addTerminalLine(line));
+        break;
+      case "skills":
+        dict.skills.forEach((line) => addTerminalLine(line, "accent"));
+        break;
+      case "music":
+        addTerminalLinesWithDelay(dict.music, "accent", 380);
+        break;
+      case "clear":
+        if (terminalOutput) terminalOutput.innerHTML = "";
+        break;
+      default:
+        addTerminalLine(dict.notFound(cmd), "error");
+    }
+  }
+
+  if (terminalInput) {
+    terminalInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        const value = terminalInput.value;
+        terminalInput.value = "";
+        runTerminalCommand(value);
+      }
+    });
+  }
+
+  if (terminalBody) {
+    terminalBody.addEventListener("click", () => {
+      if (terminalInput) terminalInput.focus();
+    });
+  }
+
+  /* ---------------------------------------------------------
+     11. vinhxcapcha — rapid-click / spam detection gate
+  --------------------------------------------------------- */
+  const capchaOverlay = document.getElementById("capchaOverlay");
+  const capchaCheckbox = document.getElementById("capchaCheckbox");
+  const capchaLabel = document.getElementById("capchaLabel");
+
+  const RAGE_CLICK_THRESHOLD = 5;
+  const RAGE_CLICK_WINDOW_MS = 900;
+  let clickTimestamps = [];
+  let capchaOpen = false;
+
+  function showCapcha() {
+    if (!capchaOverlay || capchaOpen) return;
+    capchaOpen = true;
+    capchaOverlay.hidden = false;
+    document.body.classList.add("is-locked");
+    // force a reflow so the transition triggers reliably
+    void capchaOverlay.offsetWidth;
+    capchaOverlay.classList.add("is-visible");
+
+    if (capchaCheckbox) {
+      capchaCheckbox.classList.remove("is-verifying", "is-verified");
+      capchaCheckbox.setAttribute("aria-pressed", "false");
+    }
+    if (capchaLabel) {
+      const dict = translations[currentLang] || translations.en;
+      capchaLabel.textContent = dict.capcha.label;
+    }
+  }
+
+  function hideCapcha() {
+    if (!capchaOverlay) return;
+    capchaOverlay.classList.remove("is-visible");
+    document.body.classList.remove("is-locked");
+    setTimeout(() => {
+      capchaOverlay.hidden = true;
+      capchaOpen = false;
+    }, 350);
+  }
+
+  if (capchaCheckbox) {
+    capchaCheckbox.addEventListener("click", () => {
+      if (capchaCheckbox.classList.contains("is-verifying") || capchaCheckbox.classList.contains("is-verified")) return;
+
+      capchaCheckbox.classList.add("is-verifying");
+      capchaCheckbox.setAttribute("aria-pressed", "true");
+
+      setTimeout(() => {
+        capchaCheckbox.classList.remove("is-verifying");
+        capchaCheckbox.classList.add("is-verified");
+        if (capchaLabel) {
+          const dict = translations[currentLang] || translations.en;
+          capchaLabel.textContent = dict.capcha.verified;
+        }
+        clickTimestamps = [];
+
+        setTimeout(hideCapcha, 700);
+      }, 650);
+    });
+  }
+
+  document.addEventListener("click", (e) => {
+    if (capchaOverlay && capchaOverlay.contains(e.target)) return;
+    if (capchaOpen) return;
+
+    const now = Date.now();
+    clickTimestamps.push(now);
+    clickTimestamps = clickTimestamps.filter((ts) => now - ts <= RAGE_CLICK_WINDOW_MS);
+
+    if (clickTimestamps.length >= RAGE_CLICK_THRESHOLD) {
+      clickTimestamps = [];
+      showCapcha();
+    }
+  });
 });
