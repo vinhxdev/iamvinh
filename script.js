@@ -2,7 +2,8 @@
    VINHXDEV — PORTFOLIO INTERACTIONS
    Theme (system + manual), language switch, email copy,
    scroll progress, scroll-reveal, ambient waveform, equalizers,
-   interactive terminal, vinhxcapcha anti-spam gate.
+   interactive terminal (incl. live time & battery status),
+   live VietQR donate widget, vinhxcapcha anti-spam gate.
    ============================================================ */
 
 /* ---------------------------------------------------------
@@ -10,7 +11,10 @@
 --------------------------------------------------------- */
 const translations = {
   en: {
-    nav: { about: "about", elsewhere: "elsewhere", learning: "learning", terminal: "terminal", radio: "radio", email: "copy email" },
+    nav: {
+      about: "about", elsewhere: "elsewhere", projects: "projects", learning: "learning",
+      terminal: "terminal", donate: "support", radio: "radio", email: "copy email"
+    },
     hero: {
       eyebrow: "// currently building things that make noise",
       title: "Hello, I'm Vinh.",
@@ -41,6 +45,11 @@ const translations = {
       desc: "Tracks, mixes, and whatever's been stuck in my head this week.",
       cta: "Press play"
     },
+    projects: {
+      eyebrow: "featured projects",
+      title: "Things I've shipped.",
+      desc: "My main project and personal site — where everything I build comes together."
+    },
     learning: {
       eyebrow: "learning hub",
       title: "A few resources worth your time.",
@@ -58,6 +67,8 @@ const translations = {
         "about — quick bio",
         "skills — tech stack",
         "music — now playing",
+        "time — current time in Ho Chi Minh City",
+        "status — live status + device battery",
         "clear — clear the screen"
       ],
       about: [
@@ -70,7 +81,30 @@ const translations = {
         "♪ now playing: \"keep steady\" — sosocamo ♪",
         "press play in the Radio section below to hear it for real."
       ],
+      timeLabel: (str) => `Ho Chi Minh City time: ${str}`,
+      statusActivities: [
+        "current activity: coding on vinhx.site",
+        "background: listening to SoundCloud"
+      ],
+      statusChecking: "checking device battery...",
+      statusBattery: (percent, chargingLabel) => `user system battery: ${percent}% [${chargingLabel}]`,
+      statusCharging: "Charging",
+      statusNotCharging: "Not charging",
+      statusBatteryUnsupported: "battery API not supported by this browser.",
+      statusBatteryError: "couldn't read battery status.",
       notFound: (cmd) => `command not found: ${cmd} — type "help" for options.`
+    },
+    donate: {
+      eyebrow: "support",
+      title: "Buy me a coffee, or don't — no pressure.",
+      kicker: "bank transfer",
+      bankLabel: "bank",
+      accountLabel: "account number",
+      holderLabel: "account holder",
+      amountLabel: "Amount (VND)",
+      messageLabel: "Message",
+      messagePlaceholder: "thanks vinh!",
+      note: "The QR code updates instantly as you type — scan it with any banking app."
     },
     radio: {
       eyebrow: "now playing",
@@ -90,7 +124,10 @@ const translations = {
   },
 
   vi: {
-    nav: { about: "giới thiệu", elsewhere: "kết nối", learning: "học tập", terminal: "terminal", radio: "radio", email: "sao chép email" },
+    nav: {
+      about: "giới thiệu", elsewhere: "kết nối", projects: "dự án", learning: "học tập",
+      terminal: "terminal", donate: "ủng hộ", radio: "radio", email: "sao chép email"
+    },
     hero: {
       eyebrow: "// đang xây những thứ gây ồn theo cách riêng",
       title: "Xin chào, mình là Vinh.",
@@ -121,6 +158,11 @@ const translations = {
       desc: "Track, bản mix, và bất cứ giai điệu nào đang vướng trong đầu mình tuần này.",
       cta: "Nhấn nghe"
     },
+    projects: {
+      eyebrow: "dự án tiêu biểu",
+      title: "Những gì mình đã làm ra.",
+      desc: "Dự án và trang cá nhân chính của mình — nơi mọi thứ mình xây được gộp lại."
+    },
     learning: {
       eyebrow: "tài liệu học tập",
       title: "Vài tài nguyên đáng để bạn dành thời gian.",
@@ -138,6 +180,8 @@ const translations = {
         "about — giới thiệu nhanh",
         "skills — công nghệ đang dùng",
         "music — bài đang nghe",
+        "time — giờ hiện tại tại TPHCM",
+        "status — trạng thái sống + pin thiết bị",
         "clear — xoá màn hình"
       ],
       about: [
@@ -150,7 +194,30 @@ const translations = {
         "♪ đang phát: \"keep steady\" — sosocamo ♪",
         "nhấn play ở mục Radio bên dưới để nghe thật nhé."
       ],
+      timeLabel: (str) => `giờ tại TPHCM: ${str}`,
+      statusActivities: [
+        "hoạt động hiện tại: đang code trên vinhx.site",
+        "nền: đang nghe SoundCloud"
+      ],
+      statusChecking: "đang kiểm tra pin thiết bị...",
+      statusBattery: (percent, chargingLabel) => `pin hệ thống của bạn: ${percent}% [${chargingLabel}]`,
+      statusCharging: "Đang sạc",
+      statusNotCharging: "Không sạc",
+      statusBatteryUnsupported: "trình duyệt này không hỗ trợ Battery API.",
+      statusBatteryError: "không đọc được trạng thái pin.",
       notFound: (cmd) => `không tìm thấy lệnh: ${cmd} — gõ "help" để xem danh sách.`
+    },
+    donate: {
+      eyebrow: "ủng hộ",
+      title: "Mời mình một ly cà phê, hoặc không cũng được — không áp lực gì cả.",
+      kicker: "chuyển khoản ngân hàng",
+      bankLabel: "ngân hàng",
+      accountLabel: "số tài khoản",
+      holderLabel: "chủ tài khoản",
+      amountLabel: "Số tiền (VNĐ)",
+      messageLabel: "Lời nhắn",
+      messagePlaceholder: "cam on vinh nhe",
+      note: "Mã QR sẽ tự động cập nhật khi bạn nhập — quét bằng bất kỳ app ngân hàng nào."
     },
     radio: {
       eyebrow: "đang phát",
@@ -194,6 +261,12 @@ document.addEventListener("DOMContentLoaded", () => {
       if (value !== undefined) el.innerHTML = value;
     });
 
+    document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-placeholder");
+      const value = key.split(".").reduce((acc, k) => (acc ? acc[k] : undefined), dict);
+      if (value !== undefined) el.setAttribute("placeholder", value);
+    });
+
     document.documentElement.lang = lang;
     if (langEnBtn) langEnBtn.classList.toggle("is-active", lang === "en");
     if (langViBtn) langViBtn.classList.toggle("is-active", lang === "vi");
@@ -233,7 +306,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Determine the theme actually applied by the blocking head script.
   const initialTheme = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
   currentTheme = initialTheme;
   if (themeColorMeta) {
@@ -246,7 +318,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Live-follow the OS theme only while the user hasn't manually chosen one.
   if (systemSchemeQuery) {
     const handleSystemChange = (e) => {
       if (hasManualThemeOverride()) return;
@@ -508,7 +579,41 @@ document.addEventListener("DOMContentLoaded", () => {
   updateOnScroll();
 
   /* ---------------------------------------------------------
-     10. Interactive mock terminal
+     10. Live VietQR donate widget
+  --------------------------------------------------------- */
+  const donateAmountInput = document.getElementById("donateAmount");
+  const donateMessageInput = document.getElementById("donateMessage");
+  const vietqrImage = document.getElementById("vietqrImage");
+
+  function buildVietQrUrl(amountRaw, messageRaw) {
+    const digitsOnly = (amountRaw || "").toString().replace(/[^0-9]/g, "");
+    const amount = digitsOnly ? parseInt(digitsOnly, 10) : 0;
+    const message = (messageRaw || "").trim() || "Cam on nhe";
+
+    return (
+      "https://img.vietqr.io/image/acb-33689707-compact2.png" +
+      `?amount=${amount}` +
+      `&addInfo=${encodeURIComponent(message)}` +
+      "&accountName=NGUYEN%20NGOC%20TRI%20VINH"
+    );
+  }
+
+  if (donateAmountInput && donateMessageInput && vietqrImage) {
+    let qrUpdateTimeout;
+
+    function updateVietQr() {
+      clearTimeout(qrUpdateTimeout);
+      qrUpdateTimeout = setTimeout(() => {
+        vietqrImage.src = buildVietQrUrl(donateAmountInput.value, donateMessageInput.value);
+      }, 350);
+    }
+
+    donateAmountInput.addEventListener("input", updateVietQr);
+    donateMessageInput.addEventListener("input", updateVietQr);
+  }
+
+  /* ---------------------------------------------------------
+     11. Interactive mock terminal
   --------------------------------------------------------- */
   const terminalOutput = document.getElementById("terminalOutput");
   const terminalInput = document.getElementById("terminalInput");
@@ -533,7 +638,48 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function runTerminalCommand(raw) {
+  async function handleStatusCommand(dict) {
+    dict.statusActivities.forEach((line) => addTerminalLine(line, "accent"));
+    addTerminalLine(dict.statusChecking, "muted");
+
+    if (navigator.getBattery) {
+      try {
+        const battery = await navigator.getBattery();
+        const renderBatteryLine = () => {
+          const percent = Math.round(battery.level * 100);
+          const chargingLabel = battery.charging ? dict.statusCharging : dict.statusNotCharging;
+          addTerminalLine(dict.statusBattery(percent, chargingLabel), "accent");
+        };
+        renderBatteryLine();
+      } catch (err) {
+        addTerminalLine(dict.statusBatteryError, "error");
+      }
+    } else {
+      addTerminalLine(dict.statusBatteryUnsupported, "muted");
+    }
+  }
+
+  function handleTimeCommand(dict) {
+    try {
+      const now = new Date();
+      const formatter = new Intl.DateTimeFormat(currentLang === "vi" ? "vi-VN" : "en-US", {
+        timeZone: "Asia/Ho_Chi_Minh",
+        weekday: "short",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+      });
+      addTerminalLine(dict.timeLabel(formatter.format(now)), "accent");
+    } catch (err) {
+      addTerminalLine(dict.notFound("time"), "error");
+    }
+  }
+
+  async function runTerminalCommand(raw) {
     const dict = (translations[currentLang] || translations.en).terminal;
     const cmd = raw.trim().toLowerCase();
 
@@ -553,6 +699,12 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       case "music":
         addTerminalLinesWithDelay(dict.music, "accent", 380);
+        break;
+      case "time":
+        handleTimeCommand(dict);
+        break;
+      case "status":
+        await handleStatusCommand(dict);
         break;
       case "clear":
         if (terminalOutput) terminalOutput.innerHTML = "";
@@ -579,7 +731,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------------------------------------------------------
-     11. vinhxcapcha — rapid-click / spam detection gate
+     12. vinhxcapcha — rapid-click / spam detection gate
   --------------------------------------------------------- */
   const capchaOverlay = document.getElementById("capchaOverlay");
   const capchaCheckbox = document.getElementById("capchaCheckbox");
@@ -595,7 +747,6 @@ document.addEventListener("DOMContentLoaded", () => {
     capchaOpen = true;
     capchaOverlay.hidden = false;
     document.body.classList.add("is-locked");
-    // force a reflow so the transition triggers reliably
     void capchaOverlay.offsetWidth;
     capchaOverlay.classList.add("is-visible");
 
