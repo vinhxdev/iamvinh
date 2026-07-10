@@ -24,14 +24,14 @@
     })();
   </script>
 
-  <title>vinhxdev — Developer &amp; Sound Tinkerer</title>
+  <title>Vinhxdev</title>
   <meta name="description" content="vinhxdev — full-stack developer. I love coding and listening to music whenever I have free time.">
-  <meta name="theme-color" content="#0A0B0A">
+  <meta name="theme-color" content="#0A0A0A">
   <meta name="author" content="Vinh (vinhxdev)">
 
   <!-- ============ Open Graph / Social preview ============ -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="vinhxdev — Developer & Sound Tinkerer">
+  <meta property="og:title" content="Vinhxdev — Developer & Sound Tinkerer">
   <meta property="og:description" content="I love coding and listening to music whenever I have free time.">
   <meta property="og:image" content="https://vinhxdev.github.io/og-image.jpg">
   <meta property="og:url" content="https://vinhxdev.github.io/">
@@ -40,12 +40,12 @@
   <meta property="og:locale:alternate" content="vi_VN">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="vinhxdev — Developer & Sound Tinkerer">
+  <meta name="twitter:title" content="Vinhxdev — Developer & Sound Tinkerer">
   <meta name="twitter:description" content="I love coding and listening to music whenever I have free time.">
   <meta name="twitter:image" content="https://vinhxdev.github.io/og-image.jpg">
 
   <!-- ============ Favicon (embedded SVG — a waveform-formed V) ============ -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230A0B0A'/%3E%3Cg stroke='%23E8A33D' stroke-width='7' stroke-linecap='round' fill='none'%3E%3Cpath d='M24 30 L50 74 L76 30'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230A0A0A'/%3E%3Cg stroke='%23E8A33D' stroke-width='7' stroke-linecap='round' fill='none'%3E%3Cpath d='M24 30 L50 74 L76 30'/%3E%3C/g%3E%3C/svg%3E">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -66,8 +66,10 @@
   <nav class="site-nav__links">
     <a href="#about" data-i18n="nav.about">about</a>
     <a href="#elsewhere" data-i18n="nav.elsewhere">elsewhere</a>
+    <a href="#projects" data-i18n="nav.projects">projects</a>
     <a href="#learning" data-i18n="nav.learning">learning</a>
     <a href="#terminal" data-i18n="nav.terminal">terminal</a>
+    <a href="#donate" data-i18n="nav.donate">support</a>
     <a href="#radio" data-i18n="nav.radio">radio</a>
   </nav>
 
@@ -76,7 +78,7 @@
       type="button"
       class="email-copy"
       id="emailCopyBtn"
-      data-email="hello@vinhxdev.dev"
+      data-email="nguyenngoctrivinh72@gmail.com"
       aria-label="Copy email address to clipboard">
       <svg class="email-copy__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="5" width="18" height="14" rx="2.5"/>
@@ -206,7 +208,7 @@
 
     </div>
 
-    <a class="sound-card" id="soundCard" href="https://soundcloud.com/47_nguyen-ngoc-tri-vinh" target="_blank" rel="noopener" data-reveal>
+    <a class="sound-card" id="soundCard" href="https://soundcloud.com/vinhxreal" target="_blank" rel="noopener" data-reveal>
       <div class="sound-card__left">
         <span class="link-card__icon-wrap link-card__icon-wrap--sound" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="currentColor">
@@ -214,11 +216,27 @@
           </svg>
         </span>
         <p class="link-card__label" data-i18n="sound.label">soundcloud</p>
-        <p class="sound-card__handle">47_nguyen-ngoc-tri-vinh</p>
+        <p class="sound-card__handle">vinhxreal</p>
         <p class="sound-card__desc" data-i18n="sound.desc">Tracks, mixes, and whatever's been stuck in my head this week.</p>
         <span class="sound-card__cta"><span data-i18n="sound.cta">Press play</span> <span class="link-card__arrow">↗</span></span>
       </div>
       <div class="sound-card__eq" id="soundEq" aria-hidden="true"></div>
+    </a>
+  </section>
+
+  <section class="projects" id="projects">
+    <p class="eyebrow" data-reveal data-i18n="projects.eyebrow">featured projects</p>
+    <h2 class="links__title" data-reveal data-i18n="projects.title">Things I've shipped.</h2>
+
+    <a class="project-card" href="https://vinhx.site/" target="_blank" rel="noopener" data-reveal>
+      <div class="project-card__glow" aria-hidden="true"></div>
+      <div class="project-card__top">
+        <span class="project-card__index">01</span>
+        <span class="link-card__arrow">↗</span>
+      </div>
+      <p class="project-card__title">vinhx.site</p>
+      <p class="project-card__desc" data-i18n="projects.desc">My main project and personal site — where everything I build comes together.</p>
+      <span class="project-card__url">vinhx.site</span>
     </a>
   </section>
 
@@ -281,6 +299,54 @@
     </div>
   </section>
 
+  <section class="donate" id="donate">
+    <p class="eyebrow" data-reveal data-i18n="donate.eyebrow">support</p>
+    <h2 class="links__title" data-reveal data-i18n="donate.title">Buy me a coffee, or don't — no pressure.</h2>
+
+    <div class="donate-widget" data-reveal>
+      <div class="donate-widget__info">
+        <p class="donate-widget__kicker" data-i18n="donate.kicker">bank transfer</p>
+
+        <dl class="donate-widget__details">
+          <div class="donate-widget__row">
+            <dt data-i18n="donate.bankLabel">bank</dt>
+            <dd>ACB</dd>
+          </div>
+          <div class="donate-widget__row">
+            <dt data-i18n="donate.accountLabel">account number</dt>
+            <dd>33689707</dd>
+          </div>
+          <div class="donate-widget__row">
+            <dt data-i18n="donate.holderLabel">account holder</dt>
+            <dd>NGUYEN NGOC TRI VINH</dd>
+          </div>
+        </dl>
+
+        <div class="donate-widget__field">
+          <label for="donateAmount" data-i18n="donate.amountLabel">Amount (VND)</label>
+          <input type="number" id="donateAmount" min="0" step="1000" placeholder="e.g. 50000" inputmode="numeric">
+        </div>
+
+        <div class="donate-widget__field">
+          <label for="donateMessage" data-i18n="donate.messageLabel">Message</label>
+          <input type="text" id="donateMessage" maxlength="60" data-i18n-placeholder="donate.messagePlaceholder" placeholder="cam on vinh nhe">
+        </div>
+
+        <p class="donate-widget__note" data-i18n="donate.note">The QR code updates instantly as you type — scan it with any banking app.</p>
+      </div>
+
+      <div class="donate-widget__qr">
+        <img
+          id="vietqrImage"
+          src="https://img.vietqr.io/image/acb-33689707-compact2.png?amount=0&addInfo=Cam%20on%20nhe&accountName=NGUYEN%20NGOC%20TRI%20VINH"
+          alt="VietQR code for bank transfer to ACB account 33689707"
+          width="260"
+          height="368"
+          loading="lazy">
+      </div>
+    </div>
+  </section>
+
   <section class="radio" id="radio">
     <p class="eyebrow" data-reveal data-i18n="radio.eyebrow">now playing</p>
     <h2 class="radio__title" data-reveal data-i18n="radio.title">A track that's had me on repeat lately.</h2>
@@ -337,7 +403,7 @@
       </svg>
       <span data-i18n="footer.facebook">facebook</span>
     </a>
-    <a href="https://soundcloud.com/47_nguyen-ngoc-tri-vinh" target="_blank" rel="noopener">
+    <a href="https://soundcloud.com/vinhxreal" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
         <path d="M8.6 10.2c.3-2.6 2.5-4.6 5.2-4.6 2.5 0 4.6 1.7 5.1 4a3.6 3.6 0 0 1-.4 7.2H8.9a3.15 3.15 0 0 1-.3-6.6Z"/>
       </svg>
