@@ -261,7 +261,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ).matches;
 
   /* ---------------------------------------------------------
-      1. Language switch
+       1. Language switch
   --------------------------------------------------------- */
   const langEnBtn = document.getElementById("langEnBtn");
   const langViBtn = document.getElementById("langViBtn");
@@ -296,7 +296,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (langViBtn) langViBtn.addEventListener("click", () => applyLanguage("vi"));
 
   /* ---------------------------------------------------------
-      2. Theme: system auto-detect + manual override
+       2. Theme: system auto-detect + manual override
   --------------------------------------------------------- */
   const themeToggle = document.getElementById("themeToggle");
   const themeColorMeta = document.querySelector('meta[name="theme-color"]');
@@ -348,7 +348,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------------------------------------------------------
-      3. 1-click email copy
+       3. 1-click email copy
   --------------------------------------------------------- */
   const emailCopyBtn = document.getElementById("emailCopyBtn");
   if (emailCopyBtn) {
@@ -392,7 +392,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------------------------------------------------------
-      4. Scroll progress bar
+       4. Scroll progress bar
   --------------------------------------------------------- */
   const scrollProgress = document.getElementById("scrollProgress");
   function updateScrollProgress() {
@@ -404,7 +404,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------------------------------------------------------
-      5. Smooth scroll for internal links + scroll cue + back-to-top
+       5. Smooth scroll for internal links + scroll cue + back-to-top
   --------------------------------------------------------- */
   const smoothScrollTo = (selector) => {
     const target = document.querySelector(selector);
@@ -438,7 +438,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------------------------------------------------------
-      6. Scroll-reveal via IntersectionObserver
+       6. Scroll-reveal via IntersectionObserver
   --------------------------------------------------------- */
   const revealEls = document.querySelectorAll("[data-reveal]");
 
@@ -463,7 +463,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------------------------------------------------------
-      7. Ambient hero waveform (canvas)
+       7. Ambient hero waveform (canvas)
   --------------------------------------------------------- */
   const canvas = document.getElementById("waveform");
 
@@ -545,7 +545,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------------------------------------------------------
-      8. Equalizer bar generator (SoundCloud card + Radio widget)
+       8. Equalizer bar generator (SoundCloud card + Radio widget)
   --------------------------------------------------------- */
   function createEqBars(container, count, minPeak, maxPeak, minDur, maxDur) {
     if (!container) return;
@@ -567,7 +567,7 @@ document.addEventListener("DOMContentLoaded", () => {
   createEqBars(document.getElementById("radioEq"), 9, 40, 100, 0.6, 1.3);
 
   /* ---------------------------------------------------------
-      9. Nav background intensifies on scroll + progress bar sync
+       9. Nav background intensifies on scroll + progress bar sync
   --------------------------------------------------------- */
   const nav = document.querySelector(".site-nav");
   let ticking = false;
@@ -596,7 +596,7 @@ document.addEventListener("DOMContentLoaded", () => {
   updateOnScroll();
 
   /* ---------------------------------------------------------
-      10. Live VietQR donate widget
+       10. Live VietQR donate widget
   --------------------------------------------------------- */
   const donateAmountInput = document.getElementById("donateAmount");
   const donateMessageInput = document.getElementById("donateMessage");
@@ -630,7 +630,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------------------------------------------------------
-      11. Interactive mock terminal
+       11. Interactive mock terminal
   --------------------------------------------------------- */
   const terminalOutput = document.getElementById("terminalOutput");
   const terminalInput = document.getElementById("terminalInput");
@@ -748,7 +748,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------------------------------------------------------
-      12. vinhxcapcha — rapid-click / spam detection gate
+       12. vinhxcapcha — rapid-click / spam detection gate
   --------------------------------------------------------- */
   const capchaOverlay = document.getElementById("capchaOverlay");
   const capchaCheckbox = document.getElementById("capchaCheckbox");
@@ -823,7 +823,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ---------------------------------------------------------
-      13. Real-time Traffic Logs (dstats canvas controller)
+       13. Real-time Traffic Logs (dstats canvas controller)
   --------------------------------------------------------- */
   trafficCanvas = document.getElementById("trafficCanvas");
   if (trafficCanvas) {
@@ -912,7 +912,8 @@ function renderTrafficChart() {
   const step = w / (rpsData.length - 1);
   for (let i = 0; i < rpsData.length; i++) {
     const x = i * step;
-    let y = h - ((rpsData[i] / 60) * h); // Quy chuẩn ngưỡng biểu đồ hiển thị mức tối đa 60 RPS
+    // 📈 CHỈNH TỶ LỆ TRỤC Y: Chia cho 800 để sóng giao động cao mượt mà không bị tràn trần canvas
+    let y = h - ((rpsData[i] / 800) * h); 
     
     if (y < 4) y = 4;
     if (y > h - 4) y = h - 4;
