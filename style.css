@@ -776,7 +776,7 @@ html:not([data-theme="light"]) .theme-toggle__icon--moon { display: none; }
   border: 1px solid transparent;
   transition: border-color 0.3s var(--ease), color 0.5s var(--ease);
 }
-.sound-card:hover .sound-card__cta { border-color: var(--brick); }
+.sound-card__cta:hover { border-color: var(--brick); }
 
 .sound-card__eq {
   display: flex;
@@ -951,6 +951,78 @@ html:not([data-theme="light"]) .theme-toggle__icon--moon { display: none; }
 }
 @media (max-width: 600px) {
   .resource-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   REAL-TIME TRAFFIC LOGS (dstats style)
+   ============================================================ */
+.traffic-section {
+  padding: 40px var(--edge) 60px;
+  max-width: var(--container);
+  margin: 0 auto;
+}
+
+.dstats-widget {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 30px;
+  font-family: var(--font-mono);
+  box-shadow: var(--glass-shadow);
+  transition: transform 0.4s var(--ease), border-color 0.4s var(--ease), background-color 0.4s var(--ease);
+}
+
+.dstats-widget__meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 20px;
+  margin-bottom: 24px;
+}
+
+.dstats-widget__item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dstats-widget__label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.dstats-widget__value {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--paper);
+  transition: color 0.5s var(--ease);
+}
+
+.dstats-widget__value--accent {
+  color: var(--amber) !important;
+}
+
+.dstats-widget__value--green {
+  color: var(--green) !important;
+}
+
+.dstats-widget__canvas-wrapper {
+  width: 100%;
+  height: 160px;
+  position: relative;
+}
+
+#trafficCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+@media (max-width: 720px) {
+  .dstats-widget__meta { grid-template-columns: 1fr; }
 }
 
 /* ============================================================
