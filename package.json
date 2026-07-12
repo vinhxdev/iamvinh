@@ -1,0 +1,9 @@
+{
+  "name": "vinhxdev-portfolio",
+  "version": "1.0.0",
+  "description": "Portfolio cá nhân tích hợp Real-time Traffic Monitor",
+  "main": "api/traffic.js",
+  "dependencies": {
+    "ioredis": "^5.4.1"
+  }
+}
