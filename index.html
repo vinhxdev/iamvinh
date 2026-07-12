@@ -68,6 +68,7 @@
     <a href="#elsewhere" data-i18n="nav.elsewhere">elsewhere</a>
     <a href="#projects" data-i18n="nav.projects">projects</a>
     <a href="#learning" data-i18n="nav.learning">learning</a>
+    <a href="#traffic" data-i18n="nav.traffic">traffic</a>
     <a href="#terminal" data-i18n="nav.terminal">terminal</a>
     <a href="#donate" data-i18n="nav.donate">support</a>
     <a href="#radio" data-i18n="nav.radio">radio</a>
@@ -276,6 +277,36 @@
     </div>
   </section>
 
+  <!-- ============ Real-time Traffic Logs (dstats style) ============ -->
+  <section class="traffic-section" id="traffic" style="scroll-margin-top: 80px;">
+    <p class="eyebrow" data-reveal data-i18n="traffic.eyebrow">// edge network telemetry</p>
+    <h2 class="links__title" data-reveal data-i18n="traffic.title">Live system traffic logs.</h2>
+    
+    <div class="dstats-widget" data-reveal>
+      <div class="dstats-widget__meta">
+        <div class="dstats-widget__item">
+          <span class="dstats-widget__label">ENDPOINT</span>
+          <span class="dstats-widget__value dstats-widget__value--accent">iamvinh.vercel.app/api/traffic</span>
+        </div>
+        <div class="dstats-widget__item">
+          <span class="dstats-widget__label">STATUS</span>
+          <span id="serverStatus" class="dstats-widget__value dstats-widget__value--green">OPERATIONAL</span>
+        </div>
+        <div class="dstats-widget__item">
+          <span class="dstats-widget__label">LIVE FLOW</span>
+          <span class="dstats-widget__value"><span id="liveRpsCounter">0</span> RPS</span>
+        </div>
+        <div class="dstats-widget__item">
+          <span class="dstats-widget__label">TOTAL PACKETS</span>
+          <span id="totalReqsCounter" class="dstats-widget__value">0</span>
+        </div>
+      </div>
+      <div class="dstats-widget__canvas-wrapper">
+        <canvas id="trafficCanvas"></canvas>
+      </div>
+    </div>
+  </section>
+
   <section class="terminal-section" id="terminal">
     <p class="eyebrow" data-reveal data-i18n="terminal.eyebrow">try it yourself</p>
     <h2 class="links__title" data-reveal data-i18n="terminal.title">A tiny terminal, just for fun.</h2>
@@ -374,7 +405,7 @@
             allowfullscreen
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
             loading="lazy">
-          </iframe>
+          </table>
         </div>
       </div>
     </div>
