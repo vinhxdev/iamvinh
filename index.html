@@ -70,6 +70,7 @@
     <a href="#learning" data-i18n="nav.learning">learning</a>
     <a href="#traffic" data-i18n="nav.traffic">traffic</a>
     <a href="#terminal" data-i18n="nav.terminal">terminal</a>
+    <a href="#message" data-i18n="nav.message">message</a>
     <a href="#donate" data-i18n="nav.donate">support</a>
     <a href="#radio" data-i18n="nav.radio">radio</a>
   </nav>
@@ -294,10 +295,14 @@
         </div>
         <div class="dstats-widget__item">
           <span class="dstats-widget__label">LIVE FLOW</span>
-          <span class="dstats-widget__value"><span id="liveRpsCounter">0</span> RPS</span>
+          <span class="dstats-widget__value"><span id="liveRpsCounter">0.0</span> REQ/S</span>
         </div>
         <div class="dstats-widget__item">
-          <span class="dstats-widget__label">TOTAL PACKETS</span>
+          <span class="dstats-widget__label">ONLINE NOW</span>
+          <span id="visitorsOnlineCounter" class="dstats-widget__value">0</span>
+        </div>
+        <div class="dstats-widget__item">
+          <span class="dstats-widget__label">TOTAL EVENTS</span>
           <span id="totalReqsCounter" class="dstats-widget__value">0</span>
         </div>
       </div>
@@ -328,6 +333,54 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- ============ Direct message form (delivers to inbox) ============ -->
+  <section class="message-section" id="message">
+    <p class="eyebrow" data-reveal data-i18n="message.eyebrow">// direct line</p>
+    <h2 class="links__title" data-reveal data-i18n="message.title">Drop me a message.</h2>
+
+    <form class="message-form" id="messageForm" data-reveal novalidate>
+      <div class="message-form__grid">
+        <div class="message-form__field">
+          <label for="msgName" data-i18n="message.nameLabel">your name</label>
+          <input
+            type="text"
+            id="msgName"
+            name="name"
+            maxlength="80"
+            autocomplete="name"
+            data-i18n-placeholder="message.namePlaceholder"
+            placeholder="e.g. Minh"
+            required>
+        </div>
+        <div class="message-form__field">
+          <label for="msgContent" data-i18n="message.contentLabel">message</label>
+          <textarea
+            id="msgContent"
+            name="message"
+            rows="5"
+            maxlength="2000"
+            data-i18n-placeholder="message.contentPlaceholder"
+            placeholder="Feedback, a hello, a collab idea — anything."
+            required></textarea>
+        </div>
+      </div>
+
+      <input type="text" name="_honey" class="message-form__honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+      <div class="message-form__footer">
+        <p class="message-form__note" data-i18n="message.note">Lands straight in my inbox — no login, no tracking.</p>
+        <button type="submit" class="btn btn--primary message-form__submit" id="msgSubmitBtn">
+          <span class="message-form__submit-label" data-i18n="message.send">send message</span>
+          <span class="message-form__spinner" aria-hidden="true"></span>
+          <svg class="message-form__sent-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 13l4 4L19 7"/>
+          </svg>
+        </button>
+      </div>
+      <p class="message-form__status" id="msgStatus" role="status" aria-live="polite"></p>
+    </form>
   </section>
 
   <section class="donate" id="donate">

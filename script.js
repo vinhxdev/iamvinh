@@ -4,7 +4,9 @@
    scroll progress, scroll-reveal, ambient waveform, equalizers,
    interactive terminal (incl. live time & battery status),
    live VietQR donate widget, vinhxcapcha anti-spam gate,
-   real-time traffic telemetry telemetry dashboard (dstats).
+   direct message form (delivers to inbox via FormSubmit),
+   real traffic telemetry dashboard (dstats, no fake data),
+   hero letter animation, 3D card tilt, cursor spotlight.
    ============================================================ */
 
 /* ---------------------------------------------------------
@@ -14,7 +16,7 @@ const translations = {
   en: {
     nav: {
       about: "about", elsewhere: "elsewhere", projects: "projects", learning: "learning",
-      traffic: "traffic", terminal: "terminal", donate: "support", radio: "radio", email: "copy email"
+      traffic: "traffic", terminal: "terminal", message: "message", donate: "support", radio: "radio", email: "copy email"
     },
     hero: {
       eyebrow: "// currently building things that make noise",
@@ -99,6 +101,21 @@ const translations = {
       statusBatteryError: "couldn't read battery status.",
       notFound: (cmd) => `command not found: ${cmd} — type "help" for options.`
     },
+    message: {
+      eyebrow: "// direct line",
+      title: "Drop me a message.",
+      nameLabel: "your name",
+      namePlaceholder: "e.g. Minh",
+      contentLabel: "message",
+      contentPlaceholder: "Feedback, a hello, a collab idea — anything.",
+      note: "Lands straight in my inbox — no login, no tracking.",
+      send: "send message",
+      sending: "sending...",
+      sent: "sent!",
+      statusSent: "Got it — your message is on its way to my inbox. Thank you!",
+      statusError: "Couldn't send right now. Opening your email app as a backup...",
+      statusMissing: "Please fill in both your name and a message first."
+    },
     donate: {
       eyebrow: "support",
       title: "Buy me a coffee, or don't — no pressure.",
@@ -131,7 +148,7 @@ const translations = {
   vi: {
     nav: {
       about: "giới thiệu", elsewhere: "kết nối", projects: "dự án", learning: "học tập",
-      traffic: "traffic", terminal: "terminal", donate: "ủng hộ", radio: "radio", email: "sao chép email"
+      traffic: "traffic", terminal: "terminal", message: "nhắn tin", donate: "ủng hộ", radio: "radio", email: "sao chép email"
     },
     hero: {
       eyebrow: "// đang xây những thứ gây ồn theo cách riêng",
@@ -216,6 +233,21 @@ const translations = {
       statusBatteryError: "không đọc được trạng thái pin.",
       notFound: (cmd) => `không tìm thấy lệnh: ${cmd} — gõ "help" để xem danh sách.`
     },
+    message: {
+      eyebrow: "// liên lạc trực tiếp",
+      title: "Gửi mình một tin nhắn.",
+      nameLabel: "tên của bạn",
+      namePlaceholder: "vd: Minh",
+      contentLabel: "nội dung",
+      contentPlaceholder: "Góp ý, lời chào, ý tưởng hợp tác — gì cũng được.",
+      note: "Tin nhắn bay thẳng vào hộp thư của mình — không cần đăng nhập.",
+      send: "gửi tin nhắn",
+      sending: "đang gửi...",
+      sent: "đã gửi!",
+      statusSent: "Đã nhận — tin nhắn đang trên đường tới hộp thư của mình. Cảm ơn bạn!",
+      statusError: "Chưa gửi được lúc này. Đang mở ứng dụng email của bạn để gửi dự phòng...",
+      statusMissing: "Bạn điền tên và nội dung trước đã nhé."
+    },
     donate: {
       eyebrow: "ủng hộ",
       title: "Mời mình một ly cà phê, hoặc không cũng được — không áp lực gì cả.",
@@ -249,10 +281,14 @@ const translations = {
 let currentTheme = "dark";
 let currentLang = "en";
 
-// Khởi tạo các biến cấu trúc dùng cho Real-time dstats panel
+// Khởi tạo các biến cấu trúc dùng cho Real-time dstats panel (100% số liệu thật)
 let activeRPS = 0;
 let totalRequests = 0;
-let rpsData = Array(50).fill(0);
+let visitorsOnline = 0;
+let trafficOnline = true;
+let displayedTotal = 0;
+let totalAnimFrame = null;
+let rpsData = Array(60).fill(0);
 let trafficCanvas, trafficCtx;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -265,6 +301,31 @@ document.addEventListener("DOMContentLoaded", () => {
   --------------------------------------------------------- */
   const langEnBtn = document.getElementById("langEnBtn");
   const langViBtn = document.getElementById("langViBtn");
+
+  // Tách tiêu đề hero thành từng ký tự để chạy hiệu ứng chữ trồi lên lần lượt
+  function animateHeroTitle() {
+    if (prefersReducedMotion) return;
+    const line = document.querySelector(".hero__title-line");
+    if (!line) return;
+    const text = line.textContent;
+    line.textContent = "";
+    let charIndex = 0;
+    const words = text.split(" ");
+    words.forEach((word, wi) => {
+      const wordSpan = document.createElement("span");
+      wordSpan.className = "hero-word";
+      for (const ch of word) {
+        const charSpan = document.createElement("span");
+        charSpan.className = "hero-char";
+        charSpan.textContent = ch;
+        charSpan.style.animationDelay = `${(charIndex * 0.035).toFixed(3)}s`;
+        wordSpan.appendChild(charSpan);
+        charIndex++;
+      }
+      line.appendChild(wordSpan);
+      if (wi < words.length - 1) line.appendChild(document.createTextNode(" "));
+    });
+  }
 
   function applyLanguage(lang) {
     const dict = translations[lang] || translations.en;
@@ -286,6 +347,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (langEnBtn) langEnBtn.classList.toggle("is-active", lang === "en");
     if (langViBtn) langViBtn.classList.toggle("is-active", lang === "vi");
     try { localStorage.setItem("vinh-lang", lang); } catch (e) {}
+
+    animateHeroTitle();
   }
 
   let savedLang = "en";
@@ -823,7 +886,159 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ---------------------------------------------------------
-       13. Real-time Traffic Logs (dstats canvas controller)
+       13. Direct message form — gửi thẳng về hộp thư qua FormSubmit
+  --------------------------------------------------------- */
+  const MESSAGE_INBOX = "nguyenngoctrivinh72@gmail.com";
+  const MESSAGE_ENDPOINT = `https://formsubmit.co/ajax/${MESSAGE_INBOX}`;
+
+  const messageForm = document.getElementById("messageForm");
+  const msgNameInput = document.getElementById("msgName");
+  const msgContentInput = document.getElementById("msgContent");
+  const msgSubmitBtn = document.getElementById("msgSubmitBtn");
+  const msgSubmitLabel = msgSubmitBtn ? msgSubmitBtn.querySelector(".message-form__submit-label") : null;
+  const msgStatus = document.getElementById("msgStatus");
+
+  function setMessageStatus(text, variant) {
+    if (!msgStatus) return;
+    msgStatus.textContent = text || "";
+    msgStatus.className = "message-form__status" + (variant ? ` message-form__status--${variant}` : "");
+    msgStatus.classList.toggle("is-visible", Boolean(text));
+  }
+
+  if (messageForm && msgSubmitBtn) {
+    let sendingMessage = false;
+
+    messageForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (sendingMessage) return;
+
+      const dict = (translations[currentLang] || translations.en).message;
+      const name = (msgNameInput ? msgNameInput.value : "").trim();
+      const content = (msgContentInput ? msgContentInput.value : "").trim();
+      const honey = messageForm.querySelector('input[name="_honey"]');
+      if (honey && honey.value) return;
+
+      if (!name || !content) {
+        setMessageStatus(dict.statusMissing, "error");
+        const target = !name ? msgNameInput : msgContentInput;
+        if (target) target.focus();
+        return;
+      }
+
+      sendingMessage = true;
+      msgSubmitBtn.classList.add("is-sending");
+      msgSubmitBtn.disabled = true;
+      if (msgSubmitLabel) msgSubmitLabel.textContent = dict.sending;
+      setMessageStatus("", null);
+
+      try {
+        const res = await fetch(MESSAGE_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({
+            name,
+            message: content,
+            _subject: `Tin nhan moi tu ${name} — vinhxdev`,
+            _template: "table",
+            _captcha: "false"
+          })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || String(data.success) === "false") throw new Error("send failed");
+
+        msgSubmitBtn.classList.remove("is-sending");
+        msgSubmitBtn.classList.add("is-sent");
+        if (msgSubmitLabel) msgSubmitLabel.textContent = dict.sent;
+        setMessageStatus(dict.statusSent, "ok");
+        messageForm.reset();
+
+        setTimeout(() => {
+          msgSubmitBtn.classList.remove("is-sent");
+          msgSubmitBtn.disabled = false;
+          const d = (translations[currentLang] || translations.en).message;
+          if (msgSubmitLabel) msgSubmitLabel.textContent = d.send;
+          sendingMessage = false;
+        }, 2600);
+      } catch (err) {
+        msgSubmitBtn.classList.remove("is-sending");
+        msgSubmitBtn.disabled = false;
+        if (msgSubmitLabel) msgSubmitLabel.textContent = dict.send;
+        setMessageStatus(dict.statusError, "error");
+        sendingMessage = false;
+
+        // Dự phòng khi mạng/dịch vụ lỗi: mở app email với nội dung điền sẵn
+        const mailto = `mailto:${MESSAGE_INBOX}?subject=${encodeURIComponent("Message from " + name)}&body=${encodeURIComponent(content + "\n\n— " + name)}`;
+        window.open(mailto, "_blank");
+      }
+    });
+  }
+
+  /* ---------------------------------------------------------
+       14. 3D card tilt + glare (desktop, pointer chính xác)
+  --------------------------------------------------------- */
+  const finePointer = window.matchMedia && window.matchMedia("(pointer: fine)").matches;
+
+  if (finePointer && !prefersReducedMotion) {
+    document.querySelectorAll(".link-card, .project-card, .resource-card, .sound-card").forEach((card) => {
+      card.classList.add("has-tilt");
+      let tiltRaf = null;
+
+      card.addEventListener("mousemove", (e) => {
+        const rect = card.getBoundingClientRect();
+        const px = (e.clientX - rect.left) / rect.width;
+        const py = (e.clientY - rect.top) / rect.height;
+        if (tiltRaf) return;
+        tiltRaf = requestAnimationFrame(() => {
+          tiltRaf = null;
+          const ry = ((px - 0.5) * 8).toFixed(2);
+          const rx = ((0.5 - py) * 8).toFixed(2);
+          card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-6px)`;
+          card.style.setProperty("--glare-x", `${(px * 100).toFixed(1)}%`);
+          card.style.setProperty("--glare-y", `${(py * 100).toFixed(1)}%`);
+        });
+      });
+
+      card.addEventListener("mouseleave", () => {
+        if (tiltRaf) { cancelAnimationFrame(tiltRaf); tiltRaf = null; }
+        card.style.transform = "";
+      });
+    });
+  }
+
+  /* ---------------------------------------------------------
+       15. Cursor spotlight — quầng sáng ấm bám theo con trỏ
+  --------------------------------------------------------- */
+  if (finePointer && !prefersReducedMotion) {
+    const glow = document.createElement("div");
+    glow.className = "cursor-glow";
+    glow.setAttribute("aria-hidden", "true");
+    document.body.appendChild(glow);
+
+    let glowX = window.innerWidth / 2;
+    let glowY = window.innerHeight / 2;
+    let targetX = glowX;
+    let targetY = glowY;
+    let glowVisible = false;
+
+    window.addEventListener("mousemove", (e) => {
+      targetX = e.clientX;
+      targetY = e.clientY;
+      if (!glowVisible) {
+        glow.classList.add("is-on");
+        glowVisible = true;
+      }
+    }, { passive: true });
+
+    (function moveGlow() {
+      glowX += (targetX - glowX) * 0.12;
+      glowY += (targetY - glowY) * 0.12;
+      glow.style.transform = `translate(${glowX - 260}px, ${glowY - 260}px)`;
+      requestAnimationFrame(moveGlow);
+    })();
+  }
+
+  /* ---------------------------------------------------------
+       16. Real-time Traffic Logs (dstats canvas controller)
   --------------------------------------------------------- */
   trafficCanvas = document.getElementById("trafficCanvas");
   if (trafficCanvas) {
@@ -832,26 +1047,35 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("resize", resizeTrafficCanvas);
   }
 
-  // Ghi nhận tương tác thực tế từ người xem để truyền tới Redis Serverless API
+  // Ghi nhận lượt xem trang thật ngay khi tải xong
+  postTrafficEvent("view");
+
+  // Ghi nhận tương tác thật từ người xem (click + gõ phím, chặn flood khi giữ phím)
   window.addEventListener("click", () => {
-    if (!capchaOpen) {
-      try { fetch('/api/traffic', { method: 'POST' }); } catch (e) {}
-    }
+    if (!capchaOpen) postTrafficEvent("click");
   });
 
+  let lastKeyPost = 0;
   window.addEventListener("keydown", () => {
-    if (!capchaOpen) {
-      try { fetch('/api/traffic', { method: 'POST' }); } catch (e) {}
-    }
+    if (capchaOpen) return;
+    const now = Date.now();
+    if (now - lastKeyPost < 200) return;
+    lastKeyPost = now;
+    postTrafficEvent("key");
   });
 
-  // Chạy vòng lặp đồng bộ hóa lưu lượng mạng định kỳ 1 giây
+  // Heartbeat 30s: chỉ báo hiện diện để đếm khách online, không tính là sự kiện
+  setInterval(() => {
+    if (document.visibilityState === "visible") postTrafficEvent("ping");
+  }, 30000);
+
+  // Vòng lặp đồng bộ số liệu thật mỗi giây
   setInterval(syncTrafficData, 1000);
   syncTrafficData();
 });
 
 /* ---------------------------------------------------------
-   Helper Functions for Real-time Traffic Logs
+   Helper Functions for Real-time Traffic Logs (số liệu thật)
 --------------------------------------------------------- */
 function resizeTrafficCanvas() {
   if (!trafficCanvas) return;
@@ -859,26 +1083,90 @@ function resizeTrafficCanvas() {
   trafficCanvas.height = trafficCanvas.parentElement.clientHeight;
 }
 
+// Mã định danh khách bền theo trình duyệt — dùng đếm số người online thật
+function getVisitorId() {
+  try {
+    let id = localStorage.getItem("vinh-visitor");
+    if (!id) {
+      id = "v-" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+      localStorage.setItem("vinh-visitor", id);
+    }
+    return id;
+  } catch (e) {
+    return "v-anon";
+  }
+}
+
+function postTrafficEvent(type) {
+  try {
+    fetch("/api/traffic", {
+      method: "POST",
+      keepalive: true,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type, visitor: getVisitorId() })
+    }).catch(() => {});
+  } catch (e) {}
+}
+
 async function syncTrafficData() {
   try {
-    const res = await fetch('/api/traffic');
+    const res = await fetch("/api/traffic");
     const data = await res.json();
     if (data.success) {
-      activeRPS = data.currentRPS;
-      totalRequests = data.totalRequests;
+      activeRPS = data.currentRPS || 0;
+      totalRequests = data.totalRequests || 0;
+      visitorsOnline = data.visitorsOnline || 0;
+      trafficOnline = true;
+    } else {
+      trafficOnline = false;
     }
   } catch (err) {
-    // Dự phòng tải mạng giả lập mượt mà khi rớt kết nối mạng cục bộ
-    activeRPS = Math.floor(Math.random() * 4) + 12;
+    // Không bịa số liệu khi rớt kết nối — báo OFFLINE và để đồ thị về 0 thật
+    trafficOnline = false;
+    activeRPS = 0;
   }
 
   rpsData.push(activeRPS);
   rpsData.shift();
 
-  if (document.getElementById("liveRpsCounter")) document.getElementById("liveRpsCounter").textContent = activeRPS;
-  if (document.getElementById("totalReqsCounter")) document.getElementById("totalReqsCounter").textContent = totalRequests.toLocaleString();
-
+  updateTrafficMeta();
   renderTrafficChart();
+}
+
+function updateTrafficMeta() {
+  const rpsEl = document.getElementById("liveRpsCounter");
+  const onlineEl = document.getElementById("visitorsOnlineCounter");
+  const statusEl = document.getElementById("serverStatus");
+
+  if (rpsEl) rpsEl.textContent = activeRPS < 10 ? activeRPS.toFixed(1) : Math.round(activeRPS).toString();
+  if (onlineEl) onlineEl.textContent = visitorsOnline.toLocaleString();
+
+  if (statusEl) {
+    statusEl.textContent = trafficOnline ? "OPERATIONAL" : "OFFLINE";
+    statusEl.classList.toggle("dstats-widget__value--green", trafficOnline);
+    statusEl.classList.toggle("dstats-widget__value--red", !trafficOnline);
+  }
+
+  animateTotalCounter();
+}
+
+// Đếm số tổng mượt mà thay vì nhảy cứng
+function animateTotalCounter() {
+  const el = document.getElementById("totalReqsCounter");
+  if (!el) return;
+  if (totalAnimFrame) cancelAnimationFrame(totalAnimFrame);
+
+  const step = () => {
+    const diff = totalRequests - displayedTotal;
+    if (Math.abs(diff) < 1) {
+      displayedTotal = totalRequests;
+    } else {
+      displayedTotal += diff * 0.18;
+      totalAnimFrame = requestAnimationFrame(step);
+    }
+    el.textContent = Math.round(displayedTotal).toLocaleString();
+  };
+  step();
 }
 
 function renderTrafficChart() {
@@ -886,11 +1174,12 @@ function renderTrafficChart() {
   const w = trafficCanvas.width;
   const h = trafficCanvas.height;
   trafficCtx.clearRect(0, 0, w, h);
+  if (w <= 0 || h <= 0) return;
 
-  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-  
-  // Vẽ hệ thống lưới nền (Grid monitor) đồng bộ tỷ lệ với theme
-  trafficCtx.strokeStyle = isLight ? 'rgba(32, 48, 42, 0.04)' : 'rgba(241, 236, 225, 0.03)';
+  const isLight = document.documentElement.getAttribute("data-theme") === "light";
+
+  // Lưới nền monitor đồng bộ theo theme
+  trafficCtx.strokeStyle = isLight ? "rgba(32, 48, 42, 0.05)" : "rgba(241, 236, 225, 0.04)";
   trafficCtx.lineWidth = 0.5;
   for (let i = 1; i < 4; i++) {
     trafficCtx.beginPath();
@@ -899,28 +1188,55 @@ function renderTrafficChart() {
     trafficCtx.stroke();
   }
 
-  // Vẽ tuyến đồ thị sóng dstats
+  // Trục Y tự co giãn theo đỉnh thật của dữ liệu — số nhỏ vẫn thấy rõ sóng, không bịa tỷ lệ
+  const peak = Math.max(1, ...rpsData);
+  const scale = peak * 1.25;
+
+  const step = w / (rpsData.length - 1);
+  const points = rpsData.map((v, i) => ({
+    x: i * step,
+    y: Math.min(h - 4, Math.max(4, h - 4 - (v / scale) * (h - 12)))
+  }));
+
+  const amberColor = isLight ? "#B9791F" : "#E8A33D";
+
+  const drawCurve = () => {
+    trafficCtx.moveTo(points[0].x, points[0].y);
+    for (let i = 1; i < points.length - 1; i++) {
+      const mx = (points[i].x + points[i + 1].x) / 2;
+      const my = (points[i].y + points[i + 1].y) / 2;
+      trafficCtx.quadraticCurveTo(points[i].x, points[i].y, mx, my);
+    }
+    trafficCtx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
+  };
+
+  // Vùng nền dưới đường sóng
+  const fill = trafficCtx.createLinearGradient(0, 0, 0, h);
+  fill.addColorStop(0, isLight ? "rgba(185, 121, 31, 0.16)" : "rgba(232, 163, 61, 0.2)");
+  fill.addColorStop(1, "rgba(232, 163, 61, 0)");
+  trafficCtx.beginPath();
+  trafficCtx.moveTo(points[0].x, h);
+  trafficCtx.lineTo(points[0].x, points[0].y);
+  drawCurve();
+  trafficCtx.lineTo(points[points.length - 1].x, h);
+  trafficCtx.closePath();
+  trafficCtx.fillStyle = fill;
+  trafficCtx.fill();
+
+  // Đường sóng chính
   trafficCtx.beginPath();
   trafficCtx.lineWidth = 2;
-  
-  // Áp các mã màu biến ấm đặc trưng từ file style.css
-  const amberColor = isLight ? '#B9791F' : '#E8A33D';
   trafficCtx.strokeStyle = amberColor;
   trafficCtx.shadowBlur = isLight ? 0 : 8;
   trafficCtx.shadowColor = amberColor;
-
-  const step = w / (rpsData.length - 1);
-  for (let i = 0; i < rpsData.length; i++) {
-    const x = i * step;
-    // 📈 CHỈNH TỶ LỆ TRỤC Y: Chia cho 800 để sóng giao động cao mượt mà không bị tràn trần canvas
-    let y = h - ((rpsData[i] / 800) * h); 
-    
-    if (y < 4) y = 4;
-    if (y > h - 4) y = h - 4;
-
-    if (i === 0) trafficCtx.moveTo(x, y);
-    else trafficCtx.lineTo(x, y);
-  }
+  drawCurve();
   trafficCtx.stroke();
   trafficCtx.shadowBlur = 0;
+
+  // Chấm nhịp sống ở điểm dữ liệu mới nhất
+  const last = points[points.length - 1];
+  trafficCtx.beginPath();
+  trafficCtx.arc(Math.min(last.x, w - 4), last.y, 3, 0, Math.PI * 2);
+  trafficCtx.fillStyle = amberColor;
+  trafficCtx.fill();
 }
