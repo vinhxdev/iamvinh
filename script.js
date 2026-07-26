@@ -85,8 +85,8 @@ const translations = {
       skills: ["JavaScript · HTML/CSS · Git · Lua · Systems"],
       music: [
         "spinning up the turntable...",
-        "♪ now playing: \"keep steady\" — sosocamo ♪",
-        "press play in the Radio section below to hear it for real."
+        "♪ 8 tracks loaded on the personal radio ♪",
+        "scroll to the Radio section below and pick one."
       ],
       timeLabel: (str) => `Ho Chi Minh City time: ${str}`,
       statusActivities: [
@@ -130,10 +130,10 @@ const translations = {
     },
     radio: {
       eyebrow: "now playing",
-      title: "A track that's had me on repeat lately.",
+      title: "My little radio station.",
       kicker: "personal radio",
-      track: "currently: \"keep steady\" — sosocamo",
-      note: "Hit play — no login, no ads, just the track."
+      note: "Pick a track from the list — no login, no ads, just the music.",
+      playlistLabel: "tracklist"
     },
     footer: { github: "github", facebook: "facebook", soundcloud: "soundcloud" },
     emailCopied: "copied!",
@@ -217,8 +217,8 @@ const translations = {
       skills: ["JavaScript · HTML/CSS · Git · Lua · Systems"],
       music: [
         "đang quay đĩa than...",
-        "♪ đang phát: \"keep steady\" — sosocamo ♪",
-        "nhấn play ở mục Radio bên dưới để nghe thật nhé."
+        "♪ 8 bài đã nạp sẵn trên radio cá nhân ♪",
+        "cuộn xuống mục Radio bên dưới và chọn một bài nhé."
       ],
       timeLabel: (str) => `giờ tại TPHCM: ${str}`,
       statusActivities: [
@@ -262,10 +262,10 @@ const translations = {
     },
     radio: {
       eyebrow: "đang phát",
-      title: "Bản nhạc mình nghe lặp lại suốt dạo này.",
+      title: "Trạm radio nhỏ của mình.",
       kicker: "radio cá nhân",
-      track: "đang phát: \"keep steady\" — sosocamo",
-      note: "Nhấn play — không cần đăng nhập, không quảng cáo, chỉ có nhạc."
+      note: "Chọn một bài trong danh sách — không cần đăng nhập, không quảng cáo, chỉ có nhạc.",
+      playlistLabel: "danh sách phát"
     },
     footer: { github: "github", facebook: "facebook", soundcloud: "soundcloud" },
     emailCopied: "đã sao chép!",
@@ -970,6 +970,79 @@ document.addEventListener("DOMContentLoaded", () => {
         const mailto = `mailto:${MESSAGE_INBOX}?subject=${encodeURIComponent("Message from " + name)}&body=${encodeURIComponent(content + "\n\n— " + name)}`;
         window.open(mailto, "_blank");
       }
+    });
+  }
+
+  /* ---------------------------------------------------------
+       13b. Radio station — playlist nhiều bài, chuyển bài trực tiếp
+  --------------------------------------------------------- */
+  const RADIO_TRACKS = [
+    { id: "3UsJUXvHb7qz4GiQtEc4a4", title: "keep steady", artist: "sosocamo" },
+    { id: "0VjIjW4GlUZAMYd2vXMi3b", title: "Blinding Lights", artist: "The Weeknd" },
+    { id: "2QjOHCTQ1Jl3zawyYOpxh6", title: "Sweater Weather", artist: "The Neighbourhood" },
+    { id: "0u2P5u6lvoDfwTYjAADbn4", title: "lovely", artist: "Billie Eilish & Khalid" },
+    { id: "21jGcNKet2qwijlDFuPiPb", title: "Circles", artist: "Post Malone" },
+    { id: "7qiZfU4dY1lWllzX7mPBI3", title: "Shape of You", artist: "Ed Sheeran" },
+    { id: "7qEHsqek33rTcFNT9PFqLf", title: "Someone You Loved", artist: "Lewis Capaldi" },
+    { id: "4Dvkj6JhhA12EX05fT7y2e", title: "As It Was", artist: "Harry Styles" }
+  ];
+
+  const radioTrackList = document.getElementById("radioTrackList");
+  const spotifyPlayer = document.getElementById("spotifyPlayer");
+  const radioTrackTitle = document.getElementById("radioTrackTitle");
+
+  function selectRadioTrack(index) {
+    const track = RADIO_TRACKS[index];
+    if (!track) return;
+
+    if (spotifyPlayer) {
+      spotifyPlayer.src = `https://open.spotify.com/embed/track/${track.id}?utm_source=generator&theme=0`;
+    }
+    if (radioTrackTitle) {
+      radioTrackTitle.textContent = `${track.title} — ${track.artist}`;
+    }
+    if (radioTrackList) {
+      radioTrackList.querySelectorAll(".radio-playlist__item").forEach((btn, i) => {
+        btn.classList.toggle("is-active", i === index);
+      });
+    }
+  }
+
+  if (radioTrackList) {
+    RADIO_TRACKS.forEach((track, i) => {
+      const li = document.createElement("li");
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "radio-playlist__item" + (i === 0 ? " is-active" : "");
+      btn.setAttribute("aria-label", `Play ${track.title} by ${track.artist}`);
+
+      const num = document.createElement("span");
+      num.className = "radio-playlist__num";
+      num.textContent = String(i + 1).padStart(2, "0");
+
+      const meta = document.createElement("span");
+      meta.className = "radio-playlist__meta";
+      const title = document.createElement("span");
+      title.className = "radio-playlist__title";
+      title.textContent = track.title;
+      const artist = document.createElement("span");
+      artist.className = "radio-playlist__artist";
+      artist.textContent = track.artist;
+      meta.appendChild(title);
+      meta.appendChild(artist);
+
+      const eq = document.createElement("span");
+      eq.className = "radio-playlist__eq";
+      eq.setAttribute("aria-hidden", "true");
+      for (let b = 0; b < 3; b++) eq.appendChild(document.createElement("i"));
+
+      btn.appendChild(num);
+      btn.appendChild(meta);
+      btn.appendChild(eq);
+      btn.addEventListener("click", () => selectRadioTrack(i));
+
+      li.appendChild(btn);
+      radioTrackList.appendChild(li);
     });
   }
 
