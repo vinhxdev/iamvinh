@@ -80,15 +80,10 @@
     vinhxdev<span class="logo-cursor" aria-hidden="true">_</span></a>
 
   <nav class="site-nav__links">
-    <a href="#about" data-i18n="nav.about">about</a>
-    <a href="#elsewhere" data-i18n="nav.elsewhere">elsewhere</a>
-    <a href="#projects" data-i18n="nav.projects">projects</a>
-    <a href="#learning" data-i18n="nav.learning">learning</a>
-    <a href="#traffic" data-i18n="nav.traffic">traffic</a>
-    <a href="#terminal" data-i18n="nav.terminal">terminal</a>
-    <a href="#message" data-i18n="nav.message">message</a>
-    <a href="#donate" data-i18n="nav.donate">support</a>
-    <a href="#radio" data-i18n="nav.radio">radio</a>
+    <a href="#ch-intro" data-i18n="nav.intro">intro</a>
+    <a href="#ch-work" data-i18n="nav.work">work</a>
+    <a href="#ch-lab" data-i18n="nav.lab">lab</a>
+    <a href="#ch-connect" data-i18n="nav.connect">connect</a>
   </nav>
 
   <div class="site-nav__controls">
@@ -153,6 +148,13 @@
       <span class="scroll-cue__line"></span>
     </button>
   </section>
+
+  <!-- ============ Chapter 01 — introduction ============ -->
+  <div class="chapter-head" id="ch-intro" data-reveal>
+    <span class="chapter-head__num">01</span>
+    <span class="chapter-head__title" data-i18n="chapter.intro">introduction</span>
+    <span class="chapter-head__line" aria-hidden="true"></span>
+  </div>
 
   <section class="about" id="about">
     <svg class="about__mark vmark" viewBox="0 0 64 64" aria-hidden="true">
@@ -256,6 +258,13 @@
     </a>
   </section>
 
+  <!-- ============ Chapter 02 — work & learning ============ -->
+  <div class="chapter-head" id="ch-work" data-reveal>
+    <span class="chapter-head__num">02</span>
+    <span class="chapter-head__title" data-i18n="chapter.work">work &amp; learning</span>
+    <span class="chapter-head__line" aria-hidden="true"></span>
+  </div>
+
   <section class="projects" id="projects">
     <p class="eyebrow" data-reveal data-i18n="projects.eyebrow">featured projects</p>
     <h2 class="links__title" data-reveal data-i18n="projects.title">Things I've shipped.</h2>
@@ -307,6 +316,13 @@
 
     </div>
   </section>
+
+  <!-- ============ Chapter 03 — playground ============ -->
+  <div class="chapter-head" id="ch-lab" data-reveal>
+    <span class="chapter-head__num">03</span>
+    <span class="chapter-head__title" data-i18n="chapter.lab">playground</span>
+    <span class="chapter-head__line" aria-hidden="true"></span>
+  </div>
 
   <!-- ============ Real-time Traffic Logs (dstats style) ============ -->
   <section class="traffic-section" id="traffic" style="scroll-margin-top: 80px;">
@@ -364,6 +380,13 @@
       </div>
     </div>
   </section>
+
+  <!-- ============ Chapter 04 — get in touch ============ -->
+  <div class="chapter-head" id="ch-connect" data-reveal>
+    <span class="chapter-head__num">04</span>
+    <span class="chapter-head__title" data-i18n="chapter.connect">get in touch</span>
+    <span class="chapter-head__line" aria-hidden="true"></span>
+  </div>
 
   <!-- ============ Direct message form (delivers to inbox) ============ -->
   <section class="message-section" id="message">
@@ -553,24 +576,6 @@
   </div>
   <button class="footer__top" id="backToTop" aria-label="Back to top">↑</button>
 </footer>
-
-<!-- ============ vinhxcapcha — lightweight anti-spam verification ============ -->
-<div class="vinhxcapcha-overlay" id="capchaOverlay" role="dialog" aria-modal="true" aria-labelledby="capchaTitle" hidden>
-  <div class="vinhxcapcha">
-    <p class="vinhxcapcha__kicker">vinhxcapcha</p>
-    <h3 class="vinhxcapcha__title" id="capchaTitle" data-i18n="capcha.title">Quick check before you continue</h3>
-    <p class="vinhxcapcha__note" data-i18n="capcha.note">We noticed a burst of activity. Please confirm you're not a bot.</p>
-    <button type="button" class="vinhxcapcha__checkbox" id="capchaCheckbox" aria-pressed="false">
-      <span class="vinhxcapcha__box" aria-hidden="true">
-        <svg class="vinhxcapcha__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M5 13l4 4L19 7"/>
-        </svg>
-        <span class="vinhxcapcha__spinner" aria-hidden="true"></span>
-      </span>
-      <span class="vinhxcapcha__label" id="capchaLabel" data-i18n="capcha.label">Click to verify you're a human developer</span>
-    </button>
-  </div>
-</div>
 
 <script src="script.js"></script>
 </body>
