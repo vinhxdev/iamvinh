@@ -634,7 +634,13 @@ html:not([data-theme="light"]) .theme-toggle__icon--moon { display: none; }
   flex-wrap: wrap;
   gap: 28px 44px;
 }
-.about__stats li { display: flex; flex-direction: column; gap: 6px; }
+.about__stats li {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-left: 14px;
+  border-left: 2px solid var(--amber-soft);
+}
 .about__stats-label {
   font-family: var(--font-mono);
   font-size: 0.68rem;
@@ -662,6 +668,23 @@ html:not([data-theme="light"]) .theme-toggle__icon--moon { display: none; }
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+.tech-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.tech-group:last-child { margin-bottom: 0; }
+.tech-group__name {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--amber);
+  width: 92px;
+  flex-shrink: 0;
 }
 .tech-tag {
   font-family: var(--font-mono);
