@@ -3,7 +3,7 @@
    Theme (system + manual), language switch, email copy,
    scroll progress, scroll-reveal, ambient waveform, equalizers,
    interactive terminal (incl. live time & battery status),
-   live VietQR donate widget, vinhxcapcha anti-spam gate,
+   live VietQR donate widget, chaptered page layout,
    direct message form (delivers to inbox via FormSubmit),
    real traffic telemetry dashboard (dstats, no fake data),
    hero letter animation, 3D card tilt, cursor spotlight.
@@ -15,8 +15,13 @@
 const translations = {
   en: {
     nav: {
-      about: "about", elsewhere: "elsewhere", projects: "projects", learning: "learning",
-      traffic: "traffic", terminal: "terminal", message: "message", donate: "support", radio: "radio", email: "copy email"
+      intro: "intro", work: "work", lab: "lab", connect: "connect", email: "copy email"
+    },
+    chapter: {
+      intro: "introduction",
+      work: "work & learning",
+      lab: "playground",
+      connect: "get in touch"
     },
     hero: {
       eyebrow: "// currently building things that make noise",
@@ -136,19 +141,18 @@ const translations = {
       playlistLabel: "tracklist"
     },
     footer: { github: "github", facebook: "facebook", soundcloud: "soundcloud" },
-    emailCopied: "copied!",
-    capcha: {
-      title: "Quick check before you continue",
-      note: "We noticed a burst of activity. Please confirm you're not a bot.",
-      label: "Click to verify you're a human developer",
-      verified: "Verified — welcome back."
-    }
+    emailCopied: "copied!"
   },
 
   vi: {
     nav: {
-      about: "giới thiệu", elsewhere: "kết nối", projects: "dự án", learning: "học tập",
-      traffic: "traffic", terminal: "terminal", message: "nhắn tin", donate: "ủng hộ", radio: "radio", email: "sao chép email"
+      intro: "giới thiệu", work: "công việc", lab: "thử nghiệm", connect: "kết nối", email: "sao chép email"
+    },
+    chapter: {
+      intro: "giới thiệu",
+      work: "công việc & học tập",
+      lab: "khu thử nghiệm",
+      connect: "kết nối với mình"
     },
     hero: {
       eyebrow: "// đang xây những thứ gây ồn theo cách riêng",
@@ -268,13 +272,7 @@ const translations = {
       playlistLabel: "danh sách phát"
     },
     footer: { github: "github", facebook: "facebook", soundcloud: "soundcloud" },
-    emailCopied: "đã sao chép!",
-    capcha: {
-      title: "Xác minh nhanh trước khi tiếp tục",
-      note: "Mình nhận thấy có thao tác liên tục bất thường. Vui lòng xác nhận bạn không phải bot.",
-      label: "Nhấn để xác minh bạn là một developer thật",
-      verified: "Đã xác minh — chào mừng quay lại."
-    }
+    emailCopied: "đã sao chép!"
   }
 };
 
@@ -811,81 +809,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------------------------------------------------------
-       12. vinhxcapcha — rapid-click / spam detection gate
-  --------------------------------------------------------- */
-  const capchaOverlay = document.getElementById("capchaOverlay");
-  const capchaCheckbox = document.getElementById("capchaCheckbox");
-  const capchaLabel = document.getElementById("capchaLabel");
-
-  const RAGE_CLICK_THRESHOLD = 5;
-  const RAGE_CLICK_WINDOW_MS = 900;
-  let clickTimestamps = [];
-  let capchaOpen = false;
-
-  function showCapcha() {
-    if (!capchaOverlay || capchaOpen) return;
-    capchaOpen = true;
-    capchaOverlay.hidden = false;
-    document.body.classList.add("is-locked");
-    void capchaOverlay.offsetWidth;
-    capchaOverlay.classList.add("is-visible");
-
-    if (capchaCheckbox) {
-      capchaCheckbox.classList.remove("is-verifying", "is-verified");
-      capchaCheckbox.setAttribute("aria-pressed", "false");
-    }
-    if (capchaLabel) {
-      const dict = translations[currentLang] || translations.en;
-      capchaLabel.textContent = dict.capcha.label;
-    }
-  }
-
-  function hideCapcha() {
-    if (!capchaOverlay) return;
-    capchaOverlay.classList.remove("is-visible");
-    document.body.classList.remove("is-locked");
-    setTimeout(() => {
-      capchaOverlay.hidden = true;
-      capchaOpen = false;
-    }, 350);
-  }
-
-  if (capchaCheckbox) {
-    capchaCheckbox.addEventListener("click", () => {
-      if (capchaCheckbox.classList.contains("is-verifying") || capchaCheckbox.classList.contains("is-verified")) return;
-
-      capchaCheckbox.classList.add("is-verifying");
-      capchaCheckbox.setAttribute("aria-pressed", "true");
-
-      setTimeout(() => {
-        capchaCheckbox.classList.remove("is-verifying");
-        capchaCheckbox.classList.add("is-verified");
-        if (capchaLabel) {
-          const dict = translations[currentLang] || translations.en;
-          capchaLabel.textContent = dict.capcha.verified;
-        }
-        clickTimestamps = [];
-
-        setTimeout(hideCapcha, 700);
-      }, 650);
-    });
-  }
-
-  document.addEventListener("click", (e) => {
-    if (capchaOverlay && capchaOverlay.contains(e.target)) return;
-    if (capchaOpen) return;
-
-    const now = Date.now();
-    clickTimestamps.push(now);
-    clickTimestamps = clickTimestamps.filter((ts) => now - ts <= RAGE_CLICK_WINDOW_MS);
-
-    if (clickTimestamps.length >= RAGE_CLICK_THRESHOLD) {
-      clickTimestamps = [];
-      showCapcha();
-    }
-  });
-
-  /* ---------------------------------------------------------
        13. Direct message form — gửi thẳng về hộp thư qua FormSubmit
   --------------------------------------------------------- */
   const MESSAGE_INBOX = "nguyenngoctrivinh72@gmail.com";
@@ -1125,12 +1048,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Ghi nhận tương tác thật từ người xem (click + gõ phím, chặn flood khi giữ phím)
   window.addEventListener("click", () => {
-    if (!capchaOpen) postTrafficEvent("click");
+    postTrafficEvent("click");
   });
 
   let lastKeyPost = 0;
   window.addEventListener("keydown", () => {
-    if (capchaOpen) return;
     const now = Date.now();
     if (now - lastKeyPost < 200) return;
     lastKeyPost = now;
