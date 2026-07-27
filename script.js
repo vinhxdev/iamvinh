@@ -24,22 +24,27 @@ const translations = {
       connect: "get in touch"
     },
     hero: {
-      eyebrow: "// currently building things that make noise",
+      eyebrow: "// full-stack developer — code by day, sound by night",
       title: "Hello, I'm Vinh.",
-      sub: "I'm Vinh — most places online you'll find me as vinhxdev. I love coding and listening to music whenever I have free time.",
-      btnPrimary: "Find me elsewhere",
+      sub: "I design and build web products end to end — clean interfaces, solid APIs, and the small details that make everything feel effortless. Music on, always.",
+      btnPrimary: "Get in touch",
       btnGhost: "View GitHub"
     },
-    status: { text: "Ready for new code strings" },
+    status: { text: "Available for projects & collaboration" },
     scrollcue: "scroll",
     about: {
-      eyebrow: "who's typing",
-      heading: "I like problems that end in either a <em>deploy</em> or a <em>drop</em>.",
-      p1: "I'm Vinh — you'll find me online as <strong>vinhxdev</strong>.",
-      p2: "I love coding and listening to music whenever I have free time.",
-      stat1label: "mode", stat1value: "day: code / night: sound",
-      stat2label: "status", stat2value: "open to collab",
-      techLabel: "tech stack"
+      eyebrow: "about me",
+      heading: "I build things that are <em>fast</em>, <em>clean</em>, and made to last.",
+      p1: "I'm Nguyen Ngoc Tri Vinh — a full-stack developer from Vietnam, known online as <strong>vinhxdev</strong>. I work across the whole stack: interfaces, APIs, and the infrastructure underneath.",
+      p2: "I care about the details — performance, readable code, and experiences that feel effortless. Away from the keyboard, music is the constant: there's a playlist running behind every commit.",
+      stat1label: "focus", stat1value: "full-stack web development",
+      stat2label: "location", stat2value: "Vietnam · GMT+7",
+      stat3label: "status", stat3value: "open to freelance & collab",
+      stat4label: "response", stat4value: "usually within 24 hours",
+      techLabel: "tech stack",
+      techFrontend: "frontend",
+      techBackend: "backend",
+      techTools: "tools & more"
     },
     links: { eyebrow: "elsewhere", title: "Find me around the internet." },
     card: {
@@ -84,10 +89,14 @@ const translations = {
         "clear — clear the screen"
       ],
       about: [
-        "Vinh — full-stack developer.",
-        "I love coding and listening to music whenever I have free time."
+        "Nguyen Ngoc Tri Vinh — full-stack developer, Vietnam.",
+        "Building fast, clean web products end to end. Music always on."
       ],
-      skills: ["JavaScript · HTML/CSS · Git · Lua · Systems"],
+      skills: [
+        "frontend: HTML/CSS · JavaScript",
+        "backend: Node.js · Redis · REST APIs",
+        "tools: Git · Vercel · Lua"
+      ],
       music: [
         "spinning up the turntable...",
         "♪ 8 tracks loaded on the personal radio ♪",
@@ -155,22 +164,27 @@ const translations = {
       connect: "kết nối với mình"
     },
     hero: {
-      eyebrow: "// đang xây những thứ gây ồn theo cách riêng",
+      eyebrow: "// full-stack developer — ngày viết code, đêm nghe nhạc",
       title: "Xin chào, mình là Vinh.",
-      sub: "Mình là Vinh — hầu hết mọi nơi trên mạng bạn sẽ thấy mình với cái tên vinhxdev. Mình thích code và nghe nhạc mỗi khi có thời gian rảnh.",
-      btnPrimary: "Tìm mình ở nơi khác",
+      sub: "Mình thiết kế và xây dựng sản phẩm web trọn vẹn — giao diện sạch sẽ, API vững chắc, cùng những chi tiết nhỏ khiến mọi thứ trở nên mượt mà. Nhạc luôn bật, mọi lúc.",
+      btnPrimary: "Liên hệ với mình",
       btnGhost: "Xem GitHub"
     },
-    status: { text: "Sẵn sàng vọc vạch code mới" },
+    status: { text: "Sẵn sàng nhận dự án & hợp tác" },
     scrollcue: "cuộn",
     about: {
-      eyebrow: "ai đang gõ phím",
-      heading: "Mình thích những vấn đề kết thúc bằng một lần <em>deploy</em> hoặc một bản <em>drop</em>.",
-      p1: "Mình là Vinh — hầu hết mọi nơi trên mạng bạn sẽ thấy mình với cái tên <strong>vinhxdev</strong>.",
-      p2: "Mình thích code và nghe nhạc mỗi khi có thời gian rảnh.",
-      stat1label: "chế độ", stat1value: "ngày: code / đêm: âm thanh",
-      stat2label: "trạng thái", stat2value: "sẵn sàng hợp tác",
-      techLabel: "công nghệ dùng"
+      eyebrow: "về mình",
+      heading: "Mình xây những sản phẩm <em>nhanh</em>, <em>gọn gàng</em> và bền lâu.",
+      p1: "Mình là Nguyễn Ngọc Trí Vinh — full-stack developer đến từ Việt Nam, trên mạng thường được biết đến với tên <strong>vinhxdev</strong>. Mình làm việc xuyên suốt cả stack: giao diện, API và hạ tầng bên dưới.",
+      p2: "Mình chú trọng từng chi tiết — hiệu năng, code dễ đọc và trải nghiệm mượt mà. Rời bàn phím thì âm nhạc là điều không đổi: luôn có một playlist chạy phía sau mỗi commit.",
+      stat1label: "trọng tâm", stat1value: "phát triển web full-stack",
+      stat2label: "vị trí", stat2value: "Việt Nam · GMT+7",
+      stat3label: "trạng thái", stat3value: "nhận freelance & hợp tác",
+      stat4label: "phản hồi", stat4value: "thường trong vòng 24 giờ",
+      techLabel: "công nghệ",
+      techFrontend: "frontend",
+      techBackend: "backend",
+      techTools: "công cụ & khác"
     },
     links: { eyebrow: "kết nối", title: "Tìm mình quanh đây trên internet." },
     card: {
@@ -215,10 +229,14 @@ const translations = {
         "clear — xoá màn hình"
       ],
       about: [
-        "Vinh — full-stack developer.",
-        "Mình thích code và nghe nhạc mỗi khi có thời gian rảnh."
+        "Nguyễn Ngọc Trí Vinh — full-stack developer, Việt Nam.",
+        "Xây sản phẩm web nhanh, gọn từ đầu đến cuối. Nhạc luôn bật."
       ],
-      skills: ["JavaScript · HTML/CSS · Git · Lua · Systems"],
+      skills: [
+        "frontend: HTML/CSS · JavaScript",
+        "backend: Node.js · Redis · REST APIs",
+        "tools: Git · Vercel · Lua"
+      ],
       music: [
         "đang quay đĩa than...",
         "♪ 8 bài đã nạp sẵn trên radio cá nhân ♪",
